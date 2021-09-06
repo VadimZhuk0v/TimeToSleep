@@ -5,5 +5,5 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val vmModules = module {
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(get(), get()) }
 }
