@@ -28,27 +28,38 @@ import kotlin.math.min
 fun WheelPicker(
     itemHeight: Dp,
     itemsCount: Int,
-    state: LazyListState = rememberLazyListState(),
+    initialSelectedItemIndex: Int = 0,
     onItemSelected: (index: Int) -> Unit,
     itemContent: @Composable (index: Int) -> Unit,
 ) {
+    val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = initialSelectedItemIndex)
     val itemHeightPx = LocalDensity.current.run { itemHeight.toPx() }
     val coroutineScope = rememberCoroutineScope()
     Box(modifier = Modifier.height(itemHeight * 3)) {
         Wheel(
-            state,
+            scrollState,
             itemHeight,
             itemsCount,
             itemContent,
         )
-        autoScrolling(state, coroutineScope, itemHeightPx)
+        autoScrolling(scrollState, coroutineScope, itemHeightPx)
     }
-    var selectedItem by remember { mutableStateOf(state.firstVisibleItemIndex) }
-    if (selectedItem != state.firstVisibleItemIndex && state.firstVisibleItemScrollOffset < itemHeightPx / 2) {
-        selectedItem = state.firstVisibleItemIndex
-        LocalContext.current.vibrate()
+
+    var initCompleted by remember { mutableStateOf(false) }
+    if (initCompleted) {
+        var selectedItem by remember { mutableStateOf(initialSelectedItemIndex - 1) }
+        if (selectedItem != scrollState.firstVisibleItemIndex && scrollState.firstVisibleItemScrollOffset < itemHeightPx / 2) {
+            selectedItem = scrollState.firstVisibleItemIndex
+            OnSelectedItemChanged(selectedItem, onItemSelected)
+            LocalContext.current.vibrate()
+        }
     }
-    OnSelectedItemChanged(selectedItem, onItemSelected)
+    if (scrollState.firstVisibleItemIndex == initialSelectedItemIndex) {
+        LaunchedEffect(Unit) {
+            scrollState.scrollToItem(initialSelectedItemIndex)
+            initCompleted = true
+        }
+    }
 }
 
 private fun autoScrolling(state: LazyListState, scope: CoroutineScope, itemHeight: Float) {

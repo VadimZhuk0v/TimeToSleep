@@ -1,7 +1,6 @@
 package com.vadmax.timetosleep.ui.widgets.numberclock
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ProvideTextStyle
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +30,34 @@ fun NumberClock(
     val calendar = Calendar.getInstance().apply { time = initialTime ?: Date() }
     var selectedHour by remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY)) }
     var selectedMinute by remember { mutableStateOf(calendar.get(Calendar.MINUTE)) }
+    var initialHour by remember { mutableStateOf(calendar.get(Calendar.HOUR_OF_DAY)) }
+    var initialMinute by remember { mutableStateOf(calendar.get(Calendar.MINUTE)) }
+    Timber.d("init")
+    ClockContent(
+        initialHour = initialHour, initialMinute = initialMinute,
+        onHourChange = {
+            Timber.d("Selected hour: $it")
+            selectedHour = it
+        },
+        onMinuteChange = {
+            Timber.d("Selected minutes: $it")
+            selectedMinute = it
+        },
+    )
+    ListenTimeChanges(
+        hour = selectedHour,
+        minutes = selectedMinute,
+        callback = onTimeSelected,
+    )
+}
 
+@Composable
+private fun ClockContent(
+    initialHour: Int,
+    initialMinute: Int,
+    onHourChange: (minute: Int) -> Unit,
+    onMinuteChange: (minute: Int) -> Unit,
+) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         ProvideTextStyle(
             value = TextStyle(
@@ -41,12 +67,9 @@ fun NumberClock(
         ) {
             WheelPicker(
                 itemHeight = itemHeight,
-                state = rememberLazyListState(initialFirstVisibleItemIndex = selectedHour),
+                initialSelectedItemIndex = initialHour,
                 itemsCount = 24,
-                onItemSelected = {
-                    Timber.d("Selected hour: $it")
-                    selectedHour = it
-                }
+                onItemSelected = onHourChange
             ) { index ->
                 val text = if (index < 10) {
                     "0$index"
@@ -58,12 +81,9 @@ fun NumberClock(
             Text(text = " : ")
             WheelPicker(
                 itemHeight = itemHeight,
-                state = rememberLazyListState(initialFirstVisibleItemIndex = selectedMinute),
+                initialSelectedItemIndex = initialMinute,
                 itemsCount = 60,
-                onItemSelected = {
-                    Timber.d("Selected minutes: $it")
-                    selectedMinute = it
-                }
+                onItemSelected = onMinuteChange
             ) { index ->
                 val text = if (index < 10) {
                     "0$index"
@@ -74,11 +94,6 @@ fun NumberClock(
             }
         }
     }
-    ListenTimeChanges(
-        hour = selectedHour,
-        minutes = selectedMinute,
-        callback = onTimeSelected,
-    )
 }
 
 @Composable
