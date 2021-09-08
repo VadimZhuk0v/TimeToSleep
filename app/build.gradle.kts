@@ -7,6 +7,10 @@ plugins {
     kotlin("kapt")
 }
 
+repositories {
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+}
+
 android {
     compileSdk = 30
 
@@ -83,6 +87,9 @@ dependencies {
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:28.4.0"))
+
+    // Lottie
+    implementation("com.airbnb.android:lottie-compose:4.1.0")
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")
