@@ -41,4 +41,11 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation("androidx.datastore:datastore:1.0.0")
+
+    // Protobuf
+    implementation("com.google.protobuf:protobuf-javalite:3.14.0")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.8.7")
 }

@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,11 +26,9 @@ import kotlin.math.min
 fun WheelPicker(
     itemHeight: Dp,
     itemsCount: Int,
-    initialSelectedItemIndex: Int = 0,
-    onItemSelected: (index: Int) -> Unit,
+    scrollState: LazyListState,
     itemContent: @Composable (index: Int) -> Unit,
 ) {
-    val scrollState = rememberLazyListState(initialFirstVisibleItemIndex = initialSelectedItemIndex)
     val itemHeightPx = LocalDensity.current.run { itemHeight.toPx() }
     val coroutineScope = rememberCoroutineScope()
     Box(modifier = Modifier.height(itemHeight * 3)) {
@@ -45,20 +41,10 @@ fun WheelPicker(
         autoScrolling(scrollState, coroutineScope, itemHeightPx)
     }
 
-    var initCompleted by remember { mutableStateOf(false) }
-    if (initCompleted) {
-        var selectedItem by remember { mutableStateOf(initialSelectedItemIndex - 1) }
-        if (selectedItem != scrollState.firstVisibleItemIndex && scrollState.firstVisibleItemScrollOffset < itemHeightPx / 2) {
-            selectedItem = scrollState.firstVisibleItemIndex
-            OnSelectedItemChanged(selectedItem, onItemSelected)
-            LocalContext.current.vibrate()
-        }
-    }
-    if (scrollState.firstVisibleItemIndex == initialSelectedItemIndex) {
-        LaunchedEffect(Unit) {
-            scrollState.scrollToItem(initialSelectedItemIndex)
-            initCompleted = true
-        }
+    var selectedItem by remember { mutableStateOf(0) }
+    if (selectedItem != scrollState.firstVisibleItemIndex && scrollState.firstVisibleItemScrollOffset < itemHeightPx / 2) {
+        selectedItem = scrollState.firstVisibleItemIndex
+        LocalContext.current.vibrate()
     }
 }
 
@@ -132,11 +118,4 @@ private fun Wheel(
             }
         },
     )
-}
-
-@Composable
-private fun OnSelectedItemChanged(index: Int, onItemSelected: (index: Int) -> Unit) {
-    LaunchedEffect(index) {
-        onItemSelected(index)
-    }
 }

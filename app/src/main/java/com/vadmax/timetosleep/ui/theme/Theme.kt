@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.vadmax.timetosleep.ui.theme
 
 import androidx.compose.material.Colors
@@ -13,6 +15,12 @@ private val DarkColorPalette = darkColors(
 )
 
 val Colors.icon: Color get() = Color.White
+
+val Colors.dialogBackground: Color get() = DialogBackground
+
+val Colors.screenBackground: Color get() = Color.Black
+
+val Colors.textFieldBackground: Color get() = TextFieldBackground
 
 @Composable
 fun TimeToSleepTheme(

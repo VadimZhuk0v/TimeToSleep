@@ -9,7 +9,9 @@ import com.vadmax.core.utils.extentions.second
 import com.vadmax.io.domain.usercases.GetSelectedTime
 import com.vadmax.io.domain.usercases.IsTimerEnable
 import com.vadmax.io.domain.usercases.SetSelectedTime
-import com.vadmax.timetosleep.domain.usercases.SetTimerEnable
+import com.vadmax.io.domain.usercases.SetTimerEnable
+import com.vadmax.timetosleep.domain.usercases.ApplyActions
+import com.vadmax.timetosleep.domain.usercases.SetAlarmActivation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -17,16 +19,19 @@ import java.util.Date
 
 class HomeViewModel(
     isTimerEnable: IsTimerEnable,
-    private val setTimerEnable: SetTimerEnable,
+    private val setTimerActive: SetTimerEnable,
     private val setSelectedTime: SetSelectedTime,
     private val getSelectedTime: GetSelectedTime,
+    private val setAlarmActivation: SetAlarmActivation,
+    private val applyActions: ApplyActions,
 ) : ViewModel() {
 
     val timerEnable = isTimerEnable().asLiveData()
 
     fun setTimerEnable(isEnable: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            setTimerEnable(isEnable, Date(getSelectedTime() ?: return@launch))
+//            applyActions()
+            setTimerActive(isEnable)
         }
     }
 
@@ -43,12 +48,7 @@ class HomeViewModel(
         }
         viewModelScope.launch(Dispatchers.IO) {
             setSelectedTime(calendar.timeInMillis)
-            if (timerEnable.value == true) {
-                setTimerEnable(
-                    true,
-                    Date(getSelectedTime() ?: return@launch)
-                )
-            }
+            setAlarmActivation()
         }
     }
 }

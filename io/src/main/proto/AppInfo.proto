@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option java_package = "com.vadmax.io.data.proto";
+option java_multiple_files = true;
+
+message AppInfo {
+  string name = 1;
+  string packageName = 2;
+}
+
+message AppInfoList {
+  repeated AppInfo items  = 1;
+}
