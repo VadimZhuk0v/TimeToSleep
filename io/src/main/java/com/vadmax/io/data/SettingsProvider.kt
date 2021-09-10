@@ -15,12 +15,14 @@ import kotlinx.coroutines.flow.map
 private const val SHARED_NAME = "shared"
 
 private val VL_IS_TIMER_ENABLED = booleanPreferencesKey("VL_SKIP_TUTORIAL")
+private val VL_IS_FIRST_TIME = booleanPreferencesKey("VL_IS_FIRST_TIME")
 private val VL_SELECTED_TIME = longPreferencesKey("VL_SELECTED_TIME")
 private val VL_SELECTED_APPS = stringPreferencesKey("VL_SELECTED_APPS")
 
 interface SettingsProvider {
 
     val isTimerEnabled: Flow<Boolean>
+    val isFirstTime: Flow<Boolean>
     val selectedAppsFlow: Flow<List<AppInfo>>
 
     suspend fun setTimerEnable(value: Boolean)
@@ -41,6 +43,10 @@ class SettingsProviderImpl(private val context: Context) : SettingsProvider {
     override val isTimerEnabled: Flow<Boolean> = context.dataStore.data.map {
         it[VL_IS_TIMER_ENABLED] ?: false
     }
+    override val isFirstTime = context.dataStore.data.map {
+        it[VL_IS_FIRST_TIME] ?: true
+    }
+
     override val selectedAppsFlow = context.dataStore.data.map {
         val json = it[VL_SELECTED_APPS] ?: return@map emptyList<AppInfo>()
         Gson().toObject(json)
@@ -49,6 +55,9 @@ class SettingsProviderImpl(private val context: Context) : SettingsProvider {
     override suspend fun setTimerEnable(value: Boolean) {
         context.dataStore.edit {
             it[VL_IS_TIMER_ENABLED] = value
+            if (value) {
+                it[VL_IS_FIRST_TIME] = false
+            }
         }
     }
 

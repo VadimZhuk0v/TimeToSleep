@@ -2,6 +2,7 @@ package com.vadmax.io.di
 
 import com.vadmax.io.domain.usercases.GetSelectedApps
 import com.vadmax.io.domain.usercases.GetSelectedTime
+import com.vadmax.io.domain.usercases.IsFirstTime
 import com.vadmax.io.domain.usercases.IsTimerEnable
 import com.vadmax.io.domain.usercases.SelectApp
 import com.vadmax.io.domain.usercases.SetSelectedTime
@@ -17,4 +18,5 @@ val useCasesModule = module {
     single { SelectApp(get()) }
     single { UnselectApp(get()) }
     single { GetSelectedApps(get()) }
+    single { IsFirstTime(get()) }
 }

@@ -7,10 +7,10 @@ import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
 import com.vadmax.core.utils.extentions.second
 import com.vadmax.io.domain.usercases.GetSelectedTime
+import com.vadmax.io.domain.usercases.IsFirstTime
 import com.vadmax.io.domain.usercases.IsTimerEnable
 import com.vadmax.io.domain.usercases.SetSelectedTime
 import com.vadmax.io.domain.usercases.SetTimerEnable
-import com.vadmax.timetosleep.domain.usercases.ApplyActions
 import com.vadmax.timetosleep.domain.usercases.SetAlarmActivation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,10 +23,11 @@ class HomeViewModel(
     private val setSelectedTime: SetSelectedTime,
     private val getSelectedTime: GetSelectedTime,
     private val setAlarmActivation: SetAlarmActivation,
-    private val applyActions: ApplyActions,
+    private val isFirstTime: IsFirstTime,
 ) : ViewModel() {
 
     val timerEnable = isTimerEnable().asLiveData()
+    val firstTime = isFirstTime().asLiveData()
 
     fun setTimerEnable(isEnable: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {

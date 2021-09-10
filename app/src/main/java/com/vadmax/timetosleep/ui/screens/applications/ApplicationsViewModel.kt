@@ -47,7 +47,7 @@ class ApplicationsViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            appsList.postValue(getAppsList())
+            appsList.postValue(getAppsList()!!)
         }
     }
 

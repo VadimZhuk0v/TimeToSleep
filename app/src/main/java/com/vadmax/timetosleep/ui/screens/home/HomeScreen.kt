@@ -30,7 +30,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -75,9 +75,8 @@ fun NavController.navigateToHome(navOptionsBuilder: NavOptionsBuilder.() -> Unit
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewModel()) {
     var initialSelectedTime by remember { mutableStateOf<Date?>(null) }
     LaunchedEffect(Unit) {
-        viewModel.getInitialTime()?.let {
-            initialSelectedTime = Date(it)
-        }
+        val time = viewModel.getInitialTime() ?: Date().time
+        initialSelectedTime = Date(time)
     }
     if (initialSelectedTime == null) {
         return
@@ -92,6 +91,8 @@ fun HomeScreenContent(
     initialSelectedTime: Date,
     viewModel: HomeViewModel
 ) {
+    val context = LocalContext.current
+    val firstTime by viewModel.firstTime.observeAsState(true)
     val calendar = Calendar.getInstance().apply {
         time = initialSelectedTime
     }
@@ -121,6 +122,9 @@ fun HomeScreenContent(
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
+                    if (firstTime) {
+                        Text(text = "Tap on me to enable")
+                    }
                     Box(Modifier.size(300.dp)) {
                         Moon(isTimeEnable ?: false) {
                             viewModel.setTimerEnable(it)
@@ -194,7 +198,10 @@ private fun BottomDialog(sheetState: ModalBottomSheetState, openAppsScreen: () -
                         .height(50.dp)
                         .clickable { openAppsScreen() },
                 ) {
-                    Text(text = "Open apps screen", modifier = Modifier.align(Alignment.CenterStart))
+                    Text(
+                        text = "Open apps screen",
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    )
                 }
                 Divider()
                 Text(text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}")
