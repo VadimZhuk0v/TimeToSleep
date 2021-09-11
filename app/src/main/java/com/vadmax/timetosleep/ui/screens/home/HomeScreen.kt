@@ -1,5 +1,7 @@
 package com.vadmax.timetosleep.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetState
@@ -30,9 +31,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
@@ -46,7 +47,6 @@ import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
 import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.R
-import com.vadmax.timetosleep.ui.screens.applications.navigateToApplications
 import com.vadmax.timetosleep.ui.theme.Dimens
 import com.vadmax.timetosleep.ui.theme.screenBackground
 import com.vadmax.timetosleep.ui.widgets.dialog.BottomSheetDialog
@@ -71,6 +71,7 @@ fun NavController.navigateToHome(navOptionsBuilder: NavOptionsBuilder.() -> Unit
     }
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewModel()) {
     var initialSelectedTime by remember { mutableStateOf<Date?>(null) }
@@ -84,15 +85,15 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
     HomeScreenContent(navController, initialSelectedTime!!, viewModel)
 }
 
-@Composable
+@ExperimentalAnimationApi
 @OptIn(ExperimentalMaterialApi::class)
+@Composable
 fun HomeScreenContent(
     navController: NavController,
     initialSelectedTime: Date,
     viewModel: HomeViewModel
 ) {
-    val context = LocalContext.current
-    val firstTime by viewModel.firstTime.observeAsState(true)
+    val isTimeEnable by viewModel.timerEnable.observeAsState(false)
     val calendar = Calendar.getInstance().apply {
         time = initialSelectedTime
     }
@@ -115,27 +116,31 @@ fun HomeScreenContent(
             Box(
                 Modifier.screenPadding()
             ) {
-                val isTimeEnable by viewModel.timerEnable.observeAsState()
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    if (firstTime) {
-                        Text(text = "Tap on me to enable")
+                    AnimatedVisibility(visible = isTimeEnable.not()) {
+                        Text(
+                            text = stringResource(R.string.home_tap_on_me),
+                            style = MaterialTheme.typography.h6,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
                     Box(Modifier.size(300.dp)) {
                         Moon(isTimeEnable ?: false) {
                             viewModel.setTimerEnable(it)
                         }
                     }
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(Dimens.margin4x))
                     NumberClock(numberClocState)
                 }
                 IconButton(
                     modifier = Modifier.align(Alignment.BottomEnd),
-                    painter = painterResource(id = R.drawable.ic_settings),
+                    painter = painterResource(id = R.drawable.ic_info),
                     contentDescription = "Settings",
                     onClick = {
                         coroutineScope.launch {
@@ -145,12 +150,7 @@ fun HomeScreenContent(
                 )
             }
         }
-        BottomDialog(settingsDialogState) {
-            coroutineScope.launch {
-                settingsDialogState.hide()
-            }
-            navController.navigateToApplications()
-        }
+        BottomDialog(settingsDialogState)
         LaunchedEffect(time) {
             Timber.d("Selected time: ${time.hour}:${time.minute}")
             viewModel.setTime(time.hour, time.minute)
@@ -188,22 +188,10 @@ private fun Moon(isTimerEnable: Boolean, onCheckedChanged: (value: Boolean) -> U
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun BottomDialog(sheetState: ModalBottomSheetState, openAppsScreen: () -> Unit) {
+private fun BottomDialog(sheetState: ModalBottomSheetState) {
     BottomSheetDialog(sheetState) {
         Box(modifier = Modifier.padding(Dimens.screenPadding)) {
             Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp)
-                        .clickable { openAppsScreen() },
-                ) {
-                    Text(
-                        text = "Open apps screen",
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    )
-                }
-                Divider()
                 Text(text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}")
             }
         }

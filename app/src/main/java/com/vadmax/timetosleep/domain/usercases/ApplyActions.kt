@@ -11,6 +11,5 @@ class ApplyActions(
     suspend operator fun invoke() {
         setTimerEnable(false)
         stopMusic()
-        closeApps()
     }
 }

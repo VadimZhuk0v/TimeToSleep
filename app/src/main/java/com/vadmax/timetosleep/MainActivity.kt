@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.vadmax.timetosleep.ui.screens.applications.ApplicationsScreen
 import com.vadmax.timetosleep.ui.screens.home.HomeScreen
 import com.vadmax.timetosleep.ui.theme.TimeToSleepTheme
 
@@ -19,9 +18,6 @@ class MainActivity : ComponentActivity() {
                 NavHost(navController = navController, startDestination = HomeScreen.destination) {
                     composable(HomeScreen.destination) {
                         HomeScreen(navController)
-                    }
-                    composable(ApplicationsScreen.destination) {
-                        ApplicationsScreen(navController)
                     }
                 }
             }

@@ -8,7 +8,7 @@ plugins {
 android {
     compileSdk = 30
     defaultConfig {
-        minSdk = 24
+        minSdk = 23
         targetSdk = 30
 
         // Make sure to use the AndroidJUnitRunner, or a subclass of it.

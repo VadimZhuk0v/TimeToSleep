@@ -2,6 +2,7 @@ package com.vadmax.timetosleep.ui.widgets.wheelpicker
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.vadmax.timetosleep.utils.extentions.vibrate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -27,6 +29,7 @@ fun WheelPicker(
     itemHeight: Dp,
     itemsCount: Int,
     scrollState: LazyListState,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     itemContent: @Composable (index: Int) -> Unit,
 ) {
     val itemHeightPx = LocalDensity.current.run { itemHeight.toPx() }
@@ -36,6 +39,7 @@ fun WheelPicker(
             scrollState,
             itemHeight,
             itemsCount,
+            horizontalAlignment,
             itemContent,
         )
         autoScrolling(scrollState, coroutineScope, itemHeightPx)
@@ -66,13 +70,14 @@ private fun Wheel(
     state: LazyListState,
     itemHeight: Dp,
     itemsCount: Int,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     itemContent: @Composable (index: Int) -> Unit
 ) {
     val itemHeightPx = LocalDensity.current.run { itemHeight.toPx() }
     LazyColumn(
         state = state,
-        modifier = Modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = horizontalAlignment,
+        modifier = Modifier.width(60.dp),
         content = {
             item("header") {
                 Box(modifier = Modifier.height(itemHeight))

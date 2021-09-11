@@ -25,7 +25,7 @@ fun BottomSheetDialog(state: ModalBottomSheetState, content: @Composable () -> U
             Surface(shape = MaterialTheme.shapes.large) {
                 Box(
                     modifier = Modifier
-                        .defaultMinSize(minHeight = 100.dp)
+                        .defaultMinSize(minHeight = 20.dp)
                         .fillMaxWidth()
                         .background(MaterialTheme.colors.dialogBackground)
                 ) {

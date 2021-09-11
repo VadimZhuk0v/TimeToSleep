@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "com.vadmax.timetosleep"
-        minSdk = 24
+        minSdk = 23
         targetSdk = 30
         versionCode = 4
         versionName = "0.0.4"
