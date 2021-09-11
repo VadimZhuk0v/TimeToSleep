@@ -3,6 +3,7 @@ package com.vadmax.io.data
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -18,14 +19,18 @@ private val VL_IS_TIMER_ENABLED = booleanPreferencesKey("VL_SKIP_TUTORIAL")
 private val VL_IS_FIRST_TIME = booleanPreferencesKey("VL_IS_FIRST_TIME")
 private val VL_SELECTED_TIME = longPreferencesKey("VL_SELECTED_TIME")
 private val VL_SELECTED_APPS = stringPreferencesKey("VL_SELECTED_APPS")
+private val VL_ENABLE_TIMER_COUNTER = intPreferencesKey("VL_ENABLE_TIMER_COUNTER")
 
 interface SettingsProvider {
 
     val isTimerEnabled: Flow<Boolean>
     val isFirstTime: Flow<Boolean>
     val selectedAppsFlow: Flow<List<AppInfo>>
+    val enableTimerCounter: Flow<Int>
 
     suspend fun setTimerEnable(value: Boolean)
+
+    suspend fun incEnableTimerCounter()
 
     suspend fun setSelectedTime(time: Long?)
 
@@ -45,6 +50,17 @@ class SettingsProviderImpl(private val context: Context) : SettingsProvider {
     }
     override val isFirstTime = context.dataStore.data.map {
         it[VL_IS_FIRST_TIME] ?: true
+    }
+
+    override val enableTimerCounter = context.dataStore.data.map {
+        it[VL_ENABLE_TIMER_COUNTER] ?: 1
+    }
+
+    override suspend fun incEnableTimerCounter() {
+        context.dataStore.edit {
+            val value = it[VL_ENABLE_TIMER_COUNTER] ?: 1
+            it[VL_ENABLE_TIMER_COUNTER] = value + 1
+        }
     }
 
     override val selectedAppsFlow = context.dataStore.data.map {

@@ -1,5 +1,6 @@
 package com.vadmax.timetosleep.ui.screens.home
 
+import android.app.Activity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
@@ -31,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -43,21 +45,21 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.vadmax.core.utils.extentions.hour
-import com.vadmax.core.utils.extentions.minute
 import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.ui.theme.Dimens
 import com.vadmax.timetosleep.ui.theme.screenBackground
+import com.vadmax.timetosleep.ui.widgets.ad.heaser.HeaderAd
+import com.vadmax.timetosleep.ui.widgets.ad.interstitial.intAd
 import com.vadmax.timetosleep.ui.widgets.dialog.BottomSheetDialog
 import com.vadmax.timetosleep.ui.widgets.iconbutton.IconButton
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClock
+import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClockState
 import com.vadmax.timetosleep.ui.widgets.numberclock.rememberNumberClockState
-import com.vadmax.timetosleep.utils.extentions.screenPadding
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
-import java.util.Calendar
 import java.util.Date
 
 object HomeScreen {
@@ -71,6 +73,7 @@ fun NavController.navigateToHome(navOptionsBuilder: NavOptionsBuilder.() -> Unit
     }
 }
 
+@ExperimentalMaterialApi
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewModel()) {
@@ -79,64 +82,67 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
         val time = viewModel.getInitialTime() ?: Date().time
         initialSelectedTime = Date(time)
     }
-    if (initialSelectedTime == null) {
+    val initialTime = initialSelectedTime ?: run {
         return
     }
-    HomeScreenContent(navController, initialSelectedTime!!, viewModel)
+
+    val numberClockState = rememberNumberClockState(initialTime)
+    val coroutineScope = rememberCoroutineScope()
+    val time by numberClockState.time
+    val enableTimerCounter by viewModel.enableTimerCounter.observeAsState(1)
+    val isTimerEnable by viewModel.timerEnable.observeAsState(false)
+    val settingsDialogState =
+        rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
+    LaunchedEffect(time) {
+        Timber.d("Selected time: ${time.hour}:${time.minute}")
+        viewModel.setTime(time.hour, time.minute)
+    }
+    ShowInterstitialAds(enableTimerCounter)
+    HomeScreenContent(
+        coroutineScope = coroutineScope,
+        isTimerEnable = isTimerEnable,
+        settingsDialogState = settingsDialogState,
+        numberClockState = numberClockState,
+        setTimerEnable = viewModel::setTimerEnable
+    )
 }
 
 @ExperimentalAnimationApi
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreenContent(
-    navController: NavController,
-    initialSelectedTime: Date,
-    viewModel: HomeViewModel
+    coroutineScope: CoroutineScope,
+    isTimerEnable: Boolean,
+    settingsDialogState: ModalBottomSheetState,
+    numberClockState: NumberClockState,
+    setTimerEnable: (value: Boolean) -> Unit,
 ) {
-    val isTimeEnable by viewModel.timerEnable.observeAsState(false)
-    val calendar = Calendar.getInstance().apply {
-        time = initialSelectedTime
-    }
-    val numberClocState = rememberNumberClockState(
-        initialHour = calendar.hour,
-        initialMinute = calendar.minute
-    )
-    val time by numberClocState.time
     Scaffold {
-        val coroutineScope = rememberCoroutineScope()
-
-        val settingsDialogState =
-            rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-
-        Box(
-            Modifier
-                .background(MaterialTheme.colors.screenBackground)
-        ) {
-
-            Box(
-                Modifier.screenPadding()
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxSize(),
-                ) {
-                    AnimatedVisibility(visible = isTimeEnable.not()) {
-                        Text(
-                            text = stringResource(R.string.home_tap_on_me),
-                            style = MaterialTheme.typography.h6,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                    Box(Modifier.size(300.dp)) {
-                        Moon(isTimeEnable ?: false) {
-                            viewModel.setTimerEnable(it)
+        Box(Modifier.background(MaterialTheme.colors.screenBackground)) {
+            Box {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    HeaderAd()
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                    ) {
+                        AnimatedVisibility(visible = isTimerEnable.not()) {
+                            Text(
+                                text = stringResource(R.string.home_tap_on_me),
+                                style = MaterialTheme.typography.h6,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.fillMaxWidth()
+                            )
                         }
+                        Box(Modifier.size(300.dp)) {
+                            Moon(isTimerEnable, setTimerEnable)
+                        }
+                        Spacer(modifier = Modifier.height(Dimens.margin4x))
+                        NumberClock(numberClockState)
                     }
-                    Spacer(modifier = Modifier.height(Dimens.margin4x))
-                    NumberClock(numberClocState)
                 }
                 IconButton(
                     modifier = Modifier.align(Alignment.BottomEnd),
@@ -149,11 +155,7 @@ fun HomeScreenContent(
                     },
                 )
             }
-        }
-        BottomDialog(settingsDialogState)
-        LaunchedEffect(time) {
-            Timber.d("Selected time: ${time.hour}:${time.minute}")
-            viewModel.setTime(time.hour, time.minute)
+            BottomDialog(settingsDialogState)
         }
     }
 }
@@ -195,5 +197,16 @@ private fun BottomDialog(sheetState: ModalBottomSheetState) {
                 Text(text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}")
             }
         }
+    }
+}
+
+@Composable
+private fun ShowInterstitialAds(count: Int) {
+    val context = LocalContext.current
+    LaunchedEffect(count) {
+        if (count % 3 != 0) {
+            return@LaunchedEffect
+        }
+        intAd?.show(context as Activity)
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
+import timber.log.Timber
 
 class StopMusic(private val context: Context) {
 
@@ -15,5 +16,6 @@ class StopMusic(private val context: Context) {
         } else {
             am.requestAudioFocus({}, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
         }
+        Timber.i("Music stopped")
     }
 }

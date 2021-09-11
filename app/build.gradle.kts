@@ -12,14 +12,22 @@ repositories {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/vadimzhukov/Work/AndroidStudioProjects/Timetosleep/key")
+            storePassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
+            keyAlias = "prod"
+            keyPassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
+        }
+    }
     compileSdk = 30
 
     defaultConfig {
         applicationId = "com.vadmax.timetosleep"
         minSdk = 23
         targetSdk = 30
-        versionCode = 4
-        versionName = "0.0.4"
+        versionCode = 5
+        versionName = "0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -28,7 +36,7 @@ android {
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -65,6 +73,8 @@ android {
             applicationIdSuffix = ".qa"
             versionNameSuffix = "-qa"
         }
+        create("prod") {
+        }
     }
 }
 
@@ -90,6 +100,9 @@ dependencies {
 
     // Lottie
     implementation("com.airbnb.android:lottie-compose:4.1.0")
+
+    // AdMob
+    implementation("com.google.android.gms:play-services-ads:20.3.0")
 
     testImplementation("junit:junit:4.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.3")

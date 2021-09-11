@@ -10,6 +10,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import timber.log.Timber
 
 class StopMusicReceiver : BroadcastReceiver(), KoinComponent {
 
@@ -17,6 +18,7 @@ class StopMusicReceiver : BroadcastReceiver(), KoinComponent {
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(context: Context, intent: Intent?) {
+        Timber.d("Stop music receiver is run")
         GlobalScope.launch(Dispatchers.Main) {
             applyActions()
         }

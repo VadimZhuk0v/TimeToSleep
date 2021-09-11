@@ -7,7 +7,11 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
+import com.vadmax.core.utils.extentions.hour
+import com.vadmax.core.utils.extentions.minute
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClockState.Companion.Saver
+import java.util.Calendar
+import java.util.Date
 
 @SuppressLint("ComposableNaming")
 @Composable
@@ -18,6 +22,18 @@ fun rememberNumberClockState(initialHour: Int, initialMinute: Int): NumberClockS
             LazyListState(initialMinute),
         )
     }
+}
+
+@SuppressLint("ComposableNaming")
+@Composable
+fun rememberNumberClockState(calendar: Calendar): NumberClockState {
+    return rememberNumberClockState(initialHour = calendar.hour, initialMinute = calendar.minute)
+}
+
+@SuppressLint("ComposableNaming")
+@Composable
+fun rememberNumberClockState(time: Date): NumberClockState {
+    return rememberNumberClockState(Calendar.getInstance().apply { this.time = time })
 }
 
 class NumberClockState constructor(
