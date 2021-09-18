@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.google.gson.Gson
+import com.vadmax.core.utils.extentions.safeValueOf
 import com.vadmax.io.utils.extentions.toObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -16,19 +17,39 @@ import kotlinx.coroutines.flow.map
 private const val SHARED_NAME = "shared"
 
 private val VL_IS_TIMER_ENABLED = booleanPreferencesKey("VL_SKIP_TUTORIAL")
+private val VL_IS_LOCK_SCREEN_ENABLE = booleanPreferencesKey("VL_IS_LOCK_SCREEN_ENABLE")
+private val VL_IS_WIFI_ENABLE = booleanPreferencesKey("VL_IS_WIFI_ENABLE")
+private val VL_IS_BL_ENABLE = booleanPreferencesKey("VL_IS_BL_ENABLE")
 private val VL_IS_FIRST_TIME = booleanPreferencesKey("VL_IS_FIRST_TIME")
+private val VL_IS_VIBRATION_ENABLE = booleanPreferencesKey("VL_IS_VIBRATION_ENABLE")
 private val VL_SELECTED_TIME = longPreferencesKey("VL_SELECTED_TIME")
 private val VL_SELECTED_APPS = stringPreferencesKey("VL_SELECTED_APPS")
+private val VL_RINGER_MODE = stringPreferencesKey("VL_RINGER_MODE")
 private val VL_ENABLE_TIMER_COUNTER = intPreferencesKey("VL_ENABLE_TIMER_COUNTER")
 
 interface SettingsProvider {
 
     val isTimerEnabled: Flow<Boolean>
+    val isLockScreenEnable: Flow<Boolean>
     val isFirstTime: Flow<Boolean>
+    val isVibrationEnable: Flow<Boolean>
+    val isDisableWifiEnable: Flow<Boolean>
+    val isDisableBluetoothEnable: Flow<Boolean>
     val selectedAppsFlow: Flow<List<AppInfo>>
     val enableTimerCounter: Flow<Int>
+    val ringerMode: Flow<RingerMode?>
 
     suspend fun setTimerEnable(value: Boolean)
+
+    suspend fun setDisableWifiEnable(value: Boolean)
+
+    suspend fun setVibrationEnable(value: Boolean)
+
+    suspend fun setDisableBluetoothEnable(value: Boolean)
+
+    suspend fun setLockScreenEnable(value: Boolean)
+
+    suspend fun setRingerMode(mode: RingerMode?)
 
     suspend fun incEnableTimerCounter()
 
@@ -45,9 +66,31 @@ private val Context.dataStore by preferencesDataStore(name = SHARED_NAME)
 
 class SettingsProviderImpl(private val context: Context) : SettingsProvider {
 
-    override val isTimerEnabled: Flow<Boolean> = context.dataStore.data.map {
+    override val isTimerEnabled = context.dataStore.data.map {
         it[VL_IS_TIMER_ENABLED] ?: false
     }
+
+    override val isLockScreenEnable = context.dataStore.data.map {
+        it[VL_IS_LOCK_SCREEN_ENABLE] ?: false
+    }
+
+    override val isVibrationEnable = context.dataStore.data.map {
+        it[VL_IS_VIBRATION_ENABLE] ?: true
+    }
+
+    override val isDisableWifiEnable = context.dataStore.data.map {
+        it[VL_IS_WIFI_ENABLE] ?: false
+    }
+
+    override val isDisableBluetoothEnable = context.dataStore.data.map {
+        it[VL_IS_BL_ENABLE] ?: false
+    }
+
+    override val ringerMode = context.dataStore.data.map {
+        val modeString = it[VL_RINGER_MODE]
+        safeValueOf<RingerMode>(modeString)
+    }
+
     override val isFirstTime = context.dataStore.data.map {
         it[VL_IS_FIRST_TIME] ?: true
     }
@@ -63,6 +106,18 @@ class SettingsProviderImpl(private val context: Context) : SettingsProvider {
         }
     }
 
+    override suspend fun setVibrationEnable(value: Boolean) {
+        context.dataStore.edit {
+            it[VL_IS_VIBRATION_ENABLE] = value
+        }
+    }
+
+    override suspend fun setRingerMode(mode: RingerMode?) {
+        context.dataStore.edit {
+            it[VL_RINGER_MODE] = mode?.name ?: ""
+        }
+    }
+
     override val selectedAppsFlow = context.dataStore.data.map {
         val json = it[VL_SELECTED_APPS] ?: return@map emptyList<AppInfo>()
         Gson().toObject(json)
@@ -71,9 +126,24 @@ class SettingsProviderImpl(private val context: Context) : SettingsProvider {
     override suspend fun setTimerEnable(value: Boolean) {
         context.dataStore.edit {
             it[VL_IS_TIMER_ENABLED] = value
-            if (value) {
-                it[VL_IS_FIRST_TIME] = false
-            }
+        }
+    }
+
+    override suspend fun setLockScreenEnable(value: Boolean) {
+        context.dataStore.edit {
+            it[VL_IS_LOCK_SCREEN_ENABLE] = value
+        }
+    }
+
+    override suspend fun setDisableWifiEnable(value: Boolean) {
+        context.dataStore.edit {
+            it[VL_IS_WIFI_ENABLE] = value
+        }
+    }
+
+    override suspend fun setDisableBluetoothEnable(value: Boolean) {
+        context.dataStore.edit {
+            it[VL_IS_BL_ENABLE] = value
         }
     }
 

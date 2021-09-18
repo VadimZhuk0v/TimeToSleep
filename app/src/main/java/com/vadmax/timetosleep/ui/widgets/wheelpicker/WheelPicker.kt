@@ -26,6 +26,7 @@ import kotlin.math.min
 
 @Composable
 fun WheelPicker(
+    isVibrationEnable: Boolean,
     itemHeight: Dp,
     itemsCount: Int,
     scrollState: LazyListState,
@@ -48,7 +49,9 @@ fun WheelPicker(
     var selectedItem by remember { mutableStateOf(0) }
     if (selectedItem != scrollState.firstVisibleItemIndex && scrollState.firstVisibleItemScrollOffset < itemHeightPx / 2) {
         selectedItem = scrollState.firstVisibleItemIndex
-        LocalContext.current.vibrate()
+        if (isVibrationEnable) {
+            LocalContext.current.vibrate()
+        }
     }
 }
 

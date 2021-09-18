@@ -1,9 +1,15 @@
 package com.vadmax.timetosleep.utils.extentions
 
+import android.app.NotificationManager
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.provider.Settings
+import com.vadmax.timetosleep.utils.AdminReceiver
 
 fun Context.vibrate() {
     val vibrator = getSystemService(Vibrator::class.java)
@@ -20,3 +26,36 @@ fun Context.vibrate() {
         }
     }
 }
+
+fun Context.navigateToLockScreenAdminPermission() {
+    val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+        putExtra(
+            DevicePolicyManager.EXTRA_DEVICE_ADMIN,
+            ComponentName(this@navigateToLockScreenAdminPermission, AdminReceiver::class.java)
+        )
+    }
+    startActivity(intent)
+}
+
+fun Context.navigateToNotificationAccessSettings() {
+    val intent = Intent(
+        Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
+    )
+    startActivity(intent)
+}
+
+val Context.isNotificationAccessGranted: Boolean
+    get() {
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        return notificationManager.isNotificationPolicyAccessGranted
+    }
+
+val Context.isAdminActive: Boolean
+    get() {
+        return getSystemService(DevicePolicyManager::class.java).isAdminActive(
+            ComponentName(
+                this,
+                AdminReceiver::class.java
+            )
+        )
+    }

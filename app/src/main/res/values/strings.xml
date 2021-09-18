@@ -2,7 +2,15 @@
     <string name="app_name" translatable="false">Time to sleep</string>
     <string name="admob_unit.header" translatable="false">ca-app-pub-2137393606695859/6305852738</string>
     <string name="admob_unit.interstitial" translatable="false">ca-app-pub-2137393606695859/2779872390</string>
+    <string name="manifest.admin_description">Permission for lock the screen</string>
     <string name="applications_search">Search</string>
     <string name="home.version">Application version: </string>
     <string name="home.tap_on_me">Tap on the moon to enable</string>
+    <string name="settings.additional_permission">This action require additional permission</string>
+    <string name="settings.lock_screen">Lock the screen</string>
+    <string name="settings.disable_bluetooth">Disable bluetooth</string>
+    <string name="settings.vibration">Vibration when time is changed</string>
+    <string name="settings.ringer_mode">Set ringer mode</string>
+    <string name="settings.ringer.silent">Silent</string>
+    <string name="settings.ringer.vibrate">Vibrate</string>
 </resources>

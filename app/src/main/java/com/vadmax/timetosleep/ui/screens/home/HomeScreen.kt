@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
@@ -45,13 +44,12 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.R
+import com.vadmax.timetosleep.ui.dialogs.settings.SettingsDialog
 import com.vadmax.timetosleep.ui.theme.Dimens
 import com.vadmax.timetosleep.ui.theme.screenBackground
 import com.vadmax.timetosleep.ui.widgets.ad.heaser.HeaderAd
 import com.vadmax.timetosleep.ui.widgets.ad.interstitial.intAd
-import com.vadmax.timetosleep.ui.widgets.dialog.BottomSheetDialog
 import com.vadmax.timetosleep.ui.widgets.iconbutton.IconButton
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClock
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClockState
@@ -89,6 +87,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
     val numberClockState = rememberNumberClockState(initialTime)
     val coroutineScope = rememberCoroutineScope()
     val time by numberClockState.time
+    val isVibrationEnable by viewModel.vibrationEnable.observeAsState(true)
     val enableTimerCounter by viewModel.enableTimerCounter.observeAsState(1)
     val isTimerEnable by viewModel.timerEnable.observeAsState(false)
     val settingsDialogState =
@@ -104,6 +103,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
         isTimerEnable = isTimerEnable,
         settingsDialogState = settingsDialogState,
         numberClockState = numberClockState,
+        isVibrationEnable = isVibrationEnable,
         setTimerEnable = viewModel::setTimerEnable
     )
 }
@@ -116,6 +116,7 @@ fun HomeScreenContent(
     isTimerEnable: Boolean,
     settingsDialogState: ModalBottomSheetState,
     numberClockState: NumberClockState,
+    isVibrationEnable: Boolean,
     setTimerEnable: (value: Boolean) -> Unit,
 ) {
     Scaffold {
@@ -141,12 +142,15 @@ fun HomeScreenContent(
                             Moon(isTimerEnable, setTimerEnable)
                         }
                         Spacer(modifier = Modifier.height(Dimens.margin4x))
-                        NumberClock(numberClockState)
+                        NumberClock(
+                            isVibrationEnable = isVibrationEnable,
+                            numberClockState = numberClockState,
+                        )
                     }
                 }
                 IconButton(
                     modifier = Modifier.align(Alignment.BottomEnd),
-                    painter = painterResource(id = R.drawable.ic_info),
+                    painter = painterResource(id = R.drawable.ic_settings),
                     contentDescription = "Settings",
                     onClick = {
                         coroutineScope.launch {
@@ -164,12 +168,19 @@ fun HomeScreenContent(
 private fun Moon(isTimerEnable: Boolean, onCheckedChanged: (value: Boolean) -> Unit) {
     // TODO: Smooth stop animation
     val lottieComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lt_moon))
-    val coroutineScope = rememberCoroutineScope()
     val lottieState = animateLottieCompositionAsState(
         composition = lottieComposition,
         isPlaying = isTimerEnable,
         iterations = LottieConstants.IterateForever,
     )
+    LaunchedEffect(isTimerEnable) {
+        if (isTimerEnable.not()) {
+            (lottieState as LottieAnimatable).snapTo(
+                composition = lottieComposition,
+                progress = 0F
+            )
+        }
+    }
     LottieAnimation(
         composition = lottieComposition,
         progress = lottieState.progress,
@@ -177,12 +188,6 @@ private fun Moon(isTimerEnable: Boolean, onCheckedChanged: (value: Boolean) -> U
             remember { MutableInteractionSource() },
             indication = null,
         ) {
-            coroutineScope.launch {
-                (lottieState as LottieAnimatable).snapTo(
-                    composition = lottieComposition,
-                    progress = 0F
-                )
-            }
             onCheckedChanged(isTimerEnable.not())
         }
     )
@@ -191,13 +196,7 @@ private fun Moon(isTimerEnable: Boolean, onCheckedChanged: (value: Boolean) -> U
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun BottomDialog(sheetState: ModalBottomSheetState) {
-    BottomSheetDialog(sheetState) {
-        Box(modifier = Modifier.padding(Dimens.screenPadding)) {
-            Column {
-                Text(text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}")
-            }
-        }
-    }
+    SettingsDialog(sheetState = sheetState)
 }
 
 @Composable

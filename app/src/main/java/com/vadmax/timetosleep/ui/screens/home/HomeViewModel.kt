@@ -10,6 +10,7 @@ import com.vadmax.io.domain.usercases.GetEnableTimerCounter
 import com.vadmax.io.domain.usercases.GetSelectedTime
 import com.vadmax.io.domain.usercases.IncEnableTimerCounter
 import com.vadmax.io.domain.usercases.IsTimerEnable
+import com.vadmax.io.domain.usercases.IsVibrationEnable
 import com.vadmax.io.domain.usercases.SetSelectedTime
 import com.vadmax.io.domain.usercases.SetTimerEnable
 import com.vadmax.timetosleep.domain.usercases.SetAlarmActivation
@@ -21,6 +22,7 @@ import java.util.Date
 class HomeViewModel(
     isTimerEnable: IsTimerEnable,
     getEnableTimerCounter: GetEnableTimerCounter,
+    isVibrationEnable: IsVibrationEnable,
     private val setTimerActive: SetTimerEnable,
     private val setSelectedTime: SetSelectedTime,
     private val getSelectedTime: GetSelectedTime,
@@ -30,6 +32,7 @@ class HomeViewModel(
 
     val timerEnable = isTimerEnable().asLiveData()
     val enableTimerCounter = getEnableTimerCounter().asLiveData()
+    val vibrationEnable = isVibrationEnable().asLiveData()
 
     fun setTimerEnable(isEnable: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
