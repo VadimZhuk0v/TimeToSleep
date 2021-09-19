@@ -2,13 +2,7 @@ package com.vadmax.extentions
 
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.vadmax.VariableType
-import com.vadmax.constants.AdConstants
 import com.vadmax.constants.Application
-import com.vadmax.constants.Config.AD_HEADER_UNIT
-import com.vadmax.constants.Config.AD_INTERSTITIAL_UNIT
-import com.vadmax.constants.Config.ENABLE_ANALYTICS
-import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
 import com.vadmax.constants.DependencyVersion
 import com.vadmax.constants.GeneralVersion
 import org.gradle.api.JavaVersion
@@ -52,7 +46,7 @@ fun Project.configureAndroidApplication() =
 
         signingConfigs {
             create("release") {
-                storeFile = file("/Users/vadimzhukov/Work/AndroidStudioProjects/Timetosleep/key")
+                storeFile = file("../key")
                 storePassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
                 keyAlias = "prod"
                 keyPassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
@@ -88,49 +82,5 @@ fun Project.configureAndroidApplication() =
         }
         composeOptions {
             kotlinCompilerExtensionVersion = DependencyVersion.compose
-        }
-    }
-
-private fun Project.configureBuildTypes() =
-    this.extensions.getByType<BaseAppModuleExtension>().run {
-        buildTypes {
-            getByName("release") {
-                signingConfig = signingConfigs.getByName("release")
-                isMinifyEnabled = true
-                proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
-                )
-            }
-        }
-        defaultConfig {
-            buildConfig(ENABLE_CRASHLYTICS, VariableType.Boolean(false))
-            buildConfig(ENABLE_ANALYTICS, VariableType.Boolean(false))
-            buildConfig(AD_HEADER_UNIT, VariableType.String(AdConstants.AD_TEST_BANNER_UNIT))
-            buildConfig(
-                AD_INTERSTITIAL_UNIT,
-                VariableType.String(AdConstants.AD_TEST_INTERSTITIAL_UNIT),
-            )
-        }
-        flavorDimensions.add("dimension")
-        productFlavors {
-            create("dev") {
-                applicationIdSuffix = ".dev"
-                versionNameSuffix = "-dev"
-            }
-            create("qa") {
-                applicationIdSuffix = ".qa"
-                versionNameSuffix = "-qa"
-                buildConfig(ENABLE_CRASHLYTICS, VariableType.Boolean(true))
-            }
-            create("prod") {
-                buildConfig(ENABLE_CRASHLYTICS, VariableType.Boolean(true))
-                buildConfig(ENABLE_ANALYTICS, VariableType.Boolean(true))
-                buildConfig(AD_HEADER_UNIT, VariableType.String(AdConstants.AD_PROD_BANNER_UNIT))
-                buildConfig(
-                    AD_INTERSTITIAL_UNIT,
-                    VariableType.String(AdConstants.AD_PROD_INTERSTITIAL_UNIT),
-                )
-            }
         }
     }
