@@ -88,7 +88,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
     val numberClockState = rememberNumberClockState(initialTime)
     val coroutineScope = rememberCoroutineScope()
     val time by numberClockState.time
-    val isVibrationEnable by viewModel.vibrationEnable.observeAsState(true)
+    val isVibrationEnable by viewModel.vibrationEnable.observeAsState(false)
     val enableTimerCounter by viewModel.enableTimerCounter.observeAsState(1)
     val isTimerEnable by viewModel.timerEnable.observeAsState(false)
     val settingsDialogState =

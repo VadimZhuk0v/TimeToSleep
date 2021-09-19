@@ -19,8 +19,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -122,8 +122,14 @@ private fun Item(
     onCheckedChange: (value: Boolean) -> Unit,
 ) {
     Column {
-        Row(modifier = Modifier.padding(Dimens.screenPadding)) {
-            Row(modifier = Modifier.weight(1F)) {
+        Row(
+            modifier = Modifier.padding(Dimens.screenPadding),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(
+                modifier = Modifier.weight(1F),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = "",
@@ -133,6 +139,7 @@ private fun Item(
                     text = stringResource(id = text),
                 )
             }
+            Spacer(modifier = Modifier.width(Dimens.margin))
             Switch(
                 checked = isEnable,
                 onCheckedChange = onCheckedChange,
@@ -149,7 +156,7 @@ private fun Ringer(
     selectMode: (mode: RingerMode?) -> Unit,
 ) {
     Column(modifier = Modifier.padding(Dimens.screenPadding)) {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(R.drawable.ic_volume),
                 contentDescription = ""
@@ -183,7 +190,7 @@ fun RingerItem(
     selectMode: (mode: RingerMode?) -> Unit
 ) {
     val context = LocalContext.current
-    Row {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
             text = stringResource(text),
             modifier = Modifier.weight(1F),
