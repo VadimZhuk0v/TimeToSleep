@@ -1,4 +1,5 @@
 import com.vadmax.constants.DependencyVersion
+import com.vadmax.constants.Dependencies
 import com.vadmax.extentions.configureAndroidApplication
 
 plugins {
@@ -13,14 +14,6 @@ repositories {
 }
 
 android {
-    signingConfigs {
-        create("release") {
-            storeFile = file("/Users/vadimzhukov/Work/AndroidStudioProjects/Timetosleep/key")
-            storePassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
-            keyAlias = "prod"
-            keyPassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
-        }
-    }
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -30,7 +23,7 @@ android {
 dependencies {
     implementation(project(":io"))
     implementation(project(":core"))
-    com.vadmax.constants.Dependencies.compose.forEach {
+    Dependencies.compose.forEach {
         implementation(it)
     }
 

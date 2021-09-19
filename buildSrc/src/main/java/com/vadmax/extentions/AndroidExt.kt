@@ -44,6 +44,14 @@ fun Project.configureAndroidApplication() =
     this.extensions.getByType<BaseAppModuleExtension>().run {
         compileSdk = GeneralVersion.compileSdk
 
+        signingConfigs {
+            create("release") {
+                storeFile = file("/Users/vadimzhukov/Work/AndroidStudioProjects/Timetosleep/key")
+                storePassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
+                keyAlias = "prod"
+                keyPassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
+            }
+        }
         defaultConfig {
             minSdk = GeneralVersion.minSdk
             targetSdk = GeneralVersion.targetSdk
