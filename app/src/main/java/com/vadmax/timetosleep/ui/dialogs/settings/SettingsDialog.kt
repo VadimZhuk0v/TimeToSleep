@@ -20,9 +20,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.vadmax.io.data.RingerMode
 import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.R
@@ -41,48 +43,73 @@ fun SettingsDialog(
     viewModel: SettingsViewModel = getViewModel(),
     sheetState: ModalBottomSheetState,
 ) {
-    val context = LocalContext.current
     val isLockScreenEnable by viewModel.lockScreenEnable.observeAsState(false)
     val isDisableBluetoothEnable by viewModel.disableBluetoothEnable.observeAsState(false)
     val isVibrationEnable by viewModel.vibrationEnable.observeAsState(true)
     val ringerMode by viewModel.ringerMode.observeAsState()
     BottomSheetDialog(sheetState) {
-        Box() {
-            Column {
-                Item(
-                    text = R.string.settings_vibration,
-                    icon = R.drawable.ic_vibration,
-                    isEnable = isVibrationEnable,
-                    onCheckedChange = viewModel::setVibrationEnable,
-                )
-                Item(
-                    text = R.string.settings_lock_screen,
-                    icon = R.drawable.ic_screen_lock,
-                    isEnable = isLockScreenEnable,
-                    onCheckedChange = {
-                        if (it && context.isAdminActive.not()) {
-                            context.navigateToLockScreenAdminPermission()
-                            return@Item
-                        }
-                        viewModel.setLockScreenEnable(it)
-                    },
-                )
-                Item(
-                    text = R.string.settings_disable_bluetooth,
-                    icon = R.drawable.ic_bluetooth,
-                    isEnable = isDisableBluetoothEnable,
-                    onCheckedChange = viewModel::setDisableBluetoothEnable,
-                )
-                Ringer(
-                    ringerMode = ringerMode,
-                    selectMode = viewModel::setRingerMode
-                )
-                Spacer(modifier = Modifier.height(Dimens.margin))
-                Text(
-                    text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}",
-                    modifier = Modifier.padding(Dimens.screenPadding),
-                )
-            }
+        SettingsContent(
+            isVibrationEnable = isVibrationEnable,
+            isLockScreenEnable = isLockScreenEnable,
+            isDisableBluetoothEnable = isDisableBluetoothEnable,
+            ringerMode = ringerMode,
+            setVibrationEnable = viewModel::setVibrationEnable,
+            setLockScreenEnable = viewModel::setLockScreenEnable,
+            setDisableBluetoothEnable = viewModel::setDisableBluetoothEnable,
+            setRingerMode = viewModel::setRingerMode,
+        )
+    }
+}
+
+@SuppressWarnings("LongParameterList")
+@Preview(backgroundColor = 0xFFFFFF, showBackground = true)
+@Composable
+private fun SettingsContent(
+    isVibrationEnable: Boolean = true,
+    isLockScreenEnable: Boolean = true,
+    isDisableBluetoothEnable: Boolean = true,
+    ringerMode: RingerMode? = null,
+    setVibrationEnable: (value: Boolean) -> Unit = {},
+    setLockScreenEnable: (value: Boolean) -> Unit = {},
+    setDisableBluetoothEnable: (value: Boolean) -> Unit = {},
+    setRingerMode: (mode: RingerMode?) -> Unit = {},
+) {
+    val context = LocalContext.current
+    Box() {
+        Column {
+            Item(
+                text = R.string.settings_vibration,
+                icon = R.drawable.ic_vibration,
+                isEnable = isVibrationEnable,
+                onCheckedChange = setVibrationEnable,
+            )
+            Item(
+                text = R.string.settings_lock_screen,
+                icon = R.drawable.ic_screen_lock,
+                isEnable = isLockScreenEnable,
+                onCheckedChange = {
+                    if (it && context.isAdminActive.not()) {
+                        context.navigateToLockScreenAdminPermission()
+                        return@Item
+                    }
+                    setLockScreenEnable(it)
+                },
+            )
+            Item(
+                text = R.string.settings_disable_bluetooth,
+                icon = R.drawable.ic_bluetooth,
+                isEnable = isDisableBluetoothEnable,
+                onCheckedChange = setDisableBluetoothEnable,
+            )
+            Ringer(
+                ringerMode = ringerMode,
+                selectMode = setRingerMode
+            )
+            Spacer(modifier = Modifier.height(Dimens.margin))
+            Text(
+                text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}",
+                modifier = Modifier.padding(Dimens.screenPadding),
+            )
         }
     }
 }
