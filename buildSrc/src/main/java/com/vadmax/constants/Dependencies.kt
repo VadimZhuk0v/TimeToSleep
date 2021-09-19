@@ -20,4 +20,8 @@ object Dependencies {
         "org.jetbrains.kotlinx:kotlinx-coroutines-core:${DependencyVersion.coroutines}",
         "org.jetbrains.kotlinx:kotlinx-coroutines-android:${DependencyVersion.coroutines}",
     )
+    val firebase = listOf(
+        "com.google.firebase:firebase-crashlytics-ktx",
+        "com.google.firebase:firebase-analytics-ktx",
+    )
 }

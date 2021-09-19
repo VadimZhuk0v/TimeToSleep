@@ -1,10 +1,11 @@
-import com.vadmax.constants.DependencyVersion
 import com.vadmax.constants.Dependencies
+import com.vadmax.constants.DependencyVersion
 import com.vadmax.extentions.configureAndroidApplication
 
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     kotlin("android")
     kotlin("kapt")
 }
@@ -36,6 +37,9 @@ dependencies {
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:28.4.0"))
+    Dependencies.firebase.forEach {
+        implementation(it)
+    }
 
     // Lottie
     implementation("com.airbnb.android:lottie-compose:4.1.0")

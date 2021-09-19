@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Time to sleep</string>
-    <string name="admob_unit.header" translatable="false">ca-app-pub-2137393606695859/6305852738</string>
-    <string name="admob_unit.interstitial" translatable="false">ca-app-pub-2137393606695859/2779872390</string>
     <string name="manifest.admin_description">Permission for lock the screen</string>
     <string name="applications_search">Search</string>
     <string name="home.version">Application version: </string>

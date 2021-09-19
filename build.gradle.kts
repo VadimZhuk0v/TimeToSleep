@@ -11,6 +11,7 @@ buildscript {
         classpath("io.insert-koin:koin-gradle-plugin:${com.vadmax.constants.DependencyVersion.koin}")
         classpath("com.google.gms:google-services:4.3.10")
         classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.12")
+        classpath("com.google.firebase:firebase-crashlytics-gradle:2.7.1")
     }
 }
 

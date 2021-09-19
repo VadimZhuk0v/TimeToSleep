@@ -10,17 +10,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.utils.AdUtils
-import com.vadmax.timetosleep.utils.composable.headerAdUnit
 
 @Composable
 fun HeaderAd() {
-    val unit = headerAdUnit()
     AndroidView(
         modifier = Modifier.fillMaxWidth(),
         factory = {
             FrameLayout(it).apply {
-                addView(createAdView(it, unit))
+                addView(createAdView(it, BuildConfig.AD_HEADER_UNIT))
             }
         },
     )
