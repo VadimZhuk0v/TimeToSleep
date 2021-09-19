@@ -1,3 +1,5 @@
+import com.vadmax.extentions.configureAndroidSubmodule
+
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -5,34 +7,9 @@ plugins {
 }
 
 android {
-    compileSdk = 30
-
-    defaultConfig {
-        minSdk = 23
-        targetSdk = 30
-
-        // Make sure to use the AndroidJUnitRunner, or a subclass of it.
-        // This requires a dependency on androidx.test:runner, too!
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
+    configureAndroidSubmodule()
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
     }
 }
 

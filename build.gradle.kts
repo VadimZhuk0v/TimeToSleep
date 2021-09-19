@@ -5,9 +5,9 @@ buildscript {
         maven("https://jitpack.io")
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
-        classpath("io.insert-koin:koin-gradle-plugin:3.1.2")
+        classpath("com.android.tools.build:gradle:${com.vadmax.constants.GeneralVersion.gradlePlugin}")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${com.vadmax.constants.GeneralVersion.kotlin}")
+        classpath("io.insert-koin:koin-gradle-plugin:${com.vadmax.constants.DependencyVersion.koin}")
         classpath("com.google.gms:google-services:4.3.10")
         classpath("com.google.protobuf:protobuf-gradle-plugin:0.8.12")
     }
