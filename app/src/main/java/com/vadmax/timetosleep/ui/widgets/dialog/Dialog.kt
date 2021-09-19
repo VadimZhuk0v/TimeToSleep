@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.vadmax.timetosleep.ui.theme.dialogBackground
 
+@SuppressWarnings("MagicNumber")
 @Composable
 fun Dialog(
     showDialog: Boolean,

@@ -20,10 +20,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.vadmax.timetosleep.utils.extentions.vibrate
+import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.math.min
 
+@SuppressWarnings("MagicNumber")
 @Composable
 fun WheelPicker(
     isVibrationEnable: Boolean,
@@ -47,7 +48,9 @@ fun WheelPicker(
     }
 
     var selectedItem by remember { mutableStateOf(0) }
-    if (selectedItem != scrollState.firstVisibleItemIndex && scrollState.firstVisibleItemScrollOffset < itemHeightPx / 2) {
+    if (selectedItem != scrollState.firstVisibleItemIndex &&
+        scrollState.firstVisibleItemScrollOffset < itemHeightPx / 2
+    ) {
         selectedItem = scrollState.firstVisibleItemIndex
         if (isVibrationEnable) {
             LocalContext.current.vibrate()
@@ -68,6 +71,7 @@ private fun autoScrolling(state: LazyListState, scope: CoroutineScope, itemHeigh
     }
 }
 
+@SuppressWarnings("MagicNumber")
 @Composable
 private fun Wheel(
     state: LazyListState,

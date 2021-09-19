@@ -1,3 +1,5 @@
+@file:SuppressWarnings("MagicNumber")
+
 package com.vadmax.timetosleep.ui.theme
 
 import androidx.compose.ui.graphics.Color

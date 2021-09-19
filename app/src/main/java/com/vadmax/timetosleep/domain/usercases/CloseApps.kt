@@ -1,5 +1,6 @@
 package com.vadmax.timetosleep.domain.usercases
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
 import com.vadmax.io.domain.usercases.GetSelectedApps
@@ -11,6 +12,8 @@ class CloseApps(
     private val getSelectedApps: GetSelectedApps,
 ) {
 
+    @SuppressLint("MissingPermission")
+    @SuppressWarnings("TooGenericExceptionCaught")
     suspend operator fun invoke() {
         val am = context.getSystemService(ActivityManager::class.java)
         getSelectedApps().first().forEach {

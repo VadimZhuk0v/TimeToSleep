@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+@SuppressWarnings("LongParameterList")
 class SettingsViewModel(
     isLockScreenEnable: IsLockScreenEnable,
     isDisableBluetoothEnable: IsDisableBluetoothEnable,

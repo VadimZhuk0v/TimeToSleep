@@ -8,9 +8,9 @@ import com.vadmax.timetosleep.R
 
 private const val TEST_ADMOB_BANNER_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
 
-const val isProduction = BuildConfig.FLAVOR == "prod"
+const val IS_PRODUCTION = BuildConfig.FLAVOR == "prod"
 
-val showRealAd = BuildConfig.DEBUG.not() && isProduction
+val showRealAd = BuildConfig.DEBUG.not() && IS_PRODUCTION
 
 @SuppressLint("ComposableNaming")
 @Composable

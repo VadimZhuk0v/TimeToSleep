@@ -2,6 +2,7 @@ package com.vadmax.timetosleep.ui.theme
 
 import androidx.compose.ui.unit.dp
 
+@SuppressWarnings("MagicNumber")
 object Dimens {
 
     val screenPadding = 16.dp

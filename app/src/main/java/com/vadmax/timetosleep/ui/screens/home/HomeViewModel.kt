@@ -14,11 +14,12 @@ import com.vadmax.io.domain.usercases.IsVibrationEnable
 import com.vadmax.io.domain.usercases.SetSelectedTime
 import com.vadmax.io.domain.usercases.SetTimerEnable
 import com.vadmax.timetosleep.domain.usercases.SetAlarmActivation
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
+@SuppressWarnings("LongParameterList")
 class HomeViewModel(
     isTimerEnable: IsTimerEnable,
     getEnableTimerCounter: GetEnableTimerCounter,

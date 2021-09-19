@@ -11,6 +11,7 @@ import android.os.Vibrator
 import android.provider.Settings
 import com.vadmax.timetosleep.utils.AdminReceiver
 
+@SuppressWarnings("MagicNumber")
 fun Context.vibrate() {
     val vibrator = getSystemService(Vibrator::class.java)
     when {

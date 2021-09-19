@@ -43,6 +43,7 @@ fun NumberClock(
     }
 }
 
+@SuppressWarnings("MagicNumber")
 @Composable
 fun Wheel(
     isVibrationEnable: Boolean,

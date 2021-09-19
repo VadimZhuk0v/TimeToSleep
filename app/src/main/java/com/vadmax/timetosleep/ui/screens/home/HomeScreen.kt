@@ -54,11 +54,12 @@ import com.vadmax.timetosleep.ui.widgets.iconbutton.IconButton
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClock
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClockState
 import com.vadmax.timetosleep.ui.widgets.numberclock.rememberNumberClockState
+import com.vadmax.timetosleep.utils.constants.AppConstants
+import java.util.Date
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
-import java.util.Date
 
 object HomeScreen {
     const val destination = "home"
@@ -164,6 +165,7 @@ fun HomeScreenContent(
     }
 }
 
+@SuppressWarnings("ForbiddenComment")
 @Composable
 private fun Moon(isTimerEnable: Boolean, onCheckedChanged: (value: Boolean) -> Unit) {
     // TODO: Smooth stop animation
@@ -203,7 +205,7 @@ private fun BottomDialog(sheetState: ModalBottomSheetState) {
 private fun ShowInterstitialAds(count: Int) {
     val context = LocalContext.current
     LaunchedEffect(count) {
-        if (count % 3 != 0) {
+        if (count % AppConstants.SHOW_ADS_EACH_TIMES != 0) {
             return@LaunchedEffect
         }
         intAd?.show(context as Activity)

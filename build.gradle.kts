@@ -1,3 +1,4 @@
+// ktlint-disable max-line-length
 buildscript {
     repositories {
         google()

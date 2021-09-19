@@ -5,6 +5,7 @@ import com.vadmax.io.domain.usercases.IsLockScreenEnable
 import com.vadmax.io.domain.usercases.SetTimerEnable
 import kotlinx.coroutines.flow.first
 
+@SuppressWarnings("LongParameterList")
 class ApplyActions(
     private val setTimerEnable: SetTimerEnable,
     private val stopMusic: StopMusic,
