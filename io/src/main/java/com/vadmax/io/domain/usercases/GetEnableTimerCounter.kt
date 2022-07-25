@@ -1,8 +1,15 @@
 package com.vadmax.io.domain.usercases
 
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class GetEnableTimerCounter(private val settingsProvider: SettingsProvider) {
+fun interface GetEnableTimerCounter {
+    operator fun invoke(): Flow<Int>
+}
 
-    operator fun invoke() = settingsProvider.enableTimerCounter
+class GetEnableTimerCounterImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : GetEnableTimerCounter {
+
+    override fun invoke() = settingsProvider.enableTimerCounter
 }

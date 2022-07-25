@@ -1,8 +1,16 @@
 package com.vadmax.io.domain.usercases
 
+import com.vadmax.io.data.RingerMode
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class GetRingerMode(private val settingsProvider: SettingsProvider) {
+fun interface GetRingerMode {
+    operator fun invoke(): Flow<RingerMode?>
+}
 
-    operator fun invoke() = settingsProvider.ringerMode
+class GetRingerModeImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : GetRingerMode {
+
+    override fun invoke() = settingsProvider.ringerMode
 }

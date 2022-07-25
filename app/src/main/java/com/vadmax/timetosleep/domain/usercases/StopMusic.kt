@@ -6,9 +6,15 @@ import android.media.AudioManager
 import android.os.Build
 import timber.log.Timber
 
-class StopMusic(private val context: Context) {
+fun interface StopMusic {
+    operator fun invoke()
+}
 
-    operator fun invoke() {
+class StopMusicImpl internal constructor(
+    private val context: Context,
+) : StopMusic {
+
+    override fun invoke() {
         val am = context.getSystemService(AudioManager::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val r = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN).build()

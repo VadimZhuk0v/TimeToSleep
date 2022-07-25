@@ -64,7 +64,7 @@ interface SettingsProvider {
 
 private val Context.dataStore by preferencesDataStore(name = SHARED_NAME)
 
-class SettingsProviderImpl(private val context: Context) : SettingsProvider {
+internal class SettingsProviderImpl(private val context: Context) : SettingsProvider {
 
     override val isTimerEnabled = context.dataStore.data.map {
         it[VL_IS_TIMER_ENABLED] ?: false

@@ -1,8 +1,15 @@
 package com.vadmax.io.domain.usercases
 
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class IsTimerEnable(private val settingsProvider: SettingsProvider) {
+fun interface IsTimerEnable {
+    operator fun invoke(): Flow<Boolean>
+}
 
-    operator fun invoke() = settingsProvider.isTimerEnabled
+class IsTimerEnableImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : IsTimerEnable {
+
+    override fun invoke() = settingsProvider.isTimerEnabled
 }

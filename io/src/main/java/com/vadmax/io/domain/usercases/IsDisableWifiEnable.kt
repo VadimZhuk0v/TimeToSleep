@@ -1,8 +1,15 @@
 package com.vadmax.io.domain.usercases
 
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class IsDisableWifiEnable(private val settingsProvider: SettingsProvider) {
+fun interface IsDisableWifiEnable {
+    operator fun invoke(): Flow<Boolean>
+}
 
-    operator fun invoke() = settingsProvider.isDisableWifiEnable
+class IsDisableWifiEnableImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : IsDisableWifiEnable {
+
+    override fun invoke() = settingsProvider.isDisableWifiEnable
 }

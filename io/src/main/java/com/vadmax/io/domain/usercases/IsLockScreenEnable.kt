@@ -1,8 +1,15 @@
 package com.vadmax.io.domain.usercases
 
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class IsLockScreenEnable(private val settingsProvider: SettingsProvider) {
+fun interface IsLockScreenEnable {
+    operator fun invoke(): Flow<Boolean>
+}
 
-    operator fun invoke() = settingsProvider.isLockScreenEnable
+class IsLockScreenEnableImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : IsLockScreenEnable {
+
+    override fun invoke() = settingsProvider.isLockScreenEnable
 }

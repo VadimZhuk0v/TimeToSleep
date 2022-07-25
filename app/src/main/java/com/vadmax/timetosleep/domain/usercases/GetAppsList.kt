@@ -5,14 +5,25 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import com.vadmax.io.data.AppInfo
 import com.vadmax.timetosleep.utils.extentions.getApplicationLabel
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-class GetAppsList(private val context: Context) {
+fun interface GetAppsList {
+    suspend operator fun invoke(): List<AppInfo>
+}
+
+class GetAppsListImpl internal constructor(
+    private val context: Context,
+    private val dispatcher: CoroutineContext = Dispatchers.IO
+) : GetAppsList {
 
     @Suppress("RedundantSuspendModifier", "QueryPermissionsNeeded")
-    suspend operator fun invoke(): List<AppInfo> {
+    override suspend fun invoke(): List<AppInfo> = withContext(dispatcher) {
         val mainIntent = Intent(Intent.ACTION_MAIN, null)
         mainIntent.addCategory(Intent.CATEGORY_APP_MUSIC)
-        return context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+        return@withContext context.packageManager
+            .getInstalledApplications(PackageManager.GET_META_DATA)
             .filter {
                 context.packageManager
                     .getLaunchIntentForPackage(it.packageName) != null && it.name.isNullOrEmpty()

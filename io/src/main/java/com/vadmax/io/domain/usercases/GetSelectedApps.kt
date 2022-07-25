@@ -1,8 +1,16 @@
 package com.vadmax.io.domain.usercases
 
+import com.vadmax.io.data.AppInfo
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class GetSelectedApps(private val settingsProvider: SettingsProvider) {
+fun interface GetSelectedApps {
+    operator fun invoke(): Flow<List<AppInfo>>
+}
 
-    operator fun invoke() = settingsProvider.selectedAppsFlow
+class GetSelectedAppsImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : GetSelectedApps {
+
+    override fun invoke() = settingsProvider.selectedAppsFlow
 }

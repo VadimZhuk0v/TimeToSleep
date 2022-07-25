@@ -33,7 +33,6 @@ dependencies {
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.work:work-runtime-ktx:2.6.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:28.4.0"))
