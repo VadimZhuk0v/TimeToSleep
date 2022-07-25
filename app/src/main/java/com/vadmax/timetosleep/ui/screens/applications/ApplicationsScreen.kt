@@ -27,8 +27,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -41,7 +41,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
 import com.vadmax.io.data.AppInfo
@@ -53,6 +52,7 @@ import com.vadmax.timetosleep.ui.theme.screenBackground
 import com.vadmax.timetosleep.ui.widgets.searchtextfield.SearchTextField
 import com.vadmax.timetosleep.utils.extentions.systemInfo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -72,8 +72,8 @@ fun ApplicationsScreen(
     navController: NavController,
     viewModel: ApplicationsViewModel = getViewModel(),
 ) {
-    val search by viewModel.search.observeAsState("")
-    val appsList by viewModel.displayedApps.observeAsState(listOf())
+    val search by viewModel.search.collectAsState(initial = "")
+    val appsList by viewModel.displayedApps.collectAsState(initial = listOf())
 
     Scaffold {
         Box(
@@ -122,7 +122,7 @@ private fun Header(searchText: String, onSearchEdit: (text: String) -> Unit) {
 @Composable
 private fun AppsContent(
     appsList: List<AppInfo>,
-    selectedApps: LiveData<List<AppInfo>>,
+    selectedApps: Flow<List<AppInfo>>,
     onAppTap: (appInfo: AppInfo) -> Unit
 ) {
     val context = LocalContext.current
@@ -138,7 +138,7 @@ private fun AppsContent(
                     AppItem(
                         appInfo = appInfo,
                         systemAppInfo = ai,
-                        selectedAppsLiveData = selectedApps,
+                        selectedAppsFlow = selectedApps,
                         onTap = onAppTap,
                     )
                 }
@@ -152,11 +152,11 @@ private fun AppsContent(
 fun AppItem(
     appInfo: AppInfo,
     systemAppInfo: ApplicationInfo,
-    selectedAppsLiveData: LiveData<List<AppInfo>>,
+    selectedAppsFlow: Flow<List<AppInfo>>,
     onTap: (app: AppInfo) -> Unit,
 ) {
     val context = LocalContext.current
-    val selectedApps by selectedAppsLiveData.observeAsState(listOf())
+    val selectedApps by selectedAppsFlow.collectAsState(initial = listOf())
     val isSelected = selectedApps.find { it.packageName == systemAppInfo.packageName } != null
     var icon: ImageBitmap? by remember { mutableStateOf(null) }
     LaunchedEffect(Unit) {

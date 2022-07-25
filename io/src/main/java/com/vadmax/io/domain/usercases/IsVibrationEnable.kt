@@ -1,8 +1,15 @@
 package com.vadmax.io.domain.usercases
 
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class IsVibrationEnable(private val settingsProvider: SettingsProvider) {
+fun interface IsVibrationEnable {
+    operator fun invoke(): Flow<Boolean>
+}
 
-    operator fun invoke() = settingsProvider.isVibrationEnable
+class IsVibrationEnableImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : IsVibrationEnable {
+
+    override fun invoke() = settingsProvider.isVibrationEnable
 }

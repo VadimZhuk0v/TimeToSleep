@@ -23,8 +23,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -88,9 +88,9 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
     val numberClockState = rememberNumberClockState(initialTime)
     val coroutineScope = rememberCoroutineScope()
     val time by numberClockState.time
-    val isVibrationEnable by viewModel.vibrationEnable.observeAsState(false)
-    val enableTimerCounter by viewModel.enableTimerCounter.observeAsState(1)
-    val isTimerEnable by viewModel.timerEnable.observeAsState(false)
+    val isVibrationEnable by viewModel.vibrationEnable.collectAsState(initial = false)
+    val enableTimerCounter by viewModel.enableTimerCounter.collectAsState(initial = 1)
+    val isTimerEnable by viewModel.timerEnable.collectAsState(initial = false)
     val settingsDialogState =
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 

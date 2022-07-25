@@ -1,11 +1,14 @@
 package com.vadmax.timetosleep.domain.usercases
 
 import android.bluetooth.BluetoothAdapter
-import android.content.Context
 
-class DisableBluetooth(private val context: Context) {
+fun interface DisableBluetooth {
+    operator fun invoke()
+}
 
-    operator fun invoke() {
+class DisableBluetoothImpl internal constructor() : DisableBluetooth {
+
+    override fun invoke() {
         BluetoothAdapter.getDefaultAdapter().disable()
     }
 }

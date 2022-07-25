@@ -5,9 +5,15 @@ import android.content.ComponentName
 import android.content.Context
 import com.vadmax.timetosleep.utils.AdminReceiver
 
-class IsAdminActive(private val context: Context) {
+fun interface IsAdminActive {
+    operator fun invoke(): Boolean
+}
 
-    operator fun invoke(): Boolean {
+class IsAdminActiveImpl internal constructor(
+    private val context: Context,
+) : IsAdminActive {
+
+    override fun invoke(): Boolean {
         val dm = context.getSystemService(DevicePolicyManager::class.java)
         return dm.isAdminActive(ComponentName(context, AdminReceiver::class.java))
     }

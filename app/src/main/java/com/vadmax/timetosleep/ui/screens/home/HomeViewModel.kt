@@ -1,7 +1,6 @@
 package com.vadmax.timetosleep.ui.screens.home
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
@@ -31,9 +30,9 @@ class HomeViewModel(
     private val incEnableTimerCounter: IncEnableTimerCounter,
 ) : ViewModel() {
 
-    val timerEnable = isTimerEnable().asLiveData()
-    val enableTimerCounter = getEnableTimerCounter().asLiveData()
-    val vibrationEnable = isVibrationEnable().asLiveData()
+    val timerEnable = isTimerEnable()
+    val enableTimerCounter = getEnableTimerCounter()
+    val vibrationEnable = isVibrationEnable()
 
     fun setTimerEnable(isEnable: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {

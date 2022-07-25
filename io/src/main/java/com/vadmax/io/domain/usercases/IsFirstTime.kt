@@ -1,8 +1,15 @@
 package com.vadmax.io.domain.usercases
 
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class IsFirstTime(private val settingsProvider: SettingsProvider) {
+fun interface IsFirstTime {
+    operator fun invoke(): Flow<Boolean>
+}
 
-    operator fun invoke() = settingsProvider.isFirstTime
+class IsFirstTimeImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : IsFirstTime {
+
+    override fun invoke() = settingsProvider.isFirstTime
 }

@@ -1,8 +1,15 @@
 package com.vadmax.io.domain.usercases
 
 import com.vadmax.io.data.SettingsProvider
+import kotlinx.coroutines.flow.Flow
 
-class IsDisableBluetoothEnable(private val settingsProvider: SettingsProvider) {
+fun interface IsDisableBluetoothEnable {
+    operator fun invoke(): Flow<Boolean>
+}
 
-    operator fun invoke() = settingsProvider.isDisableBluetoothEnable
+class IsDisableBluetoothEnableImpl internal constructor(
+    private val settingsProvider: SettingsProvider,
+) : IsDisableBluetoothEnable {
+
+    override fun invoke() = settingsProvider.isDisableBluetoothEnable
 }

@@ -7,19 +7,27 @@ import android.content.Intent
 import com.vadmax.io.domain.usercases.GetSelectedTime
 import com.vadmax.io.domain.usercases.IsTimerEnable
 import com.vadmax.timetosleep.broadcastreceivers.StopMusicReceiver
-import kotlinx.coroutines.flow.first
 import java.util.Date
+import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 
-class SetAlarmActivation(
+fun interface SetAlarmActivation {
+    suspend operator fun invoke()
+}
+
+class SetAlarmActivationImpl internal constructor(
     private val context: Context,
     private val getSelectedTime: GetSelectedTime,
     private val isTimerEnable: IsTimerEnable,
-) {
-    suspend operator fun invoke() {
+    private val dispatcher: CoroutineContext = Dispatchers.IO
+) : SetAlarmActivation {
+    override suspend fun invoke() = withContext(dispatcher) {
         val alarmManager = context.getSystemService(AlarmManager::class.java)
         val alarmIntent = Intent(context, StopMusicReceiver::class.java)
-        val pendingIntent =
-            PendingIntent.getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT)
+        val pendingIntent = PendingIntent
+            .getBroadcast(context, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT)
         if (isTimerEnable().first()) {
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC,

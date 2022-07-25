@@ -17,8 +17,8 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,10 +43,10 @@ fun SettingsDialog(
     viewModel: SettingsViewModel = getViewModel(),
     sheetState: ModalBottomSheetState,
 ) {
-    val isLockScreenEnable by viewModel.lockScreenEnable.observeAsState(false)
-    val isDisableBluetoothEnable by viewModel.disableBluetoothEnable.observeAsState(false)
-    val isVibrationEnable by viewModel.vibrationEnable.observeAsState(true)
-    val ringerMode by viewModel.ringerMode.observeAsState()
+    val isLockScreenEnable by viewModel.lockScreenEnable.collectAsState(initial = false)
+    val isDisableBluetoothEnable by viewModel.disableBluetoothEnable.collectAsState(initial = false)
+    val isVibrationEnable by viewModel.vibrationEnable.collectAsState(initial = true)
+    val ringerMode by viewModel.ringerMode.collectAsState(initial = null)
     BottomSheetDialog(sheetState) {
         SettingsContent(
             isVibrationEnable = isVibrationEnable,

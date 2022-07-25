@@ -1,7 +1,6 @@
 package com.vadmax.timetosleep.ui.dialogs.settings
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.vadmax.io.data.RingerMode
 import com.vadmax.io.domain.usercases.GetRingerMode
@@ -28,10 +27,10 @@ class SettingsViewModel(
     private val setVibrationEnable: SetVibrationEnable,
 ) : ViewModel() {
 
-    val lockScreenEnable = isLockScreenEnable().asLiveData()
-    val disableBluetoothEnable = isDisableBluetoothEnable().asLiveData()
-    val ringerMode = getRingerMode().asLiveData()
-    val vibrationEnable = isVibrationEnable().asLiveData()
+    val lockScreenEnable = isLockScreenEnable()
+    val disableBluetoothEnable = isDisableBluetoothEnable()
+    val ringerMode = getRingerMode()
+    val vibrationEnable = isVibrationEnable()
 
     fun setLockScreenEnable(value: Boolean) {
         Timber.d("Lock screen enable:$value")
