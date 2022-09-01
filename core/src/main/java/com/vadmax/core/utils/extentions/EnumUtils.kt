@@ -1,4 +1,4 @@
-package com.vadmax.core.utils.extentions
+package com.vadmax.core.utils.extentions // ktlint-disable filename
 
 @Suppress("TooGenericExceptionCaught")
 inline fun <reified T : Enum<T>> safeValueOf(type: String?): T? {

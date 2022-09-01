@@ -27,8 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.vadmax.timetosleep.R
-import com.vadmax.timetosleep.ui.theme.Dimens
-import com.vadmax.timetosleep.ui.theme.textFieldBackground
+import com.vadmax.timetosleep.coreui.theme.Dimens
+import com.vadmax.timetosleep.coreui.theme.textFieldBackground
 import com.vadmax.timetosleep.ui.widgets.iconbutton.IconButton
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -40,11 +40,11 @@ fun SearchTextField(value: String, label: String? = null, onValueChange: (text: 
             modifier = Modifier
                 .background(MaterialTheme.colors.textFieldBackground)
                 .fillMaxWidth()
-                .padding(start = Dimens.margin, top = Dimens.margin, bottom = Dimens.margin)
+                .padding(start = Dimens.margin, top = Dimens.margin, bottom = Dimens.margin),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(modifier = Modifier.weight(1F)) {
                     BasicTextField(
@@ -56,7 +56,7 @@ fun SearchTextField(value: String, label: String? = null, onValueChange: (text: 
                             .fillMaxWidth()
                             .onFocusChanged {
                                 isFocused = it.isFocused
-                            }
+                            },
                     )
                     if (value == "" && label.isNullOrEmpty().not() && isFocused.not()) {
                         Text(text = label ?: "")

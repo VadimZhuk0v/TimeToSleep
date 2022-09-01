@@ -44,10 +44,11 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.vadmax.core.log
 import com.vadmax.timetosleep.R
+import com.vadmax.timetosleep.coreui.theme.Dimens
+import com.vadmax.timetosleep.coreui.theme.screenBackground
 import com.vadmax.timetosleep.ui.dialogs.settings.SettingsDialog
-import com.vadmax.timetosleep.ui.theme.Dimens
-import com.vadmax.timetosleep.ui.theme.screenBackground
 import com.vadmax.timetosleep.ui.widgets.ad.heaser.HeaderAd
 import com.vadmax.timetosleep.ui.widgets.ad.interstitial.intAd
 import com.vadmax.timetosleep.ui.widgets.iconbutton.IconButton
@@ -59,7 +60,6 @@ import java.util.Date
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 object HomeScreen {
     const val destination = "home"
@@ -95,7 +95,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
         rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
 
     LaunchedEffect(time) {
-        Timber.d("Selected time: ${time.hour}:${time.minute}")
+        log.d("Selected time: ${time.hour}:${time.minute}")
         viewModel.setTime(time.hour, time.minute)
     }
     ShowInterstitialAds(enableTimerCounter)
@@ -105,7 +105,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = getViewM
         settingsDialogState = settingsDialogState,
         numberClockState = numberClockState,
         isVibrationEnable = isVibrationEnable,
-        setTimerEnable = viewModel::setTimerEnable
+        setTimerEnable = viewModel::setTimerEnable,
     )
 }
 
@@ -136,7 +136,7 @@ fun HomeScreenContent(
                                 text = stringResource(R.string.home_tap_on_me),
                                 style = MaterialTheme.typography.h6,
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
                             )
                         }
                         Box(Modifier.size(300.dp)) {
@@ -179,7 +179,7 @@ private fun Moon(isTimerEnable: Boolean, onCheckedChanged: (value: Boolean) -> U
         if (isTimerEnable.not()) {
             (lottieState as LottieAnimatable).snapTo(
                 composition = lottieComposition,
-                progress = 0F
+                progress = 0F,
             )
         }
     }
@@ -191,7 +191,7 @@ private fun Moon(isTimerEnable: Boolean, onCheckedChanged: (value: Boolean) -> U
             indication = null,
         ) {
             onCheckedChanged(isTimerEnable.not())
-        }
+        },
     )
 }
 

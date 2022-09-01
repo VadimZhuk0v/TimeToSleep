@@ -48,7 +48,7 @@ class NumberClockState constructor(
 
     data class Time(
         val hour: Int,
-        val minute: Int
+        val minute: Int,
     )
 
     companion object {
@@ -56,7 +56,7 @@ class NumberClockState constructor(
             save = {
                 listOf(
                     it.hourState.firstVisibleItemIndex,
-                    it.minuteState.firstVisibleItemIndex
+                    it.minuteState.firstVisibleItemIndex,
                 )
             },
             restore = {
@@ -64,7 +64,7 @@ class NumberClockState constructor(
                     LazyListState(it[0]),
                     LazyListState(it[1]),
                 )
-            }
+            },
         )
     }
 }

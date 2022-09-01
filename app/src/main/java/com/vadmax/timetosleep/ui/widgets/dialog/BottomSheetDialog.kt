@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.vadmax.timetosleep.ui.theme.dialogBackground
+import com.vadmax.timetosleep.coreui.theme.dialogBackground
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -27,7 +27,7 @@ fun BottomSheetDialog(state: ModalBottomSheetState, content: @Composable () -> U
                     modifier = Modifier
                         .defaultMinSize(minHeight = 20.dp)
                         .fillMaxWidth()
-                        .background(MaterialTheme.colors.dialogBackground)
+                        .background(MaterialTheme.colors.dialogBackground),
                 ) {
                     content()
                 }

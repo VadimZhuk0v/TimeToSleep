@@ -3,7 +3,7 @@ package com.vadmax.timetosleep.utils
 import android.app.admin.DeviceAdminReceiver
 import android.content.Context
 import android.content.Intent
-import com.vadmax.io.domain.usercases.SetLockScreenEnable
+import com.vadmax.timetosleep.domain.usercases.SetLockScreenEnable
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

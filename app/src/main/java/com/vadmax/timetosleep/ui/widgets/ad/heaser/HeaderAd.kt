@@ -27,7 +27,7 @@ fun HeaderAd() {
 
 private fun createAdView(context: Context, unit: String): View {
     return AdView(context).apply {
-        adSize = AdSize.FULL_BANNER
+        setAdSize(AdSize.FULL_BANNER)
         adUnitId = unit
         layoutParams = FrameLayout.LayoutParams(
             FrameLayout.LayoutParams.MATCH_PARENT,

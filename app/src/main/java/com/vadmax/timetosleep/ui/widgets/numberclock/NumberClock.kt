@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.vadmax.timetosleep.ui.theme.clock
+import com.vadmax.timetosleep.coreui.theme.clock
 import com.vadmax.timetosleep.ui.widgets.wheelpicker.WheelPicker
 
 private val itemHeight = 60.dp
@@ -20,7 +20,7 @@ fun NumberClock(
     numberClockState: NumberClockState = rememberNumberClockState(
         initialHour = 0,
         initialMinute = 0,
-    )
+    ),
 ) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier) {
         ProvideTextStyle(
@@ -49,7 +49,7 @@ fun Wheel(
     isVibrationEnable: Boolean,
     state: LazyListState,
     horizontalAlignment: Alignment.Horizontal,
-    itemsCount: Int
+    itemsCount: Int,
 ) {
     WheelPicker(
         isVibrationEnable = isVibrationEnable,

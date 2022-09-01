@@ -1,8 +1,5 @@
 package com.vadmax.timetosleep.domain.usercases
 
-import com.vadmax.io.domain.usercases.IsDisableBluetoothEnable
-import com.vadmax.io.domain.usercases.IsLockScreenEnable
-import com.vadmax.io.domain.usercases.SetTimerEnable
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -13,7 +10,7 @@ fun interface ApplyActions {
 }
 
 @SuppressWarnings("LongParameterList")
-class ApplyActionsImpl internal constructor(
+class ApplyActionsImpl(
     private val setTimerEnable: SetTimerEnable,
     private val stopMusic: StopMusic,
     private val closeApps: CloseApps,
@@ -22,7 +19,7 @@ class ApplyActionsImpl internal constructor(
     private val isDisableBluetoothEnable: IsDisableBluetoothEnable,
     private val disableBluetooth: DisableBluetooth,
     private val applyRingerMode: ApplyRingerMode,
-    private val dispatcher: CoroutineContext = Dispatchers.IO
+    private val dispatcher: CoroutineContext = Dispatchers.IO,
 ) : ApplyActions {
 
     override suspend fun invoke() = withContext(dispatcher) {

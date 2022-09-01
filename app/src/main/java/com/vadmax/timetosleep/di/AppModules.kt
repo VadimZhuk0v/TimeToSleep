@@ -1,3 +1,5 @@
 package com.vadmax.timetosleep.di
 
-val appModules = listOf(useCasesModule, vmModules)
+import com.vadmax.timetosleep.domain.di.domainModules
+
+val appModules = listOf(useCasesModule, vmModules) + domainModules

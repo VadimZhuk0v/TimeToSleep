@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.vadmax.timetosleep.ui.theme.dialogBackground
+import com.vadmax.timetosleep.coreui.theme.dialogBackground
 
 @SuppressWarnings("MagicNumber")
 @Composable
@@ -34,7 +34,7 @@ fun Dialog(
                     modifier = Modifier
                         .width((maxWidth.value * 0.8).dp)
                         .defaultMinSize(minHeight = 40.dp)
-                        .background(MaterialTheme.colors.dialogBackground)
+                        .background(MaterialTheme.colors.dialogBackground),
                 ) {
                     content()
                 }

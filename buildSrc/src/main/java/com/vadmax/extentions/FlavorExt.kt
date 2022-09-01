@@ -7,7 +7,7 @@ import com.vadmax.constants.Config
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
 
-internal fun Project.configureBuildTypes() =
+fun Project.configureBuildTypes() =
     this.extensions.getByType<BaseAppModuleExtension>().run {
         buildTypes {
             getByName("release") {
@@ -15,10 +15,26 @@ internal fun Project.configureBuildTypes() =
                 isMinifyEnabled = true
                 proguardFiles(
                     getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro"
+                    "proguard-rules.pro",
                 )
             }
         }
+    }
+
+fun Project.configureSign() =
+    this.extensions.getByType<BaseAppModuleExtension>().run {
+        signingConfigs {
+            create("release") {
+                storeFile = file("../key")
+                storePassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
+                keyAlias = "prod"
+                keyPassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
+            }
+        }
+    }
+
+fun Project.configureFlavors() =
+    this.extensions.getByType<BaseAppModuleExtension>().run {
         defaultConfig {
             buildConfig(Config.ENABLE_CRASHLYTICS, VariableType.Boolean(false))
             buildConfig(Config.ENABLE_ANALYTICS, VariableType.Boolean(false))
@@ -44,7 +60,7 @@ internal fun Project.configureBuildTypes() =
                 buildConfig(Config.ENABLE_ANALYTICS, VariableType.Boolean(true))
                 buildConfig(
                     Config.AD_HEADER_UNIT,
-                    VariableType.String(AdConstants.AD_PROD_BANNER_UNIT)
+                    VariableType.String(AdConstants.AD_PROD_BANNER_UNIT),
                 )
                 buildConfig(
                     Config.AD_INTERSTITIAL_UNIT,

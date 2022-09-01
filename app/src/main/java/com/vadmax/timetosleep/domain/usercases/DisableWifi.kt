@@ -7,7 +7,7 @@ fun interface DisableWifi {
     operator fun invoke()
 }
 
-class DisableWifiImpl internal constructor(
+class DisableWifiImpl(
     private val context: Context,
 ) : DisableWifi {
 

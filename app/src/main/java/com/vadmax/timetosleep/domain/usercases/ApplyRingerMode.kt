@@ -2,8 +2,7 @@ package com.vadmax.timetosleep.domain.usercases
 
 import android.content.Context
 import android.media.AudioManager
-import com.vadmax.io.data.RingerMode
-import com.vadmax.io.domain.usercases.GetRingerMode
+import com.vadmax.core.data.RingerMode
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -13,10 +12,10 @@ interface ApplyRingerMode {
     suspend operator fun invoke()
 }
 
-class ApplyRingerModeImpl internal constructor(
+class ApplyRingerModeImpl(
     private val context: Context,
     private val getRingerMode: GetRingerMode,
-    private val dispatcher: CoroutineContext = Dispatchers.IO
+    private val dispatcher: CoroutineContext = Dispatchers.IO,
 ) : ApplyRingerMode {
 
     override suspend fun invoke() = withContext(dispatcher) {

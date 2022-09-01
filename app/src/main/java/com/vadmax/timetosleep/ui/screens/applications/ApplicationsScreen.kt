@@ -3,7 +3,6 @@ package com.vadmax.timetosleep.ui.screens.applications
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -39,20 +38,20 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
-import com.vadmax.io.data.AppInfo
+import com.vadmax.core.data.AppInfo
 import com.vadmax.timetosleep.R
+import com.vadmax.timetosleep.coreui.theme.Dimens
+import com.vadmax.timetosleep.coreui.theme.dialogBackground
+import com.vadmax.timetosleep.coreui.theme.screenBackground
 import com.vadmax.timetosleep.ui.screens.applications.ApplicationsScreen.destination
-import com.vadmax.timetosleep.ui.theme.Dimens
-import com.vadmax.timetosleep.ui.theme.dialogBackground
-import com.vadmax.timetosleep.ui.theme.screenBackground
 import com.vadmax.timetosleep.ui.widgets.searchtextfield.SearchTextField
 import com.vadmax.timetosleep.utils.extentions.systemInfo
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -74,32 +73,65 @@ fun ApplicationsScreen(
 ) {
     val search by viewModel.search.collectAsState(initial = "")
     val appsList by viewModel.displayedApps.collectAsState(initial = listOf())
+    val selectedApps by viewModel.selectedApps.collectAsState(initial = listOf())
 
-    Scaffold {
+    ApplicationsScreenContent(
+        search = search,
+        appsList = appsList,
+        selectedApps = selectedApps,
+        searchAction = {
+            viewModel.setSearch(it)
+        },
+        onAppTap = {
+            viewModel.selectAppInfo(it)
+        },
+    )
+}
+
+@Preview(name = "Application screen")
+@Composable
+private fun ApplicationsScreenContent(
+    search: String = "test",
+    appsList: List<AppInfo> = listOf(),
+    selectedApps: List<AppInfo> = listOf(),
+    searchAction: (query: String) -> Unit = {},
+    onAppTap: (appInfo: AppInfo) -> Unit = {},
+) {
+    Scaffold { padding ->
         Box(
             modifier = Modifier
                 .background(MaterialTheme.colors.screenBackground)
-                .fillMaxSize()
+                .padding(padding)
+                .fillMaxSize(),
         ) {
             Column {
-                Header(searchText = search) {
-                    viewModel.setSearch(it)
-                }
-                AppsContent(appsList = appsList, viewModel.selectedApps) {
-                    viewModel.selectAppInfo(it)
-                }
+                Header(
+                    searchText = search,
+                    onSearchEdit = searchAction,
+                )
+                AppsContent(
+                    appsList = appsList,
+                    selectedApps = selectedApps,
+                    onAppTap = onAppTap,
+                )
             }
         }
     }
 }
 
+@Preview(
+    name = "Header",
+)
 @Composable
-private fun Header(searchText: String, onSearchEdit: (text: String) -> Unit) {
+private fun Header(
+    searchText: String = "text",
+    onSearchEdit: (text: String) -> Unit = {},
+) {
     Surface(
         shape = MaterialTheme.shapes.medium.copy(
             topStart = CornerSize(0),
             topEnd = CornerSize(0),
-        )
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -111,7 +143,7 @@ private fun Header(searchText: String, onSearchEdit: (text: String) -> Unit) {
                     SearchTextField(
                         value = searchText,
                         label = stringResource(R.string.applications_search),
-                        onValueChange = onSearchEdit
+                        onValueChange = onSearchEdit,
                     )
                 }
             }
@@ -119,11 +151,15 @@ private fun Header(searchText: String, onSearchEdit: (text: String) -> Unit) {
     }
 }
 
+@Preview(
+    name = "App content",
+    showBackground = true,
+)
 @Composable
 private fun AppsContent(
-    appsList: List<AppInfo>,
-    selectedApps: Flow<List<AppInfo>>,
-    onAppTap: (appInfo: AppInfo) -> Unit
+    appsList: List<AppInfo> = listOf(AppInfo("test", "test")),
+    selectedApps: List<AppInfo> = listOf(AppInfo("test", "test")),
+    onAppTap: (appInfo: AppInfo) -> Unit = {},
 ) {
     val context = LocalContext.current
     LazyColumn {
@@ -138,7 +174,7 @@ private fun AppsContent(
                     AppItem(
                         appInfo = appInfo,
                         systemAppInfo = ai,
-                        selectedAppsFlow = selectedApps,
+                        selectedApps = selectedApps,
                         onTap = onAppTap,
                     )
                 }
@@ -147,16 +183,15 @@ private fun AppsContent(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@Preview(name = "App item")
 @Composable
-fun AppItem(
-    appInfo: AppInfo,
-    systemAppInfo: ApplicationInfo,
-    selectedAppsFlow: Flow<List<AppInfo>>,
-    onTap: (app: AppInfo) -> Unit,
+private fun AppItem(
+    appInfo: AppInfo = AppInfo("test", ""),
+    systemAppInfo: ApplicationInfo = ApplicationInfo(),
+    selectedApps: List<AppInfo> = listOf(),
+    onTap: (app: AppInfo) -> Unit = {},
 ) {
     val context = LocalContext.current
-    val selectedApps by selectedAppsFlow.collectAsState(initial = listOf())
     val isSelected = selectedApps.find { it.packageName == systemAppInfo.packageName } != null
     var icon: ImageBitmap? by remember { mutableStateOf(null) }
     LaunchedEffect(Unit) {
@@ -168,7 +203,7 @@ fun AppItem(
     Box(
         modifier = Modifier.clickable {
             onTap(appInfo)
-        }
+        },
     ) {
         Box(
             modifier = Modifier
@@ -178,8 +213,8 @@ fun AppItem(
                     start = Dimens.screenPadding,
                     end = Dimens.screenPadding,
                     top = Dimens.margin,
-                    bottom = Dimens.margin
-                )
+                    bottom = Dimens.margin,
+                ),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(modifier = Modifier.weight(1F)) {
@@ -188,7 +223,7 @@ fun AppItem(
                             Image(
                                 bitmap = icon!!,
                                 contentDescription = "",
-                                modifier = Modifier.size(50.dp)
+                                modifier = Modifier.size(50.dp),
                             )
                         } else {
                             Spacer(modifier = Modifier.width(50.dp))

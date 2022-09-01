@@ -9,7 +9,7 @@ fun interface IsAdminActive {
     operator fun invoke(): Boolean
 }
 
-class IsAdminActiveImpl internal constructor(
+class IsAdminActiveImpl(
     private val context: Context,
 ) : IsAdminActive {
 

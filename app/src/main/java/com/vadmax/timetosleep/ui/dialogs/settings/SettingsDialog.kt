@@ -25,11 +25,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.vadmax.io.data.RingerMode
+import com.vadmax.core.data.RingerMode
 import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.R
-import com.vadmax.timetosleep.ui.theme.Dimens
-import com.vadmax.timetosleep.ui.theme.switchColors
+import com.vadmax.timetosleep.coreui.theme.Dimens
+import com.vadmax.timetosleep.coreui.theme.switchColors
 import com.vadmax.timetosleep.ui.widgets.dialog.BottomSheetDialog
 import com.vadmax.timetosleep.utils.extentions.isAdminActive
 import com.vadmax.timetosleep.utils.extentions.isNotificationAccessGranted
@@ -103,7 +103,7 @@ private fun SettingsContent(
             )
             Ringer(
                 ringerMode = ringerMode,
-                selectMode = setRingerMode
+                selectMode = setRingerMode,
             )
             Spacer(modifier = Modifier.height(Dimens.margin))
             Text(
@@ -143,7 +143,7 @@ private fun Item(
             Switch(
                 checked = isEnable,
                 onCheckedChange = onCheckedChange,
-                colors = MaterialTheme.switchColors()
+                colors = MaterialTheme.switchColors(),
             )
         }
         Divider()
@@ -159,7 +159,7 @@ private fun Ringer(
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(R.drawable.ic_volume),
-                contentDescription = ""
+                contentDescription = "",
             )
             Spacer(modifier = Modifier.width(Dimens.margin2x))
             Text(text = stringResource(id = R.string.settings_ringer_mode))
@@ -187,7 +187,7 @@ fun RingerItem(
     ringerMode: RingerMode?,
     @StringRes text: Int,
     widgetMode: RingerMode,
-    selectMode: (mode: RingerMode?) -> Unit
+    selectMode: (mode: RingerMode?) -> Unit,
 ) {
     val context = LocalContext.current
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -204,7 +204,7 @@ fun RingerItem(
                     return@Switch
                 }
                 selectMode(getMode(ringerMode, widgetMode, it))
-            }
+            },
         )
     }
 }
