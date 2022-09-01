@@ -78,7 +78,7 @@ private fun Wheel(
     itemHeight: Dp,
     itemsCount: Int,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    itemContent: @Composable (index: Int) -> Unit
+    itemContent: @Composable (index: Int) -> Unit,
 ) {
     val itemHeightPx = LocalDensity.current.run { itemHeight.toPx() }
     LazyColumn(

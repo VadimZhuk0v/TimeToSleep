@@ -18,8 +18,8 @@ fun Context.vibrate() {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
             vibrator.vibrate(
                 VibrationEffect.createPredefined(
-                    VibrationEffect.EFFECT_TICK
-                )
+                    VibrationEffect.EFFECT_TICK,
+                ),
             )
         }
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
@@ -32,7 +32,7 @@ fun Context.navigateToLockScreenAdminPermission() {
     val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
         putExtra(
             DevicePolicyManager.EXTRA_DEVICE_ADMIN,
-            ComponentName(this@navigateToLockScreenAdminPermission, AdminReceiver::class.java)
+            ComponentName(this@navigateToLockScreenAdminPermission, AdminReceiver::class.java),
         )
     }
     startActivity(intent)
@@ -40,7 +40,7 @@ fun Context.navigateToLockScreenAdminPermission() {
 
 fun Context.navigateToNotificationAccessSettings() {
     val intent = Intent(
-        Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS
+        Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS,
     )
     startActivity(intent)
 }
@@ -56,7 +56,7 @@ val Context.isAdminActive: Boolean
         return getSystemService(DevicePolicyManager::class.java).isAdminActive(
             ComponentName(
                 this,
-                AdminReceiver::class.java
-            )
+                AdminReceiver::class.java,
+            ),
         )
     }

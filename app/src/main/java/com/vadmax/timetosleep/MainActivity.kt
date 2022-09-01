@@ -7,8 +7,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.vadmax.timetosleep.coreui.theme.TimeToSleepTheme
 import com.vadmax.timetosleep.ui.screens.home.HomeScreen
-import com.vadmax.timetosleep.ui.theme.TimeToSleepTheme
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterialApi::class)

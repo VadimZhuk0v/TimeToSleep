@@ -4,13 +4,13 @@ import android.content.Context
 import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
-import timber.log.Timber
+import com.vadmax.core.log
 
 fun interface StopMusic {
     operator fun invoke()
 }
 
-class StopMusicImpl internal constructor(
+class StopMusicImpl(
     private val context: Context,
 ) : StopMusic {
 
@@ -22,6 +22,6 @@ class StopMusicImpl internal constructor(
         } else {
             am.requestAudioFocus({}, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
         }
-        Timber.i("Music stopped")
+        log.i("Music stopped")
     }
 }

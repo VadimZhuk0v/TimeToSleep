@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import com.vadmax.timetosleep.ui.theme.icon
+import com.vadmax.timetosleep.coreui.theme.icon
 
 @Composable
 fun IconButton(
@@ -14,7 +14,7 @@ fun IconButton(
     painter: Painter,
     contentDescription: String = "",
     tint: Color? = null,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     androidx.compose.material.IconButton(
         modifier = modifier,
@@ -25,6 +25,6 @@ fun IconButton(
                 contentDescription = contentDescription,
                 tint = tint ?: MaterialTheme.colors.icon,
             )
-        }
+        },
     )
 }

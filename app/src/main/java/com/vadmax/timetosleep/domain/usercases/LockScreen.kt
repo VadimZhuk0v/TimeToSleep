@@ -8,7 +8,7 @@ fun interface LockScreen {
     operator fun invoke()
 }
 
-class LockScreenImpl internal constructor(
+class LockScreenImpl(
     private val context: Context,
 ) : LockScreen {
 

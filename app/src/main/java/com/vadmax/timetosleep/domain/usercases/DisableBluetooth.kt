@@ -6,7 +6,7 @@ fun interface DisableBluetooth {
     operator fun invoke()
 }
 
-class DisableBluetoothImpl internal constructor() : DisableBluetooth {
+class DisableBluetoothImpl : DisableBluetooth {
 
     override fun invoke() {
         BluetoothAdapter.getDefaultAdapter().disable()

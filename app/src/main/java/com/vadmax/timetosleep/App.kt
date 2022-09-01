@@ -5,7 +5,6 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.gms.ads.RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.vadmax.io.di.ioModules
 import com.vadmax.timetosleep.di.appModules
 import com.vadmax.timetosleep.ui.widgets.ad.interstitial.loadInterstitialAd
 import com.vadmax.timetosleep.utils.FirebaseCrashlyticsTree
@@ -32,7 +31,7 @@ class App : Application() {
     private fun initKoin() {
         startKoin {
             androidContext(this@App)
-            modules(appModules + ioModules)
+            modules(appModules)
         }
     }
 
@@ -51,8 +50,8 @@ class App : Application() {
                 FirebaseCrashlyticsTree(
                     FirebaseCrashlytics.getInstance().apply {
                         setCrashlyticsCollectionEnabled(true)
-                    }
-                )
+                    },
+                ),
             )
         }
     }

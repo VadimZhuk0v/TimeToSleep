@@ -3,21 +3,20 @@ package com.vadmax.timetosleep.domain.usercases
 import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
-import com.vadmax.io.domain.usercases.GetSelectedApps
+import com.vadmax.core.log
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 fun interface CloseApps {
     suspend operator fun invoke()
 }
 
-class CloseAppsImpl internal constructor(
+class CloseAppsImpl(
     private val context: Context,
     private val getSelectedApps: GetSelectedApps,
-    private val dispatcher: CoroutineContext = Dispatchers.IO
+    private val dispatcher: CoroutineContext = Dispatchers.IO,
 ) : CloseApps {
 
     @SuppressLint("MissingPermission")
@@ -28,7 +27,7 @@ class CloseAppsImpl internal constructor(
             try {
                 am.killBackgroundProcesses(it.packageName)
             } catch (e: Exception) {
-                Timber.e(e, "Killing process was failed")
+                log.e(e, "Killing process was failed")
             }
         }
     }

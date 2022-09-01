@@ -2,18 +2,18 @@ package com.vadmax.timetosleep.ui.dialogs.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vadmax.io.data.RingerMode
-import com.vadmax.io.domain.usercases.GetRingerMode
-import com.vadmax.io.domain.usercases.IsDisableBluetoothEnable
-import com.vadmax.io.domain.usercases.IsLockScreenEnable
-import com.vadmax.io.domain.usercases.IsVibrationEnable
-import com.vadmax.io.domain.usercases.SetDisableBluetoothEnable
-import com.vadmax.io.domain.usercases.SetLockScreenEnable
-import com.vadmax.io.domain.usercases.SetRingerMode
-import com.vadmax.io.domain.usercases.SetVibrationEnable
+import com.vadmax.core.data.RingerMode
+import com.vadmax.core.log
+import com.vadmax.timetosleep.domain.usercases.GetRingerMode
+import com.vadmax.timetosleep.domain.usercases.IsDisableBluetoothEnable
+import com.vadmax.timetosleep.domain.usercases.IsLockScreenEnable
+import com.vadmax.timetosleep.domain.usercases.IsVibrationEnable
+import com.vadmax.timetosleep.domain.usercases.SetDisableBluetoothEnable
+import com.vadmax.timetosleep.domain.usercases.SetLockScreenEnable
+import com.vadmax.timetosleep.domain.usercases.SetRingerMode
+import com.vadmax.timetosleep.domain.usercases.SetVibrationEnable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @SuppressWarnings("LongParameterList")
 class SettingsViewModel(
@@ -33,28 +33,28 @@ class SettingsViewModel(
     val vibrationEnable = isVibrationEnable()
 
     fun setLockScreenEnable(value: Boolean) {
-        Timber.d("Lock screen enable:$value")
+        log.d("Lock screen enable:$value")
         viewModelScope.launch(Dispatchers.IO) {
             setLockScreenEnable.invoke(value)
         }
     }
 
     fun setDisableBluetoothEnable(value: Boolean) {
-        Timber.d("Disable bluetooth: $value")
+        log.d("Disable bluetooth: $value")
         viewModelScope.launch(Dispatchers.IO) {
             setDisableBluetoothEnable.invoke(value)
         }
     }
 
     fun setVibrationEnable(value: Boolean) {
-        Timber.d("Vibration enable: $value")
+        log.d("Vibration enable: $value")
         viewModelScope.launch(Dispatchers.IO) {
             setVibrationEnable.invoke(value)
         }
     }
 
     fun setRingerMode(ringerMode: RingerMode?) {
-        Timber.d("Ringer mode: $ringerMode")
+        log.d("Ringer mode: $ringerMode")
         viewModelScope.launch(Dispatchers.IO) {
             setRingerMode.invoke(ringerMode)
         }

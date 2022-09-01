@@ -3,7 +3,7 @@ package com.vadmax.timetosleep.domain.usercases
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import com.vadmax.io.data.AppInfo
+import com.vadmax.core.data.AppInfo
 import com.vadmax.timetosleep.utils.extentions.getApplicationLabel
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
@@ -13,9 +13,9 @@ fun interface GetAppsList {
     suspend operator fun invoke(): List<AppInfo>
 }
 
-class GetAppsListImpl internal constructor(
+class GetAppsListImpl(
     private val context: Context,
-    private val dispatcher: CoroutineContext = Dispatchers.IO
+    private val dispatcher: CoroutineContext = Dispatchers.IO,
 ) : GetAppsList {
 
     @Suppress("RedundantSuspendModifier", "QueryPermissionsNeeded")

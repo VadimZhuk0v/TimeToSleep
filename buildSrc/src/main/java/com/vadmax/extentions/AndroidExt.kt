@@ -1,20 +1,17 @@
-package com.vadmax.extentions
+package com.vadmax.extentions // ktlint-disable filename
 
 import com.android.build.api.dsl.LibraryExtension
-import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.vadmax.constants.Application
-import com.vadmax.constants.DependencyVersion
-import com.vadmax.constants.GeneralVersion
+import com.vadmax.constants.BuildVersion
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.getByType
 
 fun Project.configureAndroidSubmodule() = this.extensions.getByType<LibraryExtension>().run {
-    compileSdk = GeneralVersion.compileSdk
+    compileSdk = BuildVersion.compileSdk
 
     defaultConfig {
-        minSdk = GeneralVersion.minSdk
-        targetSdk = GeneralVersion.targetSdk
+        minSdk = BuildVersion.minSdk
+        targetSdk = BuildVersion.targetSdk
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -29,7 +26,7 @@ fun Project.configureAndroidSubmodule() = this.extensions.getByType<LibraryExten
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -39,48 +36,3 @@ fun Project.configureAndroidSubmodule() = this.extensions.getByType<LibraryExten
         }
     }
 }
-
-fun Project.configureAndroidApplication() =
-    this.extensions.getByType<BaseAppModuleExtension>().run {
-        compileSdk = GeneralVersion.compileSdk
-
-        signingConfigs {
-            create("release") {
-                storeFile = file("../key")
-                storePassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
-                keyAlias = "prod"
-                keyPassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
-            }
-        }
-        defaultConfig {
-            minSdk = GeneralVersion.minSdk
-            targetSdk = GeneralVersion.targetSdk
-            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-            vectorDrawables {
-                useSupportLibrary = true
-            }
-        }
-        compileOptions {
-            sourceCompatibility(JavaVersion.VERSION_1_8)
-            targetCompatibility(JavaVersion.VERSION_1_8)
-        }
-        packagingOptions {
-            resources {
-                excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            }
-        }
-        defaultConfig {
-            applicationId = Application.id
-            versionCode = Application.versionCode
-            versionName = Application.version
-        }
-
-        configureBuildTypes()
-
-        buildFeatures {
-            compose = true
-        }
-        composeOptions {
-            kotlinCompilerExtensionVersion = DependencyVersion.compose
-        }
-    }
