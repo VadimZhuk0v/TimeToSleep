@@ -12,9 +12,13 @@ import com.vadmax.core.data.AppInfo
 import com.vadmax.core.data.RingerMode
 import com.vadmax.core.utils.extentions.safeValueOf
 import com.vadmax.core.utils.extentions.toObject
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 private const val SHARED_NAME = "shared"
 
@@ -28,18 +32,20 @@ private val VL_SELECTED_TIME = longPreferencesKey("VL_SELECTED_TIME")
 private val VL_SELECTED_APPS = stringPreferencesKey("VL_SELECTED_APPS")
 private val VL_RINGER_MODE = stringPreferencesKey("VL_RINGER_MODE")
 private val VL_ENABLE_TIMER_COUNTER = intPreferencesKey("VL_ENABLE_TIMER_COUNTER")
+private val VL_SOUND_EFFECT = booleanPreferencesKey("VL_SOUND_EFFECT")
 
 interface SettingsProvider {
 
-    val isTimerEnabled: Flow<Boolean>
+    val isTimerEnabled: StateFlow<Boolean>
     val isLockScreenEnable: Flow<Boolean>
     val isFirstTime: Flow<Boolean>
-    val isVibrationEnable: Flow<Boolean>
+    val isVibrationEnable: StateFlow<Boolean>
     val isDisableWifiEnable: Flow<Boolean>
     val isDisableBluetoothEnable: Flow<Boolean>
     val selectedAppsFlow: Flow<List<AppInfo>>
     val enableTimerCounter: Flow<Int>
     val ringerMode: Flow<RingerMode?>
+    val soundEffect: StateFlow<Boolean>
 
     suspend fun setTimerEnable(value: Boolean)
 
@@ -62,15 +68,20 @@ interface SettingsProvider {
     suspend fun selectApp(appInfo: AppInfo)
 
     suspend fun removeApp(appInfo: AppInfo)
+
+    suspend fun setSoundEffect(value: Boolean)
 }
 
 private val Context.dataStore by preferencesDataStore(name = SHARED_NAME)
 
-internal class SettingsProviderImpl(private val context: Context) : SettingsProvider {
+internal class SettingsProviderImpl(
+    private val context: Context,
+    private val coroutineScope: CoroutineScope,
+) : SettingsProvider {
 
     override val isTimerEnabled = context.dataStore.data.map {
         it[VL_IS_TIMER_ENABLED] ?: false
-    }
+    }.stateIn(coroutineScope, SharingStarted.Eagerly, false)
 
     override val isLockScreenEnable = context.dataStore.data.map {
         it[VL_IS_LOCK_SCREEN_ENABLE] ?: false
@@ -78,7 +89,7 @@ internal class SettingsProviderImpl(private val context: Context) : SettingsProv
 
     override val isVibrationEnable = context.dataStore.data.map {
         it[VL_IS_VIBRATION_ENABLE] ?: true
-    }
+    }.stateIn(coroutineScope, SharingStarted.Eagerly, false)
 
     override val isDisableWifiEnable = context.dataStore.data.map {
         it[VL_IS_WIFI_ENABLE] ?: false
@@ -100,6 +111,10 @@ internal class SettingsProviderImpl(private val context: Context) : SettingsProv
     override val enableTimerCounter = context.dataStore.data.map {
         it[VL_ENABLE_TIMER_COUNTER] ?: 1
     }
+
+    override val soundEffect = context.dataStore.data.map {
+        it[VL_SOUND_EFFECT] ?: true
+    }.stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), true)
 
     override suspend fun incEnableTimerCounter() {
         context.dataStore.edit {
@@ -146,6 +161,12 @@ internal class SettingsProviderImpl(private val context: Context) : SettingsProv
     override suspend fun setDisableBluetoothEnable(value: Boolean) {
         context.dataStore.edit {
             it[VL_IS_BL_ENABLE] = value
+        }
+    }
+
+    override suspend fun setSoundEffect(value: Boolean) {
+        context.dataStore.edit {
+            it[VL_SOUND_EFFECT] = value
         }
     }
 

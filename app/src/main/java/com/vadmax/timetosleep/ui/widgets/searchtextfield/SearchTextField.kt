@@ -1,6 +1,5 @@
 package com.vadmax.timetosleep.ui.widgets.searchtextfield
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -10,9 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,17 +27,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.coreui.theme.Dimens
-import com.vadmax.timetosleep.coreui.theme.textFieldBackground
+import com.vadmax.timetosleep.coreui.theme.LocalAppThemeColors
 import com.vadmax.timetosleep.ui.widgets.iconbutton.IconButton
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SearchTextField(value: String, label: String? = null, onValueChange: (text: String) -> Unit) {
     var isFocused by remember { mutableStateOf(false) }
     Surface(shape = MaterialTheme.shapes.small) {
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colors.textFieldBackground)
+                .background(LocalAppThemeColors.current.textFieldBackground)
                 .fillMaxWidth()
                 .padding(start = Dimens.margin, top = Dimens.margin, bottom = Dimens.margin),
         ) {

@@ -8,6 +8,8 @@ import com.vadmax.timetosleep.domain.usercases.GetSelectedApps
 import com.vadmax.timetosleep.domain.usercases.GetSelectedAppsImpl
 import com.vadmax.timetosleep.domain.usercases.GetSelectedTime
 import com.vadmax.timetosleep.domain.usercases.GetSelectedTimeImpl
+import com.vadmax.timetosleep.domain.usercases.GetSoundEffectEnable
+import com.vadmax.timetosleep.domain.usercases.GetSoundEffectEnableImpl
 import com.vadmax.timetosleep.domain.usercases.IncEnableTimerCounter
 import com.vadmax.timetosleep.domain.usercases.IncEnableTimerCounterImpl
 import com.vadmax.timetosleep.domain.usercases.IsDisableBluetoothEnable
@@ -34,6 +36,8 @@ import com.vadmax.timetosleep.domain.usercases.SetRingerMode
 import com.vadmax.timetosleep.domain.usercases.SetRingerModeImpl
 import com.vadmax.timetosleep.domain.usercases.SetSelectedTime
 import com.vadmax.timetosleep.domain.usercases.SetSelectedTimeImpl
+import com.vadmax.timetosleep.domain.usercases.SetSoundEffectEnable
+import com.vadmax.timetosleep.domain.usercases.SetSoundEffectEnableImpl
 import com.vadmax.timetosleep.domain.usercases.SetTimerEnable
 import com.vadmax.timetosleep.domain.usercases.SetTimerEnableImpl
 import com.vadmax.timetosleep.domain.usercases.SetVibrationEnable
@@ -63,4 +67,6 @@ val useCasesModule = module {
     factory<SetRingerMode> { SetRingerModeImpl(get()) }
     factory<SetVibrationEnable> { SetVibrationEnableImpl(get()) }
     factory<IsVibrationEnable> { IsVibrationEnableImpl(get()) }
+    factory<SetSoundEffectEnable> { SetSoundEffectEnableImpl(get()) }
+    factory<GetSoundEffectEnable> { GetSoundEffectEnableImpl(get()) }
 }

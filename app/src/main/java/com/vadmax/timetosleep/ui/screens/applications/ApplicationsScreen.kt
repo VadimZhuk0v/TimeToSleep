@@ -4,7 +4,6 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,11 +18,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,22 +45,20 @@ import androidx.navigation.NavOptionsBuilder
 import com.vadmax.core.data.AppInfo
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.coreui.theme.Dimens
-import com.vadmax.timetosleep.coreui.theme.dialogBackground
-import com.vadmax.timetosleep.coreui.theme.screenBackground
-import com.vadmax.timetosleep.ui.screens.applications.ApplicationsScreen.destination
+import com.vadmax.timetosleep.ui.screens.applications.ApplicationsScreen.route
 import com.vadmax.timetosleep.ui.widgets.searchtextfield.SearchTextField
 import com.vadmax.timetosleep.utils.extentions.systemInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 object ApplicationsScreen {
 
-    const val destination = "applications"
+    const val route = "applications"
 }
 
 fun NavController.navigateToApplications(navOptionsBuilder: NavOptionsBuilder.() -> Unit = {}) {
-    navigate(destination) {
+    navigate(route) {
         navOptionsBuilder()
     }
 }
@@ -69,7 +66,7 @@ fun NavController.navigateToApplications(navOptionsBuilder: NavOptionsBuilder.()
 @Composable
 fun ApplicationsScreen(
     navController: NavController,
-    viewModel: ApplicationsViewModel = getViewModel(),
+    viewModel: ApplicationsViewModel = koinViewModel(),
 ) {
     val search by viewModel.search.collectAsState(initial = "")
     val appsList by viewModel.displayedApps.collectAsState(initial = listOf())
@@ -100,7 +97,6 @@ private fun ApplicationsScreenContent(
     Scaffold { padding ->
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colors.screenBackground)
                 .padding(padding)
                 .fillMaxSize(),
         ) {
@@ -138,7 +134,7 @@ private fun Header(
                 .wrapContentHeight()
                 .fillMaxWidth(),
         ) {
-            Box(modifier = Modifier.background(MaterialTheme.colors.dialogBackground)) {
+            Box(modifier = Modifier) {
                 Box(modifier = Modifier.padding(Dimens.screenPadding)) {
                     SearchTextField(
                         value = searchText,

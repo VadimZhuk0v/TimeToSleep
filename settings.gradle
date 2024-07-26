@@ -7,14 +7,19 @@ pluginManagement {
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven { url = "https://jitpack.io" }
+        maven {
+            url = "https://maven.google.com"
+        }
     }
 }
 rootProject.name = "Time to sleep"
-include ':app'
-include ':core'
-include ':local'
-include ':domain'
-include ':core-ui'
+include(":app")
+include(":core")
+include(":local")
+include(":domain")
+include(":core-ui")

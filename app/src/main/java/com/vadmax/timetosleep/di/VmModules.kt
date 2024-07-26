@@ -7,7 +7,22 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val vmModules = module {
-    viewModel { HomeViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { SettingsViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel {
+        HomeViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get())
+    }
+    viewModel {
+        SettingsViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+        )
+    }
     viewModel { ApplicationsViewModel(get(), get(), get(), get()) }
 }
