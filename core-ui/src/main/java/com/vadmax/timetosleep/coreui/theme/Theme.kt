@@ -2,40 +2,42 @@
 
 package com.vadmax.timetosleep.coreui.theme
 
-import androidx.compose.material.Colors
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.darkColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-private val DarkColorPalette = darkColors(
+private val DarkColorPalette = darkColorScheme(
     primary = Purple200,
-    primaryVariant = Purple700,
     secondary = Teal200,
+    background = Color.Black,
 )
 
-val Colors.icon: Color get() = Color.White
+data class AppThemeColors(
+    val icon: Color,
+    val dialogBackground: Color,
+    val screenBackground: Color,
+    val textFieldBackground: Color,
+)
 
-val Colors.dialogBackground: Color get() = DialogBackground
-
-val Colors.screenBackground: Color get() = Color.Black
-
-val Colors.textFieldBackground: Color get() = TextFieldBackground
-
-@Composable
-fun MaterialTheme.switchColors() = SwitchDefaults.colors(
-    checkedThumbColor = Color.White,
+val darkColors = AppThemeColors(
+    icon = Color.White,
+    dialogBackground = DialogBackground,
+    screenBackground = Color.Black,
+    textFieldBackground = TextFieldBackground,
 )
 
 @Composable
-fun TimeToSleepTheme(
+fun AppTheme(
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colors = DarkColorPalette,
-        typography = Typography,
+        colorScheme = DarkColorPalette,
+        typography = AppTypography,
         shapes = Shapes,
         content = content,
     )
 }
+
+val LocalAppThemeColors = staticCompositionLocalOf { darkColors }

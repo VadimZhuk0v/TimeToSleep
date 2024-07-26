@@ -1,9 +1,10 @@
 package com.vadmax.timetosleep.domain.usercases
 
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import timber.log.Timber
+import kotlin.coroutines.CoroutineContext
 
 fun interface ApplyActions {
     suspend operator fun invoke()
@@ -27,9 +28,11 @@ class ApplyActionsImpl(
         stopMusic()
         applyRingerMode()
         if (isLockScreenEnable().first()) {
+            Timber.i("✅ Screen is locked")
             lockScreen()
         }
         if (isDisableBluetoothEnable().first()) {
+            Timber.i("✅ Bluetooth is disabled")
             disableBluetooth()
         }
     }

@@ -5,48 +5,63 @@ import androidx.lifecycle.viewModelScope
 import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
 import com.vadmax.core.utils.extentions.second
-import com.vadmax.timetosleep.domain.usercases.GetEnableTimerCounter
+import com.vadmax.timetosleep.domain.usercases.CancelApplyActionsWorker
 import com.vadmax.timetosleep.domain.usercases.GetSelectedTime
+import com.vadmax.timetosleep.domain.usercases.GetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.IncEnableTimerCounter
 import com.vadmax.timetosleep.domain.usercases.IsTimerEnable
 import com.vadmax.timetosleep.domain.usercases.IsVibrationEnable
-import com.vadmax.timetosleep.domain.usercases.SetAlarmActivation
+import com.vadmax.timetosleep.domain.usercases.ScheduleApplyActionsWorker
 import com.vadmax.timetosleep.domain.usercases.SetSelectedTime
 import com.vadmax.timetosleep.domain.usercases.SetTimerEnable
-import java.util.Calendar
-import java.util.Date
+import com.vadmax.timetosleep.ui.screens.home.support.HomeScreenEvent
+import com.vadmax.timetosleep.utils.flow.EventFlow
+import com.vadmax.timetosleep.utils.flow.MutableEventFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 
 @SuppressWarnings("LongParameterList")
 class HomeViewModel(
     isTimerEnable: IsTimerEnable,
-    getEnableTimerCounter: GetEnableTimerCounter,
     isVibrationEnable: IsVibrationEnable,
+    private val getSoundEffectEnable: GetSoundEffectEnable,
     private val setTimerActive: SetTimerEnable,
     private val setSelectedTime: SetSelectedTime,
     private val getSelectedTime: GetSelectedTime,
-    private val setAlarmActivation: SetAlarmActivation,
+    private val scheduleApplyActionsWorker: ScheduleApplyActionsWorker,
     private val incEnableTimerCounter: IncEnableTimerCounter,
+    private val cancelApplyActionsWorker: CancelApplyActionsWorker,
 ) : ViewModel() {
 
+    private val _event = MutableEventFlow<HomeScreenEvent>()
+    val event: EventFlow<HomeScreenEvent> = _event
+
     val timerEnable = isTimerEnable()
-    val enableTimerCounter = getEnableTimerCounter()
     val vibrationEnable = isVibrationEnable()
 
     fun setTimerEnable(isEnable: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
+            if (getSoundEffectEnable().value) {
+                _event.emit(HomeScreenEvent.RippleSound)
+            }
             setTimerActive(isEnable)
-            setAlarmActivation()
             if (isEnable) {
                 incEnableTimerCounter()
+                scheduleApplyActionsWorker()
+            } else {
+                cancelApplyActionsWorker()
             }
         }
     }
 
     suspend fun getInitialTime() = getSelectedTime()
 
-    fun setTime(hour: Int, minute: Int) {
+    fun setTime(
+        hour: Int,
+        minute: Int,
+    ) {
         val calendar = Calendar.getInstance().apply {
             this.hour = hour
             this.minute = minute
@@ -57,7 +72,9 @@ class HomeViewModel(
         }
         viewModelScope.launch(Dispatchers.IO) {
             setSelectedTime(calendar.timeInMillis)
-            setAlarmActivation()
+            if (timerEnable.value) {
+                scheduleApplyActionsWorker()
+            }
         }
     }
 }

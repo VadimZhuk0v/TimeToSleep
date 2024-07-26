@@ -1,3 +1,3 @@
 package com.vadmax.timetosleep.local.di
 
-val localModules = listOf(sharedModule)
+val localModules = listOf(preferencesModule)

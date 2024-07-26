@@ -1,5 +1,6 @@
 package com.vadmax.timetosleep.ui.dialogs.settings
 
+import android.os.Build
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
@@ -9,107 +10,123 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import com.vadmax.core.data.RingerMode
 import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.R
+import com.vadmax.timetosleep.coreui.extensions.clickableNoRipple
 import com.vadmax.timetosleep.coreui.theme.Dimens
-import com.vadmax.timetosleep.coreui.theme.switchColors
-import com.vadmax.timetosleep.ui.widgets.dialog.BottomSheetDialog
+import com.vadmax.timetosleep.ui.widgets.appbottomsheet.AppModalBottomSheet
+import com.vadmax.timetosleep.ui.widgets.divider.AppHorizontalDivider
+import com.vadmax.timetosleep.ui.widgets.switch.AppSwitch
 import com.vadmax.timetosleep.utils.extentions.isAdminActive
 import com.vadmax.timetosleep.utils.extentions.isNotificationAccessGranted
 import com.vadmax.timetosleep.utils.extentions.navigateToLockScreenAdminPermission
 import com.vadmax.timetosleep.utils.extentions.navigateToNotificationAccessSettings
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SettingsDialog(
-    viewModel: SettingsViewModel = getViewModel(),
-    sheetState: ModalBottomSheetState,
+    visible: MutableState<Boolean>,
+    viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val isLockScreenEnable by viewModel.lockScreenEnable.collectAsState(initial = false)
     val isDisableBluetoothEnable by viewModel.disableBluetoothEnable.collectAsState(initial = false)
     val isVibrationEnable by viewModel.vibrationEnable.collectAsState(initial = true)
     val ringerMode by viewModel.ringerMode.collectAsState(initial = null)
-    BottomSheetDialog(sheetState) {
+    val soundEffectEnable by viewModel.soundEffectEnable.collectAsState()
+
+    AppModalBottomSheet(
+        visible = visible,
+    ) {
         SettingsContent(
             isVibrationEnable = isVibrationEnable,
             isLockScreenEnable = isLockScreenEnable,
             isDisableBluetoothEnable = isDisableBluetoothEnable,
             ringerMode = ringerMode,
+            soundEffectEnable = soundEffectEnable,
             setVibrationEnable = viewModel::setVibrationEnable,
             setLockScreenEnable = viewModel::setLockScreenEnable,
             setDisableBluetoothEnable = viewModel::setDisableBluetoothEnable,
             setRingerMode = viewModel::setRingerMode,
+            onSoundEffectChange = viewModel::setSoundEffectEnable,
         )
     }
 }
 
 @SuppressWarnings("LongParameterList")
-@Preview(backgroundColor = 0xFFFFFF, showBackground = true)
 @Composable
 private fun SettingsContent(
-    isVibrationEnable: Boolean = true,
-    isLockScreenEnable: Boolean = true,
-    isDisableBluetoothEnable: Boolean = true,
-    ringerMode: RingerMode? = null,
-    setVibrationEnable: (value: Boolean) -> Unit = {},
-    setLockScreenEnable: (value: Boolean) -> Unit = {},
-    setDisableBluetoothEnable: (value: Boolean) -> Unit = {},
-    setRingerMode: (mode: RingerMode?) -> Unit = {},
+    isVibrationEnable: Boolean,
+    isLockScreenEnable: Boolean,
+    isDisableBluetoothEnable: Boolean,
+    soundEffectEnable: Boolean,
+    ringerMode: RingerMode?,
+    setVibrationEnable: (value: Boolean) -> Unit,
+    setLockScreenEnable: (value: Boolean) -> Unit,
+    setDisableBluetoothEnable: (value: Boolean) -> Unit,
+    setRingerMode: (mode: RingerMode?) -> Unit,
+    onSoundEffectChange: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
-    Box() {
-        Column {
-            Item(
-                text = R.string.settings_vibration,
-                icon = R.drawable.ic_vibration,
-                isEnable = isVibrationEnable,
-                onCheckedChange = setVibrationEnable,
-            )
-            Item(
-                text = R.string.settings_lock_screen,
-                icon = R.drawable.ic_screen_lock,
-                isEnable = isLockScreenEnable,
-                onCheckedChange = {
-                    if (it && context.isAdminActive.not()) {
-                        context.navigateToLockScreenAdminPermission()
-                        return@Item
-                    }
-                    setLockScreenEnable(it)
-                },
-            )
-            Item(
-                text = R.string.settings_disable_bluetooth,
-                icon = R.drawable.ic_bluetooth,
-                isEnable = isDisableBluetoothEnable,
-                onCheckedChange = setDisableBluetoothEnable,
-            )
-            Ringer(
-                ringerMode = ringerMode,
-                selectMode = setRingerMode,
-            )
-            Spacer(modifier = Modifier.height(Dimens.margin))
-            Text(
-                text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}",
-                modifier = Modifier.padding(Dimens.screenPadding),
-            )
+    CompositionLocalProvider(LocalContentColor provides Color.White) {
+        Box {
+            Column {
+                Item(
+                    text = R.string.settings_sound_effect,
+                    icon = R.drawable.ic_sound_effect,
+                    isEnable = soundEffectEnable,
+                    onCheckedChange = onSoundEffectChange,
+                )
+                Item(
+                    text = R.string.settings_vibration,
+                    icon = R.drawable.ic_vibration,
+                    isEnable = isVibrationEnable,
+                    onCheckedChange = setVibrationEnable,
+                )
+                Item(
+                    text = R.string.settings_lock_screen,
+                    icon = R.drawable.ic_screen_lock,
+                    isEnable = isLockScreenEnable,
+                    onCheckedChange = {
+                        if (it && context.isAdminActive.not()) {
+                            context.navigateToLockScreenAdminPermission()
+                            return@Item
+                        }
+                        setLockScreenEnable(it)
+                    },
+                )
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                    Item(
+                        text = R.string.settings_disable_bluetooth,
+                        icon = R.drawable.ic_bluetooth,
+                        isEnable = isDisableBluetoothEnable,
+                        onCheckedChange = setDisableBluetoothEnable,
+                    )
+                }
+                Ringer(
+                    ringerMode = ringerMode,
+                    selectMode = setRingerMode,
+                )
+                Spacer(modifier = Modifier.height(Dimens.margin))
+                Text(
+                    text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}",
+                    modifier = Modifier.padding(Dimens.screenPadding),
+                )
+            }
         }
     }
 }
@@ -123,7 +140,11 @@ private fun Item(
 ) {
     Column {
         Row(
-            modifier = Modifier.padding(Dimens.screenPadding),
+            modifier = Modifier
+                .padding(Dimens.screenPadding)
+                .clickableNoRipple {
+                    onCheckedChange(isEnable.not())
+                },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
@@ -140,13 +161,12 @@ private fun Item(
                 )
             }
             Spacer(modifier = Modifier.width(Dimens.margin))
-            Switch(
+            AppSwitch(
                 checked = isEnable,
                 onCheckedChange = onCheckedChange,
-                colors = MaterialTheme.switchColors(),
             )
         }
-        Divider()
+        AppHorizontalDivider()
     }
 }
 
@@ -179,7 +199,7 @@ private fun Ringer(
             selectMode = selectMode,
         )
     }
-    Divider()
+    AppHorizontalDivider()
 }
 
 @Composable
@@ -190,18 +210,27 @@ fun RingerItem(
     selectMode: (mode: RingerMode?) -> Unit,
 ) {
     val context = LocalContext.current
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.clickableNoRipple {
+            val res = ringerMode != widgetMode
+            if (res && context.isNotificationAccessGranted.not()) {
+                context.navigateToNotificationAccessSettings()
+                return@clickableNoRipple
+            }
+            selectMode(getMode(ringerMode, widgetMode, res))
+        },
+    ) {
         Text(
             text = stringResource(text),
             modifier = Modifier.weight(1F),
         )
-        Switch(
+        AppSwitch(
             checked = ringerMode == widgetMode,
-            colors = MaterialTheme.switchColors(),
             onCheckedChange = {
                 if (it && context.isNotificationAccessGranted.not()) {
                     context.navigateToNotificationAccessSettings()
-                    return@Switch
+                    return@AppSwitch
                 }
                 selectMode(getMode(ringerMode, widgetMode, it))
             },
@@ -209,7 +238,11 @@ fun RingerItem(
     }
 }
 
-private fun getMode(currentMode: RingerMode?, widgetMode: RingerMode, value: Boolean): RingerMode? {
+private fun getMode(
+    currentMode: RingerMode?,
+    widgetMode: RingerMode,
+    value: Boolean,
+): RingerMode? {
     currentMode ?: run {
         return widgetMode
     }

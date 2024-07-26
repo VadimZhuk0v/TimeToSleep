@@ -1,4 +1,5 @@
-import com.vadmax.extentions.configureAndroidSubmodule
+import com.vadmax.AppBuildInfo
+import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
 
 val kotlinVersion: String by rootProject.extra
 val coroutinesVersion: String by rootProject.extra
@@ -9,33 +10,68 @@ plugins {
     kotlin("kapt")
 }
 
+val appBuildInfo: AppBuildInfo by rootProject.extra
+
 android {
-    configureAndroidSubmodule()
+    namespace = "com.vadmax.timetosleep.core"
+    compileSdk = appBuildInfo.compileSdk
+
+    defaultConfig {
+        minSdk = appBuildInfo.minSdk
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions += "dimens"
+    productFlavors {
+        create("dev") {
+        }
+        create("prod") {
+        }
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
+    }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "19"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
     }
 }
-
 dependencies {
-    // Timber
-    api("com.github.ajalt:timberkt:1.5.1")
-    api("no.nordicsemi.android:log-timber:2.3.0")
-    api("androidx.core:core-ktx:1.8.0")
-    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
-    // Koin
-    api("io.insert-koin:koin-android-ext:3.0.2")
-    api("io.insert-koin:koin-androidx-workmanager:3.1.2")
-    api("io.insert-koin:koin-androidx-compose:3.2.0")
+    api("androidx.core:core-ktx:1.13.1")
+    api("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
 
-    // Kotlin Coroutines
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    api(platform("org.jetbrains.kotlin:kotlin-bom:1.9.23"))
+    api("org.jetbrains.kotlin:kotlin-stdlib")
+
+    api("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
+
+    // DI
+    api("io.insert-koin:koin-android:3.5.4")
+    api("io.insert-koin:koin-android-ext:3.0.2")
+
+    // Logger
+    api("com.jakewharton.timber:timber:5.0.1")
 
     // Gson
-    api("com.google.code.gson:gson:2.8.9")
+    api("com.google.code.gson:gson:2.10.1")
 
-    api("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
+    api("androidx.work:work-runtime-ktx:2.9.0")
 
-    testImplementation("androidx.test:core-ktx:1.4.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    // Tests
+    testImplementation("junit:junit:4.13.2")
+    testImplementation(kotlin("test"))
+    androidTestImplementation(kotlin("test"))
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
 }

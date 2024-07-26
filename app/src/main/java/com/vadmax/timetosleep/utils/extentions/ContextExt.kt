@@ -5,10 +5,13 @@ import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
+import android.os.PowerManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
+import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import com.vadmax.timetosleep.utils.AdminReceiver
 
 @SuppressWarnings("MagicNumber")
@@ -22,6 +25,7 @@ fun Context.vibrate() {
                 ),
             )
         }
+
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
             vibrator.vibrate(VibrationEffect.createWaveform(longArrayOf(10, 10, 10), -1))
         }
@@ -60,3 +64,17 @@ val Context.isAdminActive: Boolean
             ),
         )
     }
+
+fun Context.requestIgnoreBatteryOptimizations(): Boolean {
+    val intent = Intent(
+        ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+        Uri.parse("package:$packageName"),
+    )
+    val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+    if (pm.isIgnoringBatteryOptimizations(packageName).not()) {
+        startActivity(intent)
+        return true
+    } else {
+        return false
+    }
+}

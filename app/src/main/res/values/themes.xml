@@ -1,8 +1,9 @@
 <resources>
 
-    <style name="Theme.TimeToSleep" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:statusBarColor">@color/black</item>
+    <style name="Theme.TimeToSleep" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:windowBackground">@color/black</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="Theme.TimeToSleep.NoActionBar">

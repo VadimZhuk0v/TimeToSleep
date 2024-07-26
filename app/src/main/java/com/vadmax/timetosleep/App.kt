@@ -1,13 +1,10 @@
 package com.vadmax.timetosleep
 
 import android.app.Application
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.RequestConfiguration
-import com.google.android.gms.ads.RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.vadmax.timetosleep.di.appModules
-import com.vadmax.timetosleep.ui.widgets.ad.interstitial.loadInterstitialAd
 import com.vadmax.timetosleep.utils.FirebaseCrashlyticsTree
+import com.vadmax.timetosleep.utils.timber.TagTree
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import timber.log.Timber
@@ -19,13 +16,12 @@ class App : Application() {
 
         initTimber()
         initKoin()
-        initAdmob()
         initCrashlytics()
-        loadInterstitialAd(this)
     }
 
     private fun initTimber() {
         Timber.plant(Timber.DebugTree())
+        Timber.plant(TagTree())
     }
 
     private fun initKoin() {
@@ -33,14 +29,6 @@ class App : Application() {
             androidContext(this@App)
             modules(appModules)
         }
-    }
-
-    private fun initAdmob() {
-        val conf = RequestConfiguration.Builder()
-            .setTagForChildDirectedTreatment(TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)
-            .build()
-        MobileAds.setRequestConfiguration(conf)
-        MobileAds.initialize(this)
     }
 
     private fun initCrashlytics() {
