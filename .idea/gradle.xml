@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/core-ui" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/local" />
+            <option value="$PROJECT_DIR$/remote" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

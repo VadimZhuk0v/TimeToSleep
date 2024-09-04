@@ -44,6 +44,8 @@ import com.vadmax.timetosleep.domain.usercases.SetVibrationEnable
 import com.vadmax.timetosleep.domain.usercases.SetVibrationEnableImpl
 import com.vadmax.timetosleep.domain.usercases.UnselectApp
 import com.vadmax.timetosleep.domain.usercases.UnselectAppImpl
+import com.vadmax.timetosleep.domain.usercases.remote.ShutdownRemote
+import com.vadmax.timetosleep.domain.usercases.remote.ShutdownRemoteImpl
 import org.koin.dsl.module
 
 val useCasesModule = module {
@@ -69,4 +71,5 @@ val useCasesModule = module {
     factory<IsVibrationEnable> { IsVibrationEnableImpl(get()) }
     factory<SetSoundEffectEnable> { SetSoundEffectEnableImpl(get()) }
     factory<GetSoundEffectEnable> { GetSoundEffectEnableImpl(get()) }
+    factory<ShutdownRemote> { ShutdownRemoteImpl(get()) }
 }

@@ -1,9 +1,9 @@
 import com.vadmax.AppBuildInfo
 
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    id("kotlin-parcelize")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -21,10 +21,11 @@ android {
     productFlavors {
         create("dev") {
         }
+        create("pc") {
+        }
         create("prod") {
         }
     }
-
 
     buildTypes {
         getByName("release") {
@@ -49,8 +50,9 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":local"))
+    implementation(project(":remote"))
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    testImplementation(libs.test.junit)
+    androidTestImplementation(libs.test.androidx.junit)
+    androidTestImplementation(libs.test.androidx.espresso.core)
 }

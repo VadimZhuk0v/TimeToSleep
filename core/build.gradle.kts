@@ -1,13 +1,11 @@
 import com.vadmax.AppBuildInfo
-import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
 
 val kotlinVersion: String by rootProject.extra
 val coroutinesVersion: String by rootProject.extra
 
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -24,6 +22,8 @@ android {
     flavorDimensions += "dimens"
     productFlavors {
         create("dev") {
+        }
+        create("pc") {
         }
         create("prod") {
         }
@@ -49,29 +49,27 @@ android {
     }
 }
 dependencies {
-    api("androidx.core:core-ktx:1.13.1")
-    api("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
+    api(libs.androidx.core)
+    api(libs.kotlinx.collections.immutable)
 
-    api(platform("org.jetbrains.kotlin:kotlin-bom:1.9.23"))
-    api("org.jetbrains.kotlin:kotlin-stdlib")
+    api(platform(libs.kotlin.bom))
 
-    api("androidx.lifecycle:lifecycle-livedata-ktx:2.8.4")
+    api(libs.androidx.lifecycle.livedata)
 
     // DI
-    api("io.insert-koin:koin-android:3.5.4")
-    api("io.insert-koin:koin-android-ext:3.0.2")
+    api(libs.koin.android)
+    api(libs.koin.android.ext)
 
     // Logger
-    api("com.jakewharton.timber:timber:5.0.1")
+    api(libs.timber)
 
     // Gson
-    api("com.google.code.gson:gson:2.10.1")
+    api(libs.google.gson)
 
-    api("androidx.work:work-runtime-ktx:2.9.0")
+    api(libs.androidx.work)
 
     // Tests
-    testImplementation("junit:junit:4.13.2")
-    testImplementation(kotlin("test"))
-    androidTestImplementation(kotlin("test"))
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    testImplementation(libs.test.junit)
+    androidTestImplementation(libs.test.androidx.junit)
+    androidTestImplementation(libs.test.androidx.espresso.core)
 }
