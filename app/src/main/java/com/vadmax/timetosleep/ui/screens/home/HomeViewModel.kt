@@ -14,6 +14,7 @@ import com.vadmax.timetosleep.domain.usercases.IsVibrationEnable
 import com.vadmax.timetosleep.domain.usercases.ScheduleApplyActionsWorker
 import com.vadmax.timetosleep.domain.usercases.SetSelectedTime
 import com.vadmax.timetosleep.domain.usercases.SetTimerEnable
+import com.vadmax.timetosleep.domain.usercases.remote.ShutdownRemote
 import com.vadmax.timetosleep.ui.screens.home.support.HomeScreenEvent
 import com.vadmax.timetosleep.utils.flow.EventFlow
 import com.vadmax.timetosleep.utils.flow.MutableEventFlow
@@ -33,6 +34,7 @@ class HomeViewModel(
     private val scheduleApplyActionsWorker: ScheduleApplyActionsWorker,
     private val incEnableTimerCounter: IncEnableTimerCounter,
     private val cancelApplyActionsWorker: CancelApplyActionsWorker,
+    private val shutdownRemote: ShutdownRemote,
 ) : ViewModel() {
 
     private val _event = MutableEventFlow<HomeScreenEvent>()
@@ -75,6 +77,12 @@ class HomeViewModel(
             if (timerEnable.value) {
                 scheduleApplyActionsWorker()
             }
+        }
+    }
+
+    fun shutdown() {
+        viewModelScope.launch {
+            shutdownRemote()
         }
     }
 }

@@ -8,20 +8,15 @@ val appBuildInfo: AppBuildInfo by extra(
     ),
 )
 
-buildscript {
-    dependencies {
-        classpath("com.google.gms:google-services:4.4.2")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:3.0.1")
-    }
-}
-
 plugins {
-    val kotlinVersion = "1.9.23"
-    id("com.android.application") version "8.5.0" apply false
-    id("com.android.library") version "8.5.0" apply false
-    id("org.jetbrains.kotlin.android") version kotlinVersion apply false
-    kotlin("plugin.serialization") version kotlinVersion
-    id("com.google.devtools.ksp") version "1.9.23-1.0.19" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.google.ksp) apply false
+    alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.compose) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }
 
 tasks.register("clean", Delete::class) {

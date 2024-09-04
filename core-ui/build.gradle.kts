@@ -3,9 +3,9 @@ import com.vadmax.AppBuildInfo
 val composeVersion: String by rootProject.extra
 
 plugins {
-    id("com.android.library")
-    kotlin("android")
-    kotlin("kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -22,6 +22,8 @@ android {
     flavorDimensions += "dimens"
     productFlavors {
         create("dev") {
+        }
+        create("pc") {
         }
         create("prod") {
         }
@@ -50,37 +52,31 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
 }
 
 dependencies {
     implementation(project(":core"))
 
-    api("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
-    api("androidx.lifecycle:lifecycle-runtime-compose:2.8.4")
-    api("androidx.activity:activity-compose:1.9.1")
-    api("androidx.core:core-splashscreen:1.0.1")
+    api(libs.androidx.lifecycle.runtime)
+    api(libs.androidx.lifecycle.runtime.compose)
+    api(libs.androidx.activity.compose)
+    api(libs.androidx.core.splashscreen)
 
     // DI
-    api("io.insert-koin:koin-androidx-compose:3.5.4")
+    api(libs.koin.androidx.compose)
 
     // Compose
-    api("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    api("com.google.accompanist:accompanist-permissions:0.34.0")
-    api("androidx.navigation:navigation-compose:2.7.7")
-    val composeBom = platform("androidx.compose:compose-bom:2024.06.00")
-    api(composeBom)
-    androidTestImplementation(composeBom)
-    debugImplementation(composeBom)
-    api("androidx.compose.ui:ui")
-    api("androidx.compose.animation:animation-graphics")
-    api("androidx.compose.runtime:runtime-livedata")
-    api("androidx.compose.ui:ui-tooling-preview")
-    api("androidx.compose.material3:material3")
+    api(libs.androidx.constraintlayout.compose)
+    api(libs.accompanist.permissions)
+    api(libs.androidx.navigation.compose)
+    api(platform(libs.compose.bom))
+    api(libs.compose.ui)
+    api(libs.compose.animation.graphics)
+    api(libs.compose.runtime.livedata)
+    api(libs.compose.ui.tooling.preview)
+    api(libs.compose.material3)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    testImplementation(libs.test.junit)
+    androidTestImplementation(libs.test.androidx.junit)
+    androidTestImplementation(libs.test.androidx.espresso.core)
 }

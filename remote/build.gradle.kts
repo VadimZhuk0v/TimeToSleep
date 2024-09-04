@@ -3,13 +3,12 @@ import com.vadmax.AppBuildInfo
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.google.ksp)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
 
 android {
-    namespace = "com.vadmax.timetosleep.local"
+    namespace = "com.vadimax.timetosleep.remote"
     compileSdk = appBuildInfo.compileSdk
 
     defaultConfig {
@@ -28,12 +27,9 @@ android {
     }
 
     buildTypes {
-        release {
+        getByName("release") {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
     compileOptions {
@@ -52,13 +48,6 @@ android {
 
 dependencies {
     implementation(project(":core"))
-
-    // DataStore
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.datastore)
-
-    // Protobuf
-    implementation(libs.protobuf.javalite)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.androidx.junit)

@@ -2,16 +2,18 @@ import com.vadmax.AppBuildInfo
 import com.vadmax.constants.AdConstants
 import com.vadmax.constants.Config
 import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.util.regex.Pattern.compile
 
 val composeVersion: String by rootProject.extra
 
 plugins {
-    id("com.android.application")
-    kotlin("android")
-    id("kotlin-parcelize")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -62,6 +64,12 @@ android {
             resValue("string", "app_name", "Time To Sleep DEV")
             buildConfigField("Boolean", ENABLE_CRASHLYTICS, "false")
         }
+        create("pc") {
+            applicationIdSuffix = ".pc"
+            versionNameSuffix = "-pc"
+            resValue("string", "app_name", "Time To Sleep PC")
+            buildConfigField("Boolean", ENABLE_CRASHLYTICS, "false")
+        }
         create("prod") {
             resValue("string", "app_name", "Time To Sleep")
             signingConfig = releaseSigningConfigs
@@ -87,9 +95,6 @@ android {
         compose = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -104,42 +109,34 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":domain"))
 
-    implementation("com.google.android.material:material:1.12.0")
-
-    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation(libs.google.material)
 
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
     // Lottie
-    implementation("com.airbnb.android:lottie-compose:6.4.1")
+    implementation(libs.lottie.compose)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    testImplementation(libs.test.junit)
+    androidTestImplementation(libs.test.androidx.junit)
+    androidTestImplementation(libs.test.androidx.espresso.core)
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    val flavor = getCurrentFlavor()
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.material3.ExperimentalMaterial3Api"
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.animation.ExperimentalAnimationApi"
-    kotlinOptions.freeCompilerArgs +=
-        "-opt-in=androidx.compose.foundation.ExperimentalFoundationApi"
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.ui.ExperimentalComposeUiApi"
-    kotlinOptions.freeCompilerArgs += "-opt-in=androidx.compose.ui.text.ExperimentalTextApi"
-    if (flavor == "dev") {
-        kotlinOptions.freeCompilerArgs +=
-            listOf(
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${project.layout.buildDirectory.asFile.get().absolutePath}/compose_metrics",
-            )
-        kotlinOptions.freeCompilerArgs +=
-            listOf(
-                "-P",
-                "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${project.layout.buildDirectory.asFile.get().absolutePath}/compose_metrics",
-            )
+composeCompiler {
+    if (getCurrentFlavor() == "dev") {
+        reportsDestination = layout.buildDirectory.dir("compose_metrics")
+    }
+}
+
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
+        freeCompilerArgs.add("-opt-in=androidx.compose.animation.ExperimentalAnimationApi")
+        freeCompilerArgs.add("-opt-in=androidx.compose.foundation.ExperimentalFoundationApi")
+        freeCompilerArgs.add("-opt-in=androidx.compose.ui.ExperimentalComposeUiApi")
+        freeCompilerArgs.add("-opt-in=androidx.compose.ui.text.ExperimentalTextApi")
     }
 }
 
