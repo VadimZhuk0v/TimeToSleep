@@ -1,8 +1,9 @@
-package com.vadmax.timetosleep.domain.usercases
+package com.vadmax.timetosleep.domain.usecases
 
 import android.content.Context
 import android.media.AudioManager
 import com.vadmax.core.data.RingerMode
+import com.vadmax.timetosleep.domain.usercases.GetRingerMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

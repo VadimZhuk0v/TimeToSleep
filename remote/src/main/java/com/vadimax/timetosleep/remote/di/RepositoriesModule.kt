@@ -1,9 +1,8 @@
 package com.vadimax.timetosleep.remote.di
 
-import com.vadimax.timetosleep.remote.repositories.CommandApiRepository
-import com.vadimax.timetosleep.remote.repositories.CommandApiRepositoryImpl
-import org.koin.dsl.module
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Module
 
-internal val repositoriesModule = module {
-    single<CommandApiRepository> { CommandApiRepositoryImpl() }
-}
+@Module
+@ComponentScan("com.vadimax.timetosleep.remote.repositories")
+internal class RepositoriesModule

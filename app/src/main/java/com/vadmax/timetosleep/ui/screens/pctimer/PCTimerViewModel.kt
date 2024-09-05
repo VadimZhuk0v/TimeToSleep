@@ -1,14 +1,19 @@
 package com.vadmax.timetosleep.ui.screens.pctimer
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
 import com.vadmax.core.utils.extentions.second
+import com.vadmax.timetosleep.domain.repositories.pc.PCRepository
 import com.vadmax.timetosleep.domain.usercases.GetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.IsVibrationEnable
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
+import timber.log.Timber
 import java.util.Calendar
 import java.util.Date
 
@@ -16,6 +21,7 @@ import java.util.Date
 class PCTimerViewModel(
     isVibrationEnable: IsVibrationEnable,
     private val getSoundEffectEnable: GetSoundEffectEnable,
+    private val pcRepository: PCRepository,
 ) : ViewModel() {
 
     val vibrationEnable = isVibrationEnable()
@@ -23,11 +29,19 @@ class PCTimerViewModel(
 
     val timerEnable = MutableStateFlow(false)
 
-    fun setTimerEnable(isEnable: Boolean) {
-        timerEnable.value = isEnable
+    init {
+        pcRepository.attachScope(viewModelScope)
     }
 
-//    suspend fun getInitialTime() = getSelectedTime()
+    fun setTimerEnable(isEnable: Boolean) {
+        timerEnable.value = isEnable
+        viewModelScope.launch(
+            CoroutineExceptionHandler { _, throwable ->
+                Timber.e(throwable)
+            },
+        ) {
+        }
+    }
 
     fun setTime(
         hour: Int,

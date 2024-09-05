@@ -1,8 +1,9 @@
-package com.vadmax.timetosleep.domain.usercases
+package com.vadmax.timetosleep.domain.usecases
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
+import com.vadmax.timetosleep.domain.usercases.GetSelectedApps
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

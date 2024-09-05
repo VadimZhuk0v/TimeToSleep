@@ -1,5 +1,9 @@
 import com.vadmax.AppBuildInfo
 import com.vadmax.constants.AdConstants
+import com.vadmax.constants.Application.versionCode
+import com.vadmax.constants.BuildVersion.compileSdk
+import com.vadmax.constants.BuildVersion.minSdk
+import com.vadmax.constants.BuildVersion.targetSdk
 import com.vadmax.constants.Config
 import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
@@ -118,6 +122,8 @@ dependencies {
 
     implementation(libs.google.material)
     implementation(libs.kotlinx.serialization)
+
+    implementation(libs.kotlinx.rpc.client)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

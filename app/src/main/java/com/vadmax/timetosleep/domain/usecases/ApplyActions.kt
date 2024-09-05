@@ -1,5 +1,8 @@
-package com.vadmax.timetosleep.domain.usercases
+package com.vadmax.timetosleep.domain.usecases
 
+import com.vadmax.timetosleep.domain.usercases.IsDisableBluetoothEnable
+import com.vadmax.timetosleep.domain.usercases.IsLockScreenEnable
+import com.vadmax.timetosleep.domain.usercases.SetTimerEnable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

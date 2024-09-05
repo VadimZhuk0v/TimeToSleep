@@ -16,6 +16,7 @@ kotlin = "2.0.10"
 kotlin-serialization = "1.7.1"
 kotlinx-collections-immutable = "0.3.7"
 ktor = "2.3.12"
+kotlin-rpc = "0.2.4"
 lifecycle-livedata-ktx = "2.8.5"
 lottie-compose = "6.5.0"
 material = "1.12.0"
@@ -25,11 +26,13 @@ crashlytics = "3.0.2"
 android = "8.5.2"
 ksp = "2.0.10-1.0.24"
 protobuf-javalite = "3.14.0"
+slf4jApi = "2.0.13"
 timber = "5.0.1"
 work= "2.9.1"
 firebase = "33.2.0"
 compose = "2024.09.00"
 ui-tooling = "1.7.0"
+logbackAndroid = "3.0.0"
 
 [libraries]
 #google
@@ -64,6 +67,14 @@ compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 
+#rpc
+ktor-client-http = { module = "io.ktor:ktor-client-okhttp" ,version.ref = "ktor" }
+logback-android = { module = "com.github.tony19:logback-android", version.ref = "logbackAndroid" }
+kotlinx-rpc-json = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-serialization-json" }
+kotlinx-rpc-client = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-client" }
+kotlinx-rpc-client-ktor = { module = "org.jetbrains.kotlinx:kotlinx-rpc-krpc-ktor-client" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4jApi" }
+
 #lottie
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
 
@@ -71,7 +82,6 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android"}
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
-koin-core = { module = "io.insert-koin:koin-core" }
 koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "koin-android-ext" }
 koin-annotation = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotation" }
 koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotation" }
@@ -94,8 +104,6 @@ test-androidx-junit = { group = "androidx.test.ext", name = "junit",  version.re
 test-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 test-junit = { group = "junit", name = "junit", version.ref = "junit" }
 
-#rpc
-
 
 [plugins]
 #android
@@ -110,4 +118,6 @@ firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+#ktor
+kotlinx-rcp = { id = "org.jetbrains.kotlinx.rpc.plugin", version.ref = "kotlin-rpc" }
 

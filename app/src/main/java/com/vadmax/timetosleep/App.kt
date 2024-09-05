@@ -20,7 +20,6 @@ class App : Application() {
     }
 
     private fun initTimber() {
-        Timber.plant(Timber.DebugTree())
         Timber.plant(TagTree())
     }
 

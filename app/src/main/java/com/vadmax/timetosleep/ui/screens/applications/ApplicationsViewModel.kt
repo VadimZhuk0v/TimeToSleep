@@ -3,7 +3,7 @@ package com.vadmax.timetosleep.ui.screens.applications
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadmax.core.data.AppInfo
-import com.vadmax.timetosleep.domain.usercases.GetAppsList
+import com.vadmax.timetosleep.domain.usecases.GetAppsList
 import com.vadmax.timetosleep.domain.usercases.GetSelectedApps
 import com.vadmax.timetosleep.domain.usercases.SelectApp
 import com.vadmax.timetosleep.domain.usercases.UnselectApp
