@@ -3,6 +3,7 @@ package com.vadmax.timetosleep.domain.usercases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Factory
 import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
@@ -11,6 +12,7 @@ fun interface ApplyActions {
 }
 
 @SuppressWarnings("LongParameterList")
+@Factory(binds = [ApplyActions::class])
 class ApplyActionsImpl(
     private val setTimerEnable: SetTimerEnable,
     private val stopMusic: StopMusic,

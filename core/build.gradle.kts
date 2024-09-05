@@ -57,8 +57,10 @@ dependencies {
     api(libs.androidx.lifecycle.livedata)
 
     // DI
+    api(platform(libs.koin.bom))
     api(libs.koin.android)
     api(libs.koin.android.ext)
+    api(libs.koin.annotation)
 
     // Logger
     api(libs.timber)

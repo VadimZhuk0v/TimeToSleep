@@ -3,6 +3,7 @@ import com.vadmax.AppBuildInfo
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.ksp)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -44,10 +45,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    sourceSets["main"].java.srcDir("build/generated/ksp/main/kotlin")
 }
 
 dependencies {
     implementation(project(":core"))
+
+    // DI
+    ksp(libs.koin.ksp.compiler)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.androidx.junit)

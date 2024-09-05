@@ -20,10 +20,12 @@ import com.vadmax.timetosleep.utils.flow.EventFlow
 import com.vadmax.timetosleep.utils.flow.MutableEventFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import java.util.Calendar
 import java.util.Date
 
 @SuppressWarnings("LongParameterList")
+@KoinViewModel
 class HomeViewModel(
     isTimerEnable: IsTimerEnable,
     isVibrationEnable: IsVibrationEnable,

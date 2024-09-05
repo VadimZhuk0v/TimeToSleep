@@ -14,6 +14,7 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.ksp)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -102,12 +103,16 @@ android {
     }
 
     lint.disable += "UnusedMaterial3ScaffoldPaddingParameter"
+    sourceSets["main"].java.srcDir("build/generated/ksp/main/kotlin")
 }
 
 dependencies {
     implementation(project(":core"))
     implementation(project(":core-ui"))
     implementation(project(":domain"))
+
+    // DI
+    ksp(libs.koin.ksp.compiler)
 
     implementation(libs.google.material)
     implementation(libs.kotlinx.serialization)

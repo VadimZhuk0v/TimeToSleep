@@ -3,16 +3,18 @@ package com.vadmax.timetosleep.domain.usercases
 import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.Context
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Factory
 import timber.log.Timber
+import kotlin.coroutines.CoroutineContext
 
 fun interface CloseApps {
     suspend operator fun invoke()
 }
 
+@Factory(binds = [CloseApps::class])
 class CloseAppsImpl(
     private val context: Context,
     private val getSelectedApps: GetSelectedApps,

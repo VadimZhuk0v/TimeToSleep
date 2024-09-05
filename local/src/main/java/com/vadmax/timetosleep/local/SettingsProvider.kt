@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import org.koin.core.annotation.Single
 
 private const val SHARED_NAME = "shared"
 
@@ -74,6 +75,7 @@ interface SettingsProvider {
 
 private val Context.dataStore by preferencesDataStore(name = SHARED_NAME)
 
+@Single(binds = [SettingsProvider::class])
 internal class SettingsProviderImpl(
     private val context: Context,
     private val coroutineScope: CoroutineScope,
