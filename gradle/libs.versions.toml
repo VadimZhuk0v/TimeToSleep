@@ -1,6 +1,6 @@
 [versions]
 accompanist-permissions = "0.34.0"
-activity-compose = "1.9.1"
+activity-compose = "1.9.2"
 constraintlayout-compose = "1.0.1"
 core-ktx = "1.13.1"
 core-splashscreen = "1.0.1"
@@ -12,12 +12,13 @@ junit-version = "1.2.1"
 koin = "3.5.6"
 koin-android-ext = "3.0.2"
 kotlin = "2.0.10"
+kotlin-serialization = "1.7.1"
 kotlinx-collections-immutable = "0.3.7"
 ktor = "2.3.12"
-lifecycle-livedata-ktx = "2.8.4"
+lifecycle-livedata-ktx = "2.8.5"
 lottie-compose = "6.5.0"
 material = "1.12.0"
-navigation-compose = "2.7.7"
+navigation-compose = "2.8.0"
 play-services = "4.4.2"
 crashlytics = "3.0.2"
 android = "8.5.2"
@@ -26,7 +27,7 @@ protobuf-javalite = "3.14.0"
 timber = "5.0.1"
 work= "2.9.1"
 firebase = "33.2.0"
-compose = "2024.08.00"
+compose = "2024.09.00"
 
 [libraries]
 #google
@@ -73,6 +74,7 @@ kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin
 
 #kotlinx
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
+kotlinx-serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlin-serialization" }
 
 #Timber
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
