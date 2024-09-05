@@ -9,8 +9,9 @@ espresso-core = "3.6.1"
 gson = "2.11.0"
 junit = "4.13.2"
 junit-version = "1.2.1"
-koin = "3.5.6"
+koin = "4.0.0-RC2"
 koin-android-ext = "3.0.2"
+koin-annotation = "1.4.0-RC4"
 kotlin = "2.0.10"
 kotlin-serialization = "1.7.1"
 kotlinx-collections-immutable = "0.3.7"
@@ -65,9 +66,13 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie-compose" }
 
 #koin
-koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android"}
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose" }
+koin-core = { module = "io.insert-koin:koin-core" }
 koin-android-ext = { module = "io.insert-koin:koin-android-ext", version.ref = "koin-android-ext" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+koin-annotation = { module = "io.insert-koin:koin-annotations", version.ref = "koin-annotation" }
+koin-ksp-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-annotation" }
 
 #kotlin
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }

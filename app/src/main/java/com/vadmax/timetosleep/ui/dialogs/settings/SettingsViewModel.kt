@@ -15,9 +15,11 @@ import com.vadmax.timetosleep.domain.usercases.SetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.SetVibrationEnable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.koin.android.annotation.KoinViewModel
 import timber.log.Timber
 
 @SuppressWarnings("LongParameterList")
+@KoinViewModel
 class SettingsViewModel(
     isLockScreenEnable: IsLockScreenEnable,
     isDisableBluetoothEnable: IsDisableBluetoothEnable,

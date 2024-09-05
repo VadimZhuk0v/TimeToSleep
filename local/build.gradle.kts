@@ -48,10 +48,14 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    sourceSets["main"].java.srcDir("build/generated/ksp/main/kotlin")
 }
 
 dependencies {
     implementation(project(":core"))
+
+    // DI
+    ksp(libs.koin.ksp.compiler)
 
     // DataStore
     implementation(libs.androidx.datastore.preferences)
