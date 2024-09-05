@@ -14,8 +14,12 @@ import org.koin.ksp.generated.module
 class ViewModelModule
 
 @Module
-@ComponentScan("com.vadmax.timetosleep.domain.usercases")
+@ComponentScan("com.vadmax.timetosleep.domain.usecases")
 class UseCases
+
+@Module
+@ComponentScan("com.vadmax.timetosleep.domain.repositories")
+class RepositoriesModule
 
 @Module
 class CoroutinesModule {
@@ -28,4 +32,5 @@ val appModules = listOf(
     ViewModelModule().module,
     CoroutinesModule().module,
     UseCases().module,
+    RepositoriesModule().module,
 ) + domainModules

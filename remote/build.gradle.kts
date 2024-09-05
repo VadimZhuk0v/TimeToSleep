@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlinx.rcp)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -53,6 +55,14 @@ dependencies {
 
     // DI
     ksp(libs.koin.ksp.compiler)
+
+    // RCP
+    implementation(libs.ktor.client.http)
+    implementation(libs.logback.android)
+    implementation(libs.kotlinx.rpc.client)
+    implementation(libs.kotlinx.rpc.client.ktor)
+    implementation(libs.kotlinx.rpc.json)
+    implementation(libs.slf4j.api)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.androidx.junit)

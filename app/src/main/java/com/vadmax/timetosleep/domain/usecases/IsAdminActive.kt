@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.domain.usercases
+package com.vadmax.timetosleep.domain.usecases
 
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
@@ -9,9 +9,7 @@ fun interface IsAdminActive {
     operator fun invoke(): Boolean
 }
 
-class IsAdminActiveImpl(
-    private val context: Context,
-) : IsAdminActive {
+class IsAdminActiveImpl(private val context: Context) : IsAdminActive {
 
     override fun invoke(): Boolean {
         val dm = context.getSystemService(DevicePolicyManager::class.java)

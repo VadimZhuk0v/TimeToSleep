@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.domain.usercases
+package com.vadmax.timetosleep.domain.usecases
 
 import android.app.admin.DevicePolicyManager
 import android.content.Context

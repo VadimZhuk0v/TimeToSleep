@@ -1,3 +1,10 @@
 package com.vadimax.timetosleep.remote.di
 
-val remoteModules = listOf(repositoriesModule)
+import org.koin.ksp.generated.defaultModule
+import org.koin.ksp.generated.module
+
+val remoteModules = listOf(
+    HttpModule().module,
+    RepositoriesModule().module,
+    defaultModule,
+)

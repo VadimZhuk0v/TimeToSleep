@@ -10,6 +10,6 @@ class TagTree : Timber.DebugTree() {
         message: String,
         t: Throwable?,
     ) {
-        super.log(priority, "TimeToSleepTag$tag", message, t)
+        super.log(priority, "DeveloperLog$tag", message, t)
     }
 }
