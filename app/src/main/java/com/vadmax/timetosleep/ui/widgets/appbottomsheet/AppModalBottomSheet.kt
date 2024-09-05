@@ -35,7 +35,7 @@ fun AppModalBottomSheet(
             },
             sheetState = sheetState,
             containerColor = containerColor,
-            windowInsets = WindowInsets.displayCutout,
+            contentWindowInsets = { WindowInsets.displayCutout },
             content = {
                 content()
                 Box(
