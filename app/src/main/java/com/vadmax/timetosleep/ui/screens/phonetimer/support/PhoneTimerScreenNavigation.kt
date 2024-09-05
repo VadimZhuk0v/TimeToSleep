@@ -14,13 +14,15 @@ fun NavController.navigateToPhoneTimer(navOptionsBuilder: NavOptionsBuilder.() -
     navigate(
         route = PhoneTimerScreenArgs,
     ) {
-        launchSingleTop = true
+        popUpTo(0)
         navOptionsBuilder()
     }
 }
 
 fun NavGraphBuilder.phoneTimerScreenComposable() {
     composable<PhoneTimerScreenArgs> {
-        PhoneTimerScreen()
+        with(PhoneTimerScope) {
+            PhoneTimerScreen()
+        }
     }
 }

@@ -21,6 +21,8 @@ fun NavController.navigateToHome(navOptionsBuilder: NavOptionsBuilder.() -> Unit
 
 fun NavGraphBuilder.homeScreenComposable() {
     composable<HomeScreenArgs> {
-        HomeScreen()
+        with(HomeScreenScope) {
+            HomeScreen()
+        }
     }
 }

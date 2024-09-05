@@ -111,6 +111,8 @@ dependencies {
     implementation(project(":core-ui"))
     implementation(project(":domain"))
 
+    debugImplementation(libs.androidx.ui.tooling)
+
     // DI
     ksp(libs.koin.ksp.compiler)
 
@@ -138,11 +140,8 @@ composeCompiler {
 
 tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions {
+        freeCompilerArgs.add("-Xcontext-receivers")
         freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
-        freeCompilerArgs.add("-opt-in=androidx.compose.animation.ExperimentalAnimationApi")
-        freeCompilerArgs.add("-opt-in=androidx.compose.foundation.ExperimentalFoundationApi")
-        freeCompilerArgs.add("-opt-in=androidx.compose.ui.ExperimentalComposeUiApi")
-        freeCompilerArgs.add("-opt-in=androidx.compose.ui.text.ExperimentalTextApi")
     }
 }
 
