@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.vadmax.timetosleep.coreui.theme.clock
 import com.vadmax.timetosleep.ui.widgets.wheelpicker.WheelPicker
@@ -29,7 +30,10 @@ fun NumberClock(
                 horizontalAlignment = Alignment.End,
                 itemsCount = 24,
             )
-            Text(text = " : ")
+            Text(
+                text = " : ",
+                color = Color.White,
+            )
             Wheel(
                 isVibrationEnable = isVibrationEnable,
                 state = numberClockState.minuteState,
@@ -61,6 +65,9 @@ fun Wheel(
             } else {
                 index.toString()
             }
-        Text(text = text)
+        Text(
+            text = text,
+            color = Color.White,
+        )
     }
 }

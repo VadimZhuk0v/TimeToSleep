@@ -1,5 +1,6 @@
 package com.vadmax.timetosleep.ui.screens.pctimer.support
 
+import androidx.compose.animation.with
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
@@ -14,13 +15,15 @@ fun NavController.navigateToPCTimer(navOptionsBuilder: NavOptionsBuilder.() -> U
     navigate(
         route = PCTimerScreenArgs,
     ) {
-        launchSingleTop = true
+        popUpTo(0)
         navOptionsBuilder()
     }
 }
 
 fun NavGraphBuilder.pcTimerScreenComposable() {
     composable<PCTimerScreenArgs> {
-        PCTimerScreen()
+        with(PCTimerScreenScope) {
+            PCTimerScreen()
+        }
     }
 }

@@ -29,6 +29,7 @@ timber = "5.0.1"
 work= "2.9.1"
 firebase = "33.2.0"
 compose = "2024.09.00"
+ui-tooling = "1.7.0"
 
 [libraries]
 #google
@@ -46,6 +47,7 @@ androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-kt
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-livedata-ktx" }
 androidx-datastore = { module = "androidx.datastore:datastore", version.ref = "datastore-preferences" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore-preferences" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
 
 #firebase
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase" }
