@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.ui.screens.home.ui
+package com.vadmax.timetosleep.ui.screens.pctimer.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.StartOffset
@@ -29,9 +29,9 @@ import androidx.compose.ui.unit.dp
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.coreui.theme.AppTheme
 import com.vadmax.timetosleep.coreui.widgets.Spacer
-import com.vadmax.timetosleep.ui.screens.home.support.HomeScreenScope
+import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
 
-context(HomeScreenScope)
+context(PCTimerScreenScope)
 @Composable
 fun ConnectionStatus(
     modifier: Modifier = Modifier,
@@ -52,7 +52,7 @@ fun ConnectionStatus(
         Spacer(8.dp)
         Text(
             text = text,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleLarge,
             color = Color.White,
         )
     }
@@ -75,7 +75,7 @@ private fun Circle(connected: Boolean) {
         animationSpec = tween(1500),
     )
     Box(
-        modifier = Modifier.size(17.dp),
+        modifier = Modifier.size(25.dp),
         contentAlignment = Alignment.Center,
     ) {
         for (i in 0..3) {
@@ -117,7 +117,7 @@ private fun Circle(connected: Boolean) {
 @Composable
 private fun ConnectionStatusPreview() {
     AppTheme {
-        with(HomeScreenScope) {
+        with(PCTimerScreenScope) {
             Column {
                 ConnectionStatus(connected = true)
                 Spacer(10.dp)

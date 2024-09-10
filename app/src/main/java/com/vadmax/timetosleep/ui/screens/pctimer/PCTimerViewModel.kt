@@ -2,20 +2,18 @@ package com.vadmax.timetosleep.ui.screens.pctimer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vadmax.core.utils.extentions.hour
-import com.vadmax.core.utils.extentions.minute
-import com.vadmax.core.utils.extentions.second
+import com.vadmax.core.utils.extentions.map
+import com.vadmax.timetosleep.data.TimeUIModel
 import com.vadmax.timetosleep.domain.repositories.pc.PCRepository
+import com.vadmax.timetosleep.domain.repositories.pc.TimerState
 import com.vadmax.timetosleep.domain.usercases.GetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.IsVibrationEnable
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
+import com.vadmax.timetosleep.ui.screens.pctimer.ui.PCTimerScreenState
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import timber.log.Timber
-import java.util.Calendar
-import java.util.Date
 
 @KoinViewModel
 class PCTimerViewModel(
@@ -25,35 +23,40 @@ class PCTimerViewModel(
 ) : ViewModel() {
 
     val vibrationEnable = isVibrationEnable()
-    val initialTime = flow { emit(Date()) }
+    val selectTime = pcRepository.selectTime
+    val connected = pcRepository.connected
 
-    val timerEnable = MutableStateFlow(false)
+    val timerEnable = pcRepository.enabled.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(500),
+        false,
+    )
 
-    init {
-        pcRepository.attachScope(viewModelScope)
-    }
-
-    fun setTimerEnable(isEnable: Boolean) {
-        timerEnable.value = isEnable
-        viewModelScope.launch(
-            CoroutineExceptionHandler { _, throwable ->
-                Timber.e(throwable)
-            },
-        ) {
+    val screenState = pcRepository.timerState.map(viewModelScope) {
+        when (it) {
+            TimerState.Idle -> PCTimerScreenState.Idle
+            is TimerState.Timer -> PCTimerScreenState.Timer(it.initialTime)
         }
     }
 
-    fun setTime(
-        hour: Int,
-        minute: Int,
-    ) {
-        val calendar = Calendar.getInstance().apply {
-            this.hour = hour
-            this.minute = minute
-            second = 0
-            if (time < Date()) {
-                this.add(Calendar.DAY_OF_YEAR, 1)
-            }
+    fun setTimerEnable(value: Boolean) {
+        Timber.i("👆 On enable click")
+        pcRepository.setEnabled(value)
+    }
+
+    fun attachScope() {
+        Timber.d("Attach viewmodel scope to pcRepository")
+        pcRepository.attachScope(viewModelScope)
+    }
+
+    fun detachScope() {
+        Timber.d("Detach viewmodel scope from pcRepository")
+        pcRepository.detachScope()
+    }
+
+    fun setTime(time: TimeUIModel) {
+        viewModelScope.launch {
+            pcRepository.changeTimeByUser(time)
         }
     }
 }

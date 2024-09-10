@@ -9,8 +9,6 @@ import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.util.regex.Pattern.compile
 
-val composeVersion: String by rootProject.extra
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -104,6 +102,10 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+
+    composeCompiler {
+        enableStrongSkippingMode = true
     }
 
     lint.disable += "UnusedMaterial3ScaffoldPaddingParameter"

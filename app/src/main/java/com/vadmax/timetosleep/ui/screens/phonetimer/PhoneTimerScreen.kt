@@ -1,10 +1,8 @@
 package com.vadmax.timetosleep.ui.screens.phonetimer
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,13 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,54 +25,43 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.coreui.theme.AppTheme
 import com.vadmax.timetosleep.coreui.theme.Dimens
+import com.vadmax.timetosleep.data.TimeUIModel
 import com.vadmax.timetosleep.ui.screens.phonetimer.support.ListenScreenEvent
 import com.vadmax.timetosleep.ui.screens.phonetimer.support.PhoneTimerScope
 import com.vadmax.timetosleep.ui.screens.phonetimer.ui.Moon
+import com.vadmax.timetosleep.ui.screens.phonetimer.ui.PhoneTimerScreenState
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClock
 import com.vadmax.timetosleep.ui.widgets.numberclock.rememberNumberClockState
 import com.vadmax.timetosleep.ui.widgets.ripplesurface.RippleSurface
 import com.vadmax.timetosleep.ui.widgets.ripplesurface.RippleSurfaceState
 import com.vadmax.timetosleep.utils.extentions.requestIgnoreBatteryOptimizations
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import java.util.Date
 
 context(PhoneTimerScope)
 @Composable
 fun PhoneTimerScreen(viewModel: PhoneTimerViewModel = koinViewModel()) {
-    val initialTime by viewModel.initialTime.collectAsState(initial = null)
-    val isVibrationEnable by viewModel.vibrationEnable.collectAsState()
-    val isTimerEnable by viewModel.timerEnable.collectAsState()
+    val context = LocalContext.current
 
-    AnimatedContent(
-        targetState = initialTime,
-        label = "InitialTime",
-        modifier = Modifier.fillMaxSize(),
-        transitionSpec = {
-            fadeIn(tween(300)) togetherWith fadeOut(tween(300))
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+    val isVibrationEnable by viewModel.vibrationEnable.collectAsStateWithLifecycle()
+    val isTimerEnable by viewModel.timerEnable.collectAsStateWithLifecycle()
+
+    PhoneTimerContent(
+        screenState = screenState,
+        isTimerEnable = isTimerEnable,
+        isVibrationEnable = isVibrationEnable,
+        setTimerEnable = {
+            if (context.requestIgnoreBatteryOptimizations().not()) {
+                viewModel.setTimerEnable(it)
+            }
         },
-    ) {
-        if (it == null) {
-            Box(Modifier.fillMaxSize())
-            return@AnimatedContent
-        }
-        val context = LocalContext.current
-        PhoneTimerContent(
-            isTimerEnable = isTimerEnable,
-            isVibrationEnable = isVibrationEnable,
-            setTimerEnable = {
-                if (context.requestIgnoreBatteryOptimizations().not()) {
-                    viewModel.setTimerEnable(it)
-                }
-            },
-            setTime = viewModel::setTime,
-            initialTime = it,
-        )
-    }
+        setTime = viewModel::setTime,
+    )
 
     ListenScreenEvent(viewModel.event)
 }
@@ -86,71 +69,116 @@ fun PhoneTimerScreen(viewModel: PhoneTimerViewModel = koinViewModel()) {
 context(PhoneTimerScope)
 @Composable
 fun PhoneTimerContent(
+    screenState: PhoneTimerScreenState,
     isTimerEnable: Boolean,
     isVibrationEnable: Boolean,
-    initialTime: Date,
     setTimerEnable: (value: Boolean) -> Unit,
-    setTime: (hours: Int, minute: Int) -> Unit,
+    setTime: (TimeUIModel) -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val numberClockState = rememberNumberClockState(initialTime)
-    val setTimeUpdated by rememberUpdatedState(setTime)
     Scaffold {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(),
+        AnimatedContent(
+            targetState = screenState,
+            label = "Screen state",
         ) {
-            Box(
-                modifier = Modifier.height(100.dp),
-            ) {
-                androidx.compose.animation.AnimatedVisibility(
-                    modifier = Modifier.fillMaxWidth(),
-                    visible = isTimerEnable.not(),
-                    label = "Title",
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                ) {
-                    Text(
-                        text = stringResource(R.string.home_tap_on_me),
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.8F)
-                    .aspectRatio(1F),
-            ) {
-                val state = remember { RippleSurfaceState() }
-                RippleSurface(
-                    modifier = Modifier.fillMaxSize(),
-                    state = state,
-                )
-                Moon(
+            when (it) {
+                PhoneTimerScreenState.Idle -> IdleScreenState()
+                is PhoneTimerScreenState.Timer -> TimerScreenState(
+                    screenState = it,
                     isTimerEnable = isTimerEnable,
-                    onCheckedChange = {
-                        setTimerEnable(it)
-                        coroutineScope.launch {
-                            state.show()
-                        }
-                    },
+                    isVibrationEnable = isVibrationEnable,
+                    setTimerEnable = setTimerEnable,
+                    setTime = setTime,
                 )
             }
-            Spacer(modifier = Modifier.height(Dimens.margin4x))
-            NumberClock(
-                isVibrationEnable = isVibrationEnable,
-                numberClockState = numberClockState,
-            )
         }
     }
-    LaunchedEffect(Unit) {
-        snapshotFlow { numberClockState.time }
-            .collectLatest {
-                setTimeUpdated(it.hour, it.minute)
+}
+
+context(PhoneTimerScope)
+@Composable
+private fun IdleScreenState(modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+    }
+}
+
+context(PhoneTimerScope)
+@Composable
+private fun TimerScreenState(
+    screenState: PhoneTimerScreenState.Timer,
+    isTimerEnable: Boolean,
+    isVibrationEnable: Boolean,
+    setTimerEnable: (value: Boolean) -> Unit,
+    setTime: (TimeUIModel) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val numberClockState = rememberNumberClockState(screenState.initialTime)
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        Box(
+            modifier = Modifier.height(100.dp),
+        ) {
+            androidx.compose.animation.AnimatedVisibility(
+                modifier = Modifier.fillMaxWidth(),
+                visible = isTimerEnable.not(),
+                label = "Title",
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                Text(
+                    text = stringResource(R.string.home_tap_on_me),
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.8F)
+                .aspectRatio(1F),
+        ) {
+            val state = remember { RippleSurfaceState() }
+            RippleSurface(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+            )
+            Moon(
+                isTimerEnable = isTimerEnable,
+                onCheckedChange = {
+                    setTimerEnable(it)
+                    coroutineScope.launch {
+                        state.show()
+                    }
+                },
+            )
+        }
+        Spacer(modifier = Modifier.height(Dimens.margin4x))
+        NumberClock(
+            isVibrationEnable = isVibrationEnable,
+            numberClockState = numberClockState,
+            onChangeByUser = setTime,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PhoneTimerIdlePreview() {
+    with(PhoneTimerScope) {
+        AppTheme {
+            PhoneTimerContent(
+                isTimerEnable = false,
+                isVibrationEnable = false,
+                setTimerEnable = {},
+                setTime = { },
+                screenState = PhoneTimerScreenState.Idle,
+            )
+        }
     }
 }
 
@@ -162,9 +190,9 @@ private fun PhoneTimerPreview() {
             PhoneTimerContent(
                 isTimerEnable = false,
                 isVibrationEnable = false,
-                initialTime = Date(),
                 setTimerEnable = {},
-                setTime = { _, _ -> },
+                setTime = { },
+                screenState = PhoneTimerScreenState.Timer(TimeUIModel(0, 0)),
             )
         }
     }

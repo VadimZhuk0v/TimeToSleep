@@ -10,7 +10,10 @@ import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
+import com.vadmax.timetosleep.data.TimeUIModel
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClockState.Companion.Saver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
@@ -40,13 +43,36 @@ fun rememberNumberClockState(calendar: Calendar): NumberClockState =
 fun rememberNumberClockState(time: Date): NumberClockState =
     rememberNumberClockState(Calendar.getInstance().apply { this.time = time })
 
+@SuppressLint("ComposableNaming")
+@Composable
+fun rememberNumberClockState(time: TimeUIModel): NumberClockState =
+    rememberNumberClockState(time.hours, time.minutes)
+
 class NumberClockState(val hourState: LazyListState, val minuteState: LazyListState) {
 
     val time by derivedStateOf {
-        Time(hourState.firstVisibleItemIndex, minuteState.firstVisibleItemIndex)
+        TimeUIModel(hourState.firstVisibleItemIndex, minuteState.firstVisibleItemIndex)
     }
+    var scrolledProgrammatically = false
+        private set
 
-    data class Time(val hour: Int, val minute: Int)
+    fun animateToTime(
+        scope: CoroutineScope,
+        time: TimeUIModel,
+    ) {
+        scrolledProgrammatically = true
+        val minJob = scope.launch {
+            minuteState.animateScrollToItem(time.minutes)
+        }
+        val hourJob = scope.launch {
+            hourState.animateScrollToItem(time.hours)
+        }
+        scope.launch {
+            minJob.join()
+            hourJob.join()
+            scrolledProgrammatically = false
+        }
+    }
 
     companion object {
         val Saver: Saver<NumberClockState, *> = listSaver(

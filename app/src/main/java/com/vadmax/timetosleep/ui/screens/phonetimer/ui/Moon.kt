@@ -12,9 +12,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.coreui.extensions.clickableNoRipple
-import com.vadmax.timetosleep.ui.screens.phonetimer.support.PhoneTimerScope
 
-context(PhoneTimerScope)
 @Composable
 fun Moon(
     isTimerEnable: Boolean,
