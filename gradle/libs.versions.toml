@@ -30,8 +30,8 @@ slf4jApi = "2.0.13"
 timber = "5.0.1"
 work= "2.9.1"
 firebase = "33.2.0"
-compose = "2024.09.00"
-ui-tooling = "1.7.0"
+compose = "2024.09.01"
+ui-tooling = "1.7.1"
 logbackAndroid = "3.0.0"
 
 [libraries]

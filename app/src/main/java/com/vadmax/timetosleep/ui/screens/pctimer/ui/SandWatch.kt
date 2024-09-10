@@ -11,30 +11,22 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.vadmax.timetosleep.R
-import com.vadmax.timetosleep.coreui.extensions.clickableNoRipple
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
 
 context(PCTimerScreenScope)
 @Composable
-fun Clock(
-    isTimerEnable: Boolean,
-    onCheckedChange: (value: Boolean) -> Unit,
-) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lt_clock))
+fun SandWatch() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lt_sand_watch))
     val lottieState = animateLottieCompositionAsState(
         composition = composition,
-        isPlaying = isTimerEnable,
+        isPlaying = true,
         iterations = LottieConstants.IterateForever,
         cancellationBehavior = LottieCancellationBehavior.OnIterationFinish,
-        speed = 0.3F,
+        speed = 0.6F,
     )
     LottieAnimation(
         composition = composition,
         progress = { lottieState.progress },
-        modifier = Modifier
-            .fillMaxSize()
-            .clickableNoRipple {
-                onCheckedChange(isTimerEnable.not())
-            },
+        modifier = Modifier.fillMaxSize(),
     )
 }

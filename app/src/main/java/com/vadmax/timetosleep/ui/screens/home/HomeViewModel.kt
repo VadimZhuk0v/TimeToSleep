@@ -11,6 +11,4 @@ class HomeViewModel(private val pcRepository: PCRepository) : ViewModel() {
 
     private val _event = MutableEventFlow<HomeScreenEvent>()
     val event: MutableEventFlow<HomeScreenEvent> = _event
-
-    val connected = pcRepository.connected
 }

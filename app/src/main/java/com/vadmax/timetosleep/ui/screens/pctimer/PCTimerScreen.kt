@@ -1,9 +1,10 @@
 package com.vadmax.timetosleep.ui.screens.pctimer
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,134 +18,173 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.coreui.theme.Dimens
+import com.vadmax.timetosleep.coreui.widgets.Spacer
+import com.vadmax.timetosleep.data.TimeUIModel
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
-import com.vadmax.timetosleep.ui.screens.pctimer.ui.Clock
+import com.vadmax.timetosleep.ui.screens.pctimer.ui.ConnectionStatus
+import com.vadmax.timetosleep.ui.screens.pctimer.ui.PCTimerScreenState
+import com.vadmax.timetosleep.ui.screens.pctimer.ui.SandWatch
+import com.vadmax.timetosleep.ui.screens.phonetimer.ui.Moon
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClock
 import com.vadmax.timetosleep.ui.widgets.numberclock.rememberNumberClockState
 import com.vadmax.timetosleep.ui.widgets.ripplesurface.RippleSurface
 import com.vadmax.timetosleep.ui.widgets.ripplesurface.RippleSurfaceState
-import com.vadmax.timetosleep.utils.extentions.requestIgnoreBatteryOptimizations
-import kotlinx.coroutines.flow.collectLatest
+import com.vadmax.timetosleep.utils.flow.SingleEventEffect
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import java.util.Date
 
 context(PCTimerScreenScope)
 @Composable
 fun PCTimerScreen(viewModel: PCTimerViewModel = koinViewModel()) {
-    val initialTime by viewModel.initialTime.collectAsState(initial = null)
-    val isVibrationEnable by viewModel.vibrationEnable.collectAsState()
-    val isTimerEnable by viewModel.timerEnable.collectAsState()
+    val screenState by viewModel.screenState.collectAsStateWithLifecycle()
+    val isVibrationEnable by viewModel.vibrationEnable.collectAsStateWithLifecycle()
+    val isTimerEnable by viewModel.timerEnable.collectAsStateWithLifecycle()
+    val connected by viewModel.connected.collectAsStateWithLifecycle()
 
-    AnimatedContent(
-        targetState = initialTime,
-        label = "InitialTime",
-        modifier = Modifier.fillMaxSize(),
-        transitionSpec = {
-            fadeIn(tween(300)) togetherWith fadeOut(tween(300))
-        },
-    ) {
-        if (it == null) {
-            Box(Modifier.fillMaxSize())
-            return@AnimatedContent
-        }
-        val context = LocalContext.current
-        PCTimerContent(
-            isTimerEnable = isTimerEnable,
-            isVibrationEnable = isVibrationEnable,
-            setTimerEnable = {
-                if (context.requestIgnoreBatteryOptimizations().not()) {
-                    viewModel.setTimerEnable(it)
-                }
-            },
-            setTime = viewModel::setTime,
-            initialTime = it,
-        )
+    PCTimerContent(
+        isTimerEnable = isTimerEnable,
+        connected = connected,
+        isVibrationEnable = isVibrationEnable,
+        setTimerEnable = viewModel::setTimerEnable,
+        setTime = viewModel::setTime,
+        screenState = screenState,
+        selectTime = viewModel.selectTime,
+    )
+    LifecycleStartEffect(Unit) {
+        viewModel.attachScope()
+        onStopOrDispose { viewModel.detachScope() }
     }
 }
 
 context(PCTimerScreenScope)
 @Composable
 private fun PCTimerContent(
+    screenState: PCTimerScreenState,
     isTimerEnable: Boolean,
+    connected: Boolean,
     isVibrationEnable: Boolean,
-    initialTime: Date,
+    selectTime: Flow<TimeUIModel>,
     setTimerEnable: (value: Boolean) -> Unit,
-    setTime: (hours: Int, minute: Int) -> Unit,
+    setTime: (TimeUIModel) -> Unit,
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val numberClockState = rememberNumberClockState(initialTime)
-    val setTimeUpdated by rememberUpdatedState(setTime)
     Scaffold {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize(),
         ) {
-            Box(
-                modifier = Modifier.height(100.dp),
+            Spacer(20.dp)
+            ConnectionStatus(
+                connected = connected,
+            )
+            Spacer(20.dp)
+            AnimatedContent(
+                targetState = screenState,
+                label = "Screen state",
+                transitionSpec = { scaleIn() togetherWith scaleOut() },
             ) {
-                androidx.compose.animation.AnimatedVisibility(
-                    modifier = Modifier.fillMaxWidth(),
-                    visible = isTimerEnable.not(),
-                    label = "Title",
-                    enter = fadeIn(),
-                    exit = fadeOut(),
-                ) {
-                    Text(
-                        text = stringResource(R.string.home_tap_on_me),
-                        style = MaterialTheme.typography.headlineMedium,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
+                when (it) {
+                    PCTimerScreenState.Idle -> IdleScreenStata()
+                    is PCTimerScreenState.Timer -> TimerScreenState(
+                        screenState = it,
+                        isTimerEnable = isTimerEnable,
+                        isVibrationEnable = isVibrationEnable,
+                        setTimerEnable = setTimerEnable,
+                        setTime = setTime,
+                        selectTime = selectTime,
                     )
                 }
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(0.8F)
-                    .aspectRatio(1F),
-            ) {
-                val state = remember { RippleSurfaceState() }
-                RippleSurface(
-                    modifier = Modifier.fillMaxSize(),
-                    state = state,
-                )
-                Clock(
-                    isTimerEnable = isTimerEnable,
-                    onCheckedChange = {
-                        setTimerEnable(it)
-                        coroutineScope.launch {
-                            state.show()
-                        }
-                    },
-                )
-            }
-            Spacer(modifier = Modifier.height(Dimens.margin4x))
-            NumberClock(
-                isVibrationEnable = isVibrationEnable,
-                numberClockState = numberClockState,
-            )
         }
     }
-    LaunchedEffect(Unit) {
-        snapshotFlow { numberClockState.time }
-            .collectLatest {
-                setTimeUpdated(it.hour, it.minute)
+}
+
+context(PCTimerScreenScope)
+@Composable
+private fun IdleScreenStata(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        SandWatch()
+    }
+}
+
+context(PCTimerScreenScope)
+@Composable
+private fun TimerScreenState(
+    screenState: PCTimerScreenState.Timer,
+    isTimerEnable: Boolean,
+    isVibrationEnable: Boolean,
+    selectTime: Flow<TimeUIModel>,
+    setTimerEnable: (value: Boolean) -> Unit,
+    setTime: (TimeUIModel) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val numberClockState = rememberNumberClockState(screenState.initialTime)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = modifier.fillMaxSize(),
+    ) {
+        Box(
+            modifier = Modifier.height(100.dp),
+        ) {
+            androidx.compose.animation.AnimatedVisibility(
+                modifier = Modifier.fillMaxWidth(),
+                visible = isTimerEnable.not(),
+                label = "Title",
+                enter = fadeIn(),
+                exit = fadeOut(),
+            ) {
+                Text(
+                    text = stringResource(R.string.home_tap_on_me),
+                    style = MaterialTheme.typography.headlineMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(0.8F)
+                .aspectRatio(1F),
+        ) {
+            val state = remember { RippleSurfaceState() }
+            RippleSurface(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+            )
+            Moon(
+                isTimerEnable = isTimerEnable,
+                onCheckedChange = {
+                    setTimerEnable(it)
+                    coroutineScope.launch {
+                        state.show()
+                    }
+                },
+            )
+        }
+        Spacer(modifier = Modifier.height(Dimens.margin4x))
+        NumberClock(
+            isVibrationEnable = isVibrationEnable,
+            numberClockState = numberClockState,
+            onChangeByUser = setTime,
+        )
+    }
+    SingleEventEffect(selectTime) {
+        numberClockState.animateToTime(coroutineScope, it)
     }
 }
