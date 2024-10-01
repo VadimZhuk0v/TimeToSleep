@@ -1,11 +1,13 @@
 package com.vadimax.timetosleep.remote.rcp
 
+import com.vadimax.timetosleep.remote.usecases.GetServerConfig
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
 import kotlinx.rpc.serialization.json
@@ -28,6 +30,7 @@ interface RPCClientFactory {
 internal class RPCClientFactoryImpl(
     private val coroutineScope: CoroutineScope,
     private val httpClient: HttpClient,
+    private val getServerConfig: GetServerConfig,
 ) : RPCClientFactory {
 
     private var deferred: Deferred<KtorRPCClient?>? = null
@@ -39,6 +42,10 @@ internal class RPCClientFactoryImpl(
     }
 
     override suspend fun getInstance(): KtorRPCClient? = withContext(creationThread) {
+        val config = getServerConfig().firstOrNull() ?: run {
+            Timber.w("⚠️ No server config")
+            return@withContext null
+        }
         if (deferred != null && deferred?.await() != null) {
             Timber.d("Return exciting RPC client")
             return@withContext deferred?.await()
@@ -49,8 +56,8 @@ internal class RPCClientFactoryImpl(
             try {
                 httpClient.rpc {
                     url {
-                        host = "192.168.50.210"
-                        port = 9006
+                        host = config.ipAddress
+                        port = config.port
                     }
                     rpcConfig {
                         serialization {

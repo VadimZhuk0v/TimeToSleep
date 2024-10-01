@@ -1,12 +1,9 @@
 import com.vadmax.AppBuildInfo
-import com.vadmax.constants.AdConstants
-import com.vadmax.constants.Application.versionCode
-import com.vadmax.constants.BuildVersion.compileSdk
-import com.vadmax.constants.BuildVersion.minSdk
-import com.vadmax.constants.BuildVersion.targetSdk
 import com.vadmax.constants.Config
 import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import java.io.FileInputStream
+import java.util.Properties
 import java.util.regex.Pattern.compile
 
 plugins {
@@ -20,6 +17,14 @@ plugins {
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+} else {
+    println("keystore.properties file not found. Release builds may fail.")
+}
 
 android {
     namespace = "com.vadmax.timetosleep"
@@ -37,24 +42,14 @@ android {
         }
         buildConfigField("Boolean", "ENABLE_CRASHLYTICS", "true")
         buildConfigField("Boolean", Config.ENABLE_ANALYTICS, false.toString())
-        buildConfigField(
-            "String",
-            Config.AD_HEADER_UNIT,
-            "\"${AdConstants.AD_TEST_BANNER_UNIT}\"",
-        )
-        buildConfigField(
-            "String",
-            Config.AD_INTERSTITIAL_UNIT,
-            "\"${AdConstants.AD_TEST_INTERSTITIAL_UNIT}\"",
-        )
     }
 
     signingConfigs {
         create("prod") {
-            storeFile = file("../key")
-            storePassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
-            keyAlias = "prod"
-            keyPassword = "wKdW9KKWCtEufUCKsqMaFdW4sc5PwG5"
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String?
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
         }
     }
 
@@ -65,12 +60,6 @@ android {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
             resValue("string", "app_name", "Time To Sleep DEV")
-            buildConfigField("Boolean", ENABLE_CRASHLYTICS, "false")
-        }
-        create("pc") {
-            applicationIdSuffix = ".pc"
-            versionNameSuffix = "-pc"
-            resValue("string", "app_name", "Time To Sleep PC")
             buildConfigField("Boolean", ENABLE_CRASHLYTICS, "false")
         }
         create("prod") {
@@ -118,14 +107,11 @@ dependencies {
     implementation(project(":domain"))
 
     debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.google.material)
 
     // DI
     ksp(libs.koin.ksp.compiler)
-
-    implementation(libs.google.material)
-    implementation(libs.kotlinx.serialization)
-
-    implementation(libs.kotlinx.rpc.client)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
@@ -134,6 +120,16 @@ dependencies {
 
     // Lottie
     implementation(libs.lottie.compose)
+
+    // QR
+    implementation(libs.qr.kit)
+
+    // Coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+
+    // Custom Tabs
+    implementation(libs.androidx.browser)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.androidx.junit)

@@ -23,4 +23,6 @@ interface PCRepository {
     suspend fun changeTimeByUser(time: TimeUIModel)
 
     fun setEnabled(value: Boolean)
+
+    fun setServerConfig(data: String)
 }

@@ -3,16 +3,16 @@ package com.vadmax.timetosleep.ui.dialogs.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadmax.core.data.RingerMode
-import com.vadmax.timetosleep.domain.usercases.GetRingerMode
-import com.vadmax.timetosleep.domain.usercases.GetSoundEffectEnable
-import com.vadmax.timetosleep.domain.usercases.IsDisableBluetoothEnable
-import com.vadmax.timetosleep.domain.usercases.IsLockScreenEnable
-import com.vadmax.timetosleep.domain.usercases.IsVibrationEnable
-import com.vadmax.timetosleep.domain.usercases.SetDisableBluetoothEnable
-import com.vadmax.timetosleep.domain.usercases.SetLockScreenEnable
-import com.vadmax.timetosleep.domain.usercases.SetRingerMode
-import com.vadmax.timetosleep.domain.usercases.SetSoundEffectEnable
-import com.vadmax.timetosleep.domain.usercases.SetVibrationEnable
+import com.vadmax.timetosleep.domain.usercases.local.GetRingerMode
+import com.vadmax.timetosleep.domain.usercases.local.GetSoundEffectEnable
+import com.vadmax.timetosleep.domain.usercases.local.IsDisableBluetoothEnable
+import com.vadmax.timetosleep.domain.usercases.local.IsLockScreenEnable
+import com.vadmax.timetosleep.domain.usercases.local.IsVibrationEnable
+import com.vadmax.timetosleep.domain.usercases.local.SetDisableBluetoothEnable
+import com.vadmax.timetosleep.domain.usercases.local.SetLockScreenEnable
+import com.vadmax.timetosleep.domain.usercases.local.SetRingerMode
+import com.vadmax.timetosleep.domain.usercases.local.SetSoundEffectEnable
+import com.vadmax.timetosleep.domain.usercases.local.SetVibrationEnable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -25,11 +25,11 @@ class SettingsViewModel(
     isDisableBluetoothEnable: IsDisableBluetoothEnable,
     getRingerMode: GetRingerMode,
     isVibrationEnable: IsVibrationEnable,
+    getSoundEffectEnable: GetSoundEffectEnable,
     private val setLockScreenEnable: SetLockScreenEnable,
     private val setDisableBluetoothEnable: SetDisableBluetoothEnable,
     private val setRingerMode: SetRingerMode,
     private val setVibrationEnable: SetVibrationEnable,
-    private val getSoundEffectEnable: GetSoundEffectEnable,
     private val setSoundEffectEnable: SetSoundEffectEnable,
 ) : ViewModel() {
 

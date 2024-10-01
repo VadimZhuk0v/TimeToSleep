@@ -1,6 +1,8 @@
 package com.vadmax.timetosleep.domain.repositories.pc
 
 import com.vadmax.timetosleep.data.TimeUIModel
+import com.vadmax.timetosleep.domain.usercases.local.HasServerConfig
+import com.vadmax.timetosleep.domain.usercases.local.SetServerConfig
 import com.vadmax.timetosleep.domain.usercases.remote.data.GetPCTime
 import com.vadmax.timetosleep.domain.usercases.remote.data.GetPCTimerEnabled
 import com.vadmax.timetosleep.domain.usercases.remote.data.GetPingStatus
@@ -22,6 +24,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -41,6 +44,8 @@ class PCRepositoryImpl(
     private val sendTimeToServer: SendTimeToServer,
     private val subscribePCTimerEnabled: SubscribePCTimerEnabled,
     private val sendTimerEnable: SendTimerEnable,
+    private val hasServerConfig: HasServerConfig,
+    private val setServerConfig: SetServerConfig,
 ) : PCRepository {
 
     override val connected = MutableStateFlow(false)
@@ -51,7 +56,15 @@ class PCRepositoryImpl(
 
     private val selectedTime = MutableStateFlow<TimeUIModel?>(null)
 
-    override val timerState = combine(connected, selectedTime) { connected, selectTime ->
+    override val timerState = combine(
+        connected,
+        selectedTime,
+        hasServerConfig(),
+    ) { connected, selectTime, hasServerConfig ->
+        if (hasServerConfig.not()) {
+            Timber.d("No server config")
+            return@combine TimerState.NoDevice
+        }
         if (connected.not() || selectTime == null) {
             return@combine TimerState.Idle
         }
@@ -66,9 +79,9 @@ class PCRepositoryImpl(
     private var pcTimeJob: Job? = null
     private var collectPCTimeJob: Job? = null
     private var pcTimerEnabledJob: Job? = null
-    private var collectPCTimerEnabledJob: Job? = null
     private var setNotConnectedJob: Job? = null
     private var sendTimeJob: Job? = null
+    private var listenServerConfigJob: Job? = null
 
     private val pcExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Timber.w("❌ PC request failed with error: ${throwable.message}")
@@ -85,11 +98,12 @@ class PCRepositoryImpl(
 
     override fun attachScope(coroutineScope: CoroutineScope) {
         uiCoroutineScope = coroutineScope
-        resubscribe()
+        listenServerConfig()
     }
 
     override fun detachScope() {
         cancelAllJobs()
+        listenServerConfigJob?.cancel()
         uiCoroutineScope = null
     }
 
@@ -100,6 +114,12 @@ class PCRepositoryImpl(
     override fun setEnabled(value: Boolean) {
         uiCoroutineScope?.launch {
             sendTimerEnable(value)
+        }
+    }
+
+    override fun setServerConfig(data: String) {
+        coroutineScope.launch {
+            setServerConfig.invoke(data)
         }
     }
 
@@ -199,6 +219,18 @@ class PCRepositoryImpl(
         pcTimerEnabledJob?.cancel()
         pcTimerEnabledJob = uiCoroutineScope?.launch(pcExceptionHandler) {
             subscribePCTimerEnabled.invoke()
+        }
+    }
+
+    private fun listenServerConfig() {
+        listenServerConfigJob = uiCoroutineScope?.launch {
+            hasServerConfig().distinctUntilChanged().collectLatest {
+                if (it) {
+                    resubscribe()
+                } else {
+                    cancelAllJobs()
+                }
+            }
         }
     }
 }

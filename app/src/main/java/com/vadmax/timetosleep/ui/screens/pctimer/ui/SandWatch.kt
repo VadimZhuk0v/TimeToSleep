@@ -1,9 +1,10 @@
 package com.vadmax.timetosleep.ui.screens.pctimer.ui
 
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCancellationBehavior
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -27,6 +28,6 @@ fun SandWatch() {
     LottieAnimation(
         composition = composition,
         progress = { lottieState.progress },
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.size(400.dp),
     )
 }

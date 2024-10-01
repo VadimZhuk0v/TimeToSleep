@@ -20,4 +20,11 @@
 
     <string name="pc.connected">Connected</string>
     <string name="pc.disconnected">Disconnected</string>
+    <string name="pc.unpair">Unpair PC</string>
+    <string name="pc.scan_qr_title">Scan QR to pair with PC</string>
+    <string name="pc.grant_access_to_the_camera">Grant access to the camera\nto scan</string>
+    <string name="pc.grant_access">Grant Access</string>
+
+    <string name="pc_info.title">Download a Windows app\nto pair your device</string>
+    <string name="pc_info.download">Download</string>
 </resources>

@@ -22,8 +22,6 @@ android {
     productFlavors {
         create("dev") {
         }
-        create("pc") {
-        }
         create("prod") {
         }
     }
@@ -56,6 +54,8 @@ dependencies {
 
     // DI
     ksp(libs.koin.ksp.compiler)
+
+    implementation(libs.kotlinx.serialization)
 
     testImplementation(libs.test.junit)
     androidTestImplementation(libs.test.androidx.junit)

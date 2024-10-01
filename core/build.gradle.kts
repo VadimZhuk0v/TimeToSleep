@@ -23,8 +23,6 @@ android {
     productFlavors {
         create("dev") {
         }
-        create("pc") {
-        }
         create("prod") {
         }
     }

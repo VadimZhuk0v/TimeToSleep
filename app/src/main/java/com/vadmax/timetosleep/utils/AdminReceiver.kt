@@ -3,7 +3,7 @@ package com.vadmax.timetosleep.utils
 import android.app.admin.DeviceAdminReceiver
 import android.content.Context
 import android.content.Intent
-import com.vadmax.timetosleep.domain.usercases.SetLockScreenEnable
+import com.vadmax.timetosleep.domain.usercases.local.SetLockScreenEnable
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -11,12 +11,18 @@ import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class AdminReceiver : DeviceAdminReceiver(), KoinComponent {
+class AdminReceiver :
+    DeviceAdminReceiver(),
+    KoinComponent {
 
-    private val setLockScreenEnable: SetLockScreenEnable by inject()
+    private val setLockScreenEnable:
+        com.vadmax.timetosleep.domain.usercases.local.SetLockScreenEnable by inject()
 
     @OptIn(DelicateCoroutinesApi::class)
-    override fun onDisabled(context: Context, intent: Intent) {
+    override fun onDisabled(
+        context: Context,
+        intent: Intent,
+    ) {
         super.onDisabled(context, intent)
 
         GlobalScope.launch(Dispatchers.IO) {
