@@ -1,6 +1,8 @@
 package com.vadmax.timetosleep.local
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -12,6 +14,8 @@ import com.vadmax.core.data.AppInfo
 import com.vadmax.core.data.RingerMode
 import com.vadmax.core.utils.extentions.safeValueOf
 import com.vadmax.core.utils.extentions.toObject
+import com.vadmax.timetosleep.local.data.ServerConfigLocalModel
+import com.vadmax.timetosleep.local.data.ServerDataModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -48,6 +52,10 @@ interface SettingsProvider {
     val ringerMode: Flow<RingerMode?>
     val soundEffect: StateFlow<Boolean>
 
+    fun getServerDataModel(): Flow<ServerConfigLocalModel?>
+
+    suspend fun setServerDataModel(value: ServerConfigLocalModel)
+
     suspend fun setTimerEnable(value: Boolean)
 
     suspend fun setDisableWifiEnable(value: Boolean)
@@ -71,9 +79,16 @@ interface SettingsProvider {
     suspend fun removeApp(appInfo: AppInfo)
 
     suspend fun setSoundEffect(value: Boolean)
+
+    suspend fun deleteServerConfig()
 }
 
 private val Context.dataStore by preferencesDataStore(name = SHARED_NAME)
+
+private val Context.serverDataStore: DataStore<ServerDataModel> by dataStore(
+    fileName = "ServerDataStore",
+    serializer = ServerDataModelSerializer,
+)
 
 @Single(binds = [SettingsProvider::class])
 internal class SettingsProviderImpl(
@@ -114,6 +129,21 @@ internal class SettingsProviderImpl(
         it[VL_ENABLE_TIMER_COUNTER] ?: 1
     }
 
+    override suspend fun setServerDataModel(value: ServerConfigLocalModel) {
+        context.serverDataStore.updateData {
+            it.toBuilder()
+                .setPort(value.port)
+                .setIpAddress(value.ipAddress)
+                .build()
+        }
+    }
+
+    override suspend fun deleteServerConfig() {
+        context.serverDataStore.updateData {
+            it.toBuilder().clear().build()
+        }
+    }
+
     override val soundEffect = context.dataStore.data.map {
         it[VL_SOUND_EFFECT] ?: true
     }.stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), true)
@@ -122,6 +152,17 @@ internal class SettingsProviderImpl(
         context.dataStore.edit {
             val value = it[VL_ENABLE_TIMER_COUNTER] ?: 1
             it[VL_ENABLE_TIMER_COUNTER] = value + 1
+        }
+    }
+
+    override fun getServerDataModel() = context.serverDataStore.data.map {
+        if (it.ipAddress.isEmpty()) {
+            null
+        } else {
+            ServerConfigLocalModel(
+                ipAddress = it.ipAddress,
+                port = it.port,
+            )
         }
     }
 

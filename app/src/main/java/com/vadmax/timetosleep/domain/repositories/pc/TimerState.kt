@@ -6,5 +6,7 @@ sealed interface TimerState {
 
     data object Idle : TimerState
 
+    data object NoDevice : TimerState
+
     data class Timer(val initialTime: TimeUIModel) : TimerState
 }

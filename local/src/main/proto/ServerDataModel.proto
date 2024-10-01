@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "com.vadmax.timetosleep.local.data";
+option java_multiple_files = true;
+
+message ServerDataModel {
+    string ipAddress = 1;
+    int32 port = 2;
+}

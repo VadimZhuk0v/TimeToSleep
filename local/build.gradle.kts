@@ -1,9 +1,13 @@
+import com.google.protobuf.gradle.id
 import com.vadmax.AppBuildInfo
+import com.vadmax.constants.BuildVersion.compileSdk
+import com.vadmax.constants.BuildVersion.minSdk
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.ksp)
+    alias(libs.plugins.proto)
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
@@ -16,12 +20,24 @@ android {
         minSdk = appBuildInfo.minSdk
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    protobuf {
+        protoc {
+            artifact = "com.google.protobuf:protoc:3.24.1"
+        }
+        generateProtoTasks {
+            all().forEach { task ->
+                task.builtins {
+                    id("java") {
+                        option("lite")
+                    }
+                }
+            }
+        }
+    }
 
     flavorDimensions += "dimens"
     productFlavors {
         create("dev") {
-        }
-        create("pc") {
         }
         create("prod") {
         }

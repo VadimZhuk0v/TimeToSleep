@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadmax.core.data.AppInfo
 import com.vadmax.timetosleep.domain.usecases.GetAppsList
-import com.vadmax.timetosleep.domain.usercases.GetSelectedApps
-import com.vadmax.timetosleep.domain.usercases.SelectApp
-import com.vadmax.timetosleep.domain.usercases.UnselectApp
+import com.vadmax.timetosleep.domain.usercases.local.GetSelectedApps
+import com.vadmax.timetosleep.domain.usercases.local.SelectApp
+import com.vadmax.timetosleep.domain.usercases.local.UnselectApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,9 +18,9 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class ApplicationsViewModel(
     private val getAppsList: GetAppsList,
-    private val getSelectedApps: GetSelectedApps,
-    private val selectApp: SelectApp,
-    private val unselectApp: UnselectApp,
+    private val getSelectedApps: com.vadmax.timetosleep.domain.usercases.local.GetSelectedApps,
+    private val selectApp: com.vadmax.timetosleep.domain.usercases.local.SelectApp,
+    private val unselectApp: com.vadmax.timetosleep.domain.usercases.local.UnselectApp,
 ) : ViewModel() {
 
     private val appsList = MutableStateFlow(listOf<AppInfo>())

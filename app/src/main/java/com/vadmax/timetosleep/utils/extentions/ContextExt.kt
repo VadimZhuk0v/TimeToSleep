@@ -2,6 +2,7 @@ package com.vadmax.timetosleep.utils.extentions
 
 import android.app.NotificationManager
 import android.app.admin.DevicePolicyManager
+import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -12,7 +13,9 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.provider.Settings
 import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+import androidx.browser.customtabs.CustomTabsIntent
 import com.vadmax.timetosleep.utils.AdminReceiver
+import timber.log.Timber
 
 @SuppressWarnings("MagicNumber")
 fun Context.vibrate() {
@@ -76,5 +79,16 @@ fun Context.requestIgnoreBatteryOptimizations(): Boolean {
         return true
     } else {
         return false
+    }
+}
+
+fun Context.openLink(url: String) {
+    Timber.d("🔗 Try to open link $url")
+    try {
+        CustomTabsIntent.Builder()
+            .build()
+            .launchUrl(this, Uri.parse(url))
+    } catch (e: ActivityNotFoundException) {
+        Timber.e("❌ Error open link $url", e)
     }
 }
