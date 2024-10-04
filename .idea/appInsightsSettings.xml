@@ -8,7 +8,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.vadmax.timetosleep" />
+                  <option name="appId" value="com.askwho.app" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.vadmax.timetosleep" />
-                  <option name="mobileSdkAppId" value="1:698629622023:android:9671a7566bd5b4d5f1dda2" />
-                  <option name="projectId" value="time-to-sleep-f9c3d" />
-                  <option name="projectNumber" value="698629622023" />
+                  <option name="appId" value="com.vadmax.timetosleep.app" />
+                  <option name="mobileSdkAppId" value="1:384196989808:android:b52a230e294b754f4bb5b5" />
+                  <option name="projectId" value="time-to-sleep-445ee" />
+                  <option name="projectNumber" value="384196989808" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

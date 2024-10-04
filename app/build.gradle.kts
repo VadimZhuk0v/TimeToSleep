@@ -17,7 +17,7 @@ plugins {
 }
 
 val appBuildInfo: AppBuildInfo by rootProject.extra
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile = rootProject.file("app/keystore.properties")
 val keystoreProperties = Properties()
 
 if (keystorePropertiesFile.exists()) {
@@ -31,11 +31,11 @@ android {
     compileSdk = appBuildInfo.compileSdk
 
     defaultConfig {
-        applicationId = "com.vadmax.timetosleep"
+        applicationId = "com.vadmax.timetosleep.app"
         minSdk = appBuildInfo.minSdk
         targetSdk = appBuildInfo.targetSdk
-        versionCode = 1
-        versionName = "2.0.0"
+        versionCode = 3
+        versionName = "2.0.0-alpha"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true

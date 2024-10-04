@@ -1,124 +1,45 @@
 {
   "project_info": {
-    "project_number": "698629622023",
-    "project_id": "time-to-sleep-f9c3d",
-    "storage_bucket": "time-to-sleep-f9c3d.appspot.com"
+    "project_number": "384196989808",
+    "project_id": "time-to-sleep-445ee",
+    "storage_bucket": "time-to-sleep-445ee.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:698629622023:android:9671a7566bd5b4d5f1dda2",
+        "mobilesdk_app_id": "1:384196989808:android:b52a230e294b754f4bb5b5",
         "android_client_info": {
-          "package_name": "com.vadmax.timetosleep"
+          "package_name": "com.vadmax.timetosleep.app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAVLZxWc73WFgHbD49ZmxkxhjDjmLx-Fbw"
+          "current_key": "AIzaSyBfAP98A9E9CUv5UwIPaDfUer3lbtVizVU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      },
-      "admob_app_id": "ca-app-pub-2137393606695859~5567486138"
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:698629622023:android:a5fe7190feaf53ddf1dda2",
-        "android_client_info": {
-          "package_name": "com.vadmax.timetosleep.dev"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAVLZxWc73WFgHbD49ZmxkxhjDjmLx-Fbw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:698629622023:android:ce9c099bb63ffd16f1dda2",
+        "mobilesdk_app_id": "1:384196989808:android:70d9954105cdec974bb5b5",
         "android_client_info": {
-          "package_name": "com.vadmax.timetosleep.pc"
+          "package_name": "com.vadmax.timetosleep.app.dev"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAVLZxWc73WFgHbD49ZmxkxhjDjmLx-Fbw"
+          "current_key": "AIzaSyBfAP98A9E9CUv5UwIPaDfUer3lbtVizVU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:698629622023:android:17bfc9d6739d2d1af1dda2",
-        "android_client_info": {
-          "package_name": "com.vadmax.timetosleep.qa"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAVLZxWc73WFgHbD49ZmxkxhjDjmLx-Fbw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "698629622023-bfi5bb0assr8vph09mjho13ljac2pmci.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
