@@ -20,7 +20,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
@@ -28,7 +27,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.Single
 import timber.log.Timber
@@ -71,7 +70,9 @@ class PCRepositoryImpl(
         TimerState.Timer(selectTime)
     }.distinctUntilChangedBy {
         it::class
-    }.stateIn(coroutineScope, SharingStarted.Lazily, TimerState.Idle)
+    }.onEach {
+        Timber.d("Timer state: $it")
+    }
 
     private var uiCoroutineScope: CoroutineScope? = null
     private var pingJob: Job? = null

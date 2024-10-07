@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface PCRepository {
 
-    val timerState: StateFlow<TimerState>
+    val timerState: Flow<TimerState>
 
     val connected: StateFlow<Boolean>
 

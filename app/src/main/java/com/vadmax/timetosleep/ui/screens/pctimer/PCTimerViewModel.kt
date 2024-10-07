@@ -2,7 +2,6 @@ package com.vadmax.timetosleep.ui.screens.pctimer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vadmax.core.utils.extentions.map
 import com.vadmax.timetosleep.data.TimeUIModel
 import com.vadmax.timetosleep.domain.repositories.pc.PCRepository
 import com.vadmax.timetosleep.domain.repositories.pc.TimerState
@@ -11,6 +10,7 @@ import com.vadmax.timetosleep.domain.usercases.local.GetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.local.IsVibrationEnable
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.PCTimerScreenState
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -34,13 +34,13 @@ class PCTimerViewModel(
         false,
     )
 
-    val screenState = pcRepository.timerState.map(viewModelScope) {
+    val screenState = pcRepository.timerState.map {
         when (it) {
             TimerState.NoDevice -> PCTimerScreenState.NoDeice
             TimerState.Idle -> PCTimerScreenState.Idle
             is TimerState.Timer -> PCTimerScreenState.Timer(it.initialTime)
         }
-    }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(500), PCTimerScreenState.Idle)
 
     fun setTimerEnable(value: Boolean) {
         Timber.i("👆 On enable click")

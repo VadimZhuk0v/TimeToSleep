@@ -9,5 +9,7 @@ import org.koin.core.annotation.Factory
 @Factory(binds = [GetServerConfig::class])
 internal class GetServerConfigImpl(private val settingsProvider: SettingsProvider) :
     GetServerConfig {
-    override fun invoke() = settingsProvider.getServerDataModel().map { it?.toRemoteModel() }
+    override fun invoke() = settingsProvider.getServerDataModel().map {
+        it?.toRemoteModel()
+    }
 }
