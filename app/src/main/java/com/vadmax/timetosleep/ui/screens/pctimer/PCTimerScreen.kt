@@ -14,9 +14,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,25 +27,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleStartEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vadmax.timetosleep.R
-import com.vadmax.timetosleep.coreui.Shapes
 import com.vadmax.timetosleep.coreui.VoidCallback
 import com.vadmax.timetosleep.coreui.theme.AppColors
 import com.vadmax.timetosleep.coreui.theme.Dimens
 import com.vadmax.timetosleep.coreui.widgets.Spacer
 import com.vadmax.timetosleep.data.TimeUIModel
 import com.vadmax.timetosleep.ui.dialogs.pcinfo.PCInfoDialog
+import com.vadmax.timetosleep.ui.dialogs.pcsettings.PCSettingsDialog
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.ConnectionStatus
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.NoDeviceScreenStata
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.PCTimerScreenState
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.SandWatch
 import com.vadmax.timetosleep.ui.screens.phonetimer.ui.Moon
+import com.vadmax.timetosleep.ui.widgets.actionbutton.ActionButton
+import com.vadmax.timetosleep.ui.widgets.iconbutton.IconButton
 import com.vadmax.timetosleep.ui.widgets.numberclock.NumberClock
 import com.vadmax.timetosleep.ui.widgets.numberclock.rememberNumberClockState
 import com.vadmax.timetosleep.ui.widgets.ripplesurface.RippleSurface
@@ -63,6 +67,7 @@ fun PCTimerScreen(viewModel: PCTimerViewModel = koinViewModel()) {
     val connected by viewModel.connected.collectAsStateWithLifecycle()
 
     val infoDialogVisible = remember { mutableStateOf(false) }
+    val settingsDialogVisible = remember { mutableStateOf(false) }
 
     PCTimerContent(
         isTimerEnable = isTimerEnable,
@@ -75,8 +80,10 @@ fun PCTimerScreen(viewModel: PCTimerViewModel = koinViewModel()) {
         setServerConfig = viewModel::setServerConfig,
         onInfoClick = { infoDialogVisible.value = true },
         onUnpairClick = viewModel::onUnpairClick,
+        onSettingsClick = { settingsDialogVisible.value = true },
     )
     PCInfoDialog(visible = infoDialogVisible)
+    PCSettingsDialog(visible = settingsDialogVisible)
 
     LifecycleStartEffect(Unit) {
         viewModel.attachScope()
@@ -94,6 +101,7 @@ private fun PCTimerContent(
     onInfoClick: VoidCallback,
     selectTime: Flow<TimeUIModel>,
     onUnpairClick: VoidCallback,
+    onSettingsClick: VoidCallback,
     setTimerEnable: (value: Boolean) -> Unit,
     setServerConfig: (value: String) -> Unit,
     setTime: (TimeUIModel) -> Unit,
@@ -122,6 +130,7 @@ private fun PCTimerContent(
                         setTime = setTime,
                         selectTime = selectTime,
                         connected = connected,
+                        onSettingsClick = onSettingsClick,
                     )
 
                     PCTimerScreenState.Idle -> IdleScreenStata(
@@ -146,12 +155,12 @@ private fun IdleScreenStata(
     ) {
         SandWatch()
         Spacer(20.dp)
-        OutlinedButton(
+        ActionButton(
             onClick = onUnpairClick,
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = AppColors.unpair,
             ),
-            shape = Shapes.shape16,
+            borderColor = AppColors.unpair,
         ) {
             Text(
                 text = stringResource(R.string.pc_unpair),
@@ -168,6 +177,7 @@ private fun TimerScreenState(
     connected: Boolean,
     isTimerEnable: Boolean,
     isVibrationEnable: Boolean,
+    onSettingsClick: VoidCallback,
     selectTime: Flow<TimeUIModel>,
     setTimerEnable: (value: Boolean) -> Unit,
     setTime: (TimeUIModel) -> Unit,
@@ -175,58 +185,71 @@ private fun TimerScreenState(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val numberClockState = rememberNumberClockState(screenState.initialTime)
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize(),
+    Box(
+        modifier = modifier,
     ) {
-        Spacer(40.dp)
-        ConnectionStatus(
-            connected = connected,
-        )
-        Spacer(20.dp)
-        Box(
-            modifier = Modifier.height(100.dp),
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxSize(),
         ) {
-            androidx.compose.animation.AnimatedVisibility(
-                modifier = Modifier.fillMaxWidth(),
-                visible = isTimerEnable.not(),
-                label = "Title",
-                enter = fadeIn(),
-                exit = fadeOut(),
+            Spacer(40.dp)
+            ConnectionStatus(
+                connected = connected,
+            )
+            Spacer(20.dp)
+            Box(
+                modifier = Modifier.height(100.dp),
             ) {
-                Text(
-                    text = stringResource(R.string.home_tap_on_me),
-                    style = MaterialTheme.typography.headlineMedium,
-                    textAlign = TextAlign.Center,
+                androidx.compose.animation.AnimatedVisibility(
                     modifier = Modifier.fillMaxWidth(),
+                    visible = isTimerEnable.not(),
+                    label = "Title",
+                    enter = fadeIn(),
+                    exit = fadeOut(),
+                ) {
+                    Text(
+                        text = stringResource(R.string.home_tap_on_me),
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.8F)
+                    .aspectRatio(1F),
+            ) {
+                val state = remember { RippleSurfaceState() }
+                RippleSurface(
+                    modifier = Modifier.fillMaxSize(),
+                    state = state,
+                )
+                Moon(
+                    isTimerEnable = isTimerEnable,
+                    onCheckedChange = {
+                        setTimerEnable(it)
+                        coroutineScope.launch {
+                            state.show()
+                        }
+                    },
                 )
             }
+            Spacer(modifier = Modifier.height(Dimens.margin4x))
+            NumberClock(
+                isVibrationEnable = isVibrationEnable,
+                numberClockState = numberClockState,
+                onChangeByUser = setTime,
+            )
         }
-        Box(
+        IconButton(
             modifier = Modifier
-                .fillMaxWidth(0.8F)
-                .aspectRatio(1F),
-        ) {
-            val state = remember { RippleSurfaceState() }
-            RippleSurface(
-                modifier = Modifier.fillMaxSize(),
-                state = state,
-            )
-            Moon(
-                isTimerEnable = isTimerEnable,
-                onCheckedChange = {
-                    setTimerEnable(it)
-                    coroutineScope.launch {
-                        state.show()
-                    }
-                },
-            )
-        }
-        Spacer(modifier = Modifier.height(Dimens.margin4x))
-        NumberClock(
-            isVibrationEnable = isVibrationEnable,
-            numberClockState = numberClockState,
-            onChangeByUser = setTime,
+                .align(Alignment.BottomEnd)
+                .padding(bottom = Dimens.margin)
+                .navigationBarsPadding(),
+            painter = painterResource(id = R.drawable.ic_settings),
+            contentDescription = "Settings",
+            onClick = onSettingsClick,
         )
     }
     SingleEventEffect(selectTime) {

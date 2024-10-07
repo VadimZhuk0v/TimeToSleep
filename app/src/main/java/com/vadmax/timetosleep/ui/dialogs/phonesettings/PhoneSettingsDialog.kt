@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.ui.dialogs.settings
+package com.vadmax.timetosleep.ui.dialogs.phonesettings
 
 import android.os.Build
 import androidx.annotation.DrawableRes

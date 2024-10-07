@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -42,8 +40,10 @@ import com.vadmax.timetosleep.coreui.Shapes
 import com.vadmax.timetosleep.coreui.VoidCallback
 import com.vadmax.timetosleep.coreui.theme.AppColors
 import com.vadmax.timetosleep.coreui.theme.AppTheme
+import com.vadmax.timetosleep.coreui.theme.Dimens
 import com.vadmax.timetosleep.coreui.widgets.Spacer
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
+import com.vadmax.timetosleep.ui.widgets.actionbutton.ActionButton
 import com.vadmax.timetosleep.ui.widgets.localicon.LocalIcon
 import com.vadmax.timetosleep.ui.widgets.localimage.LocalImage
 import kotlinx.coroutines.delay
@@ -86,7 +86,7 @@ fun NoDeviceScreenStata(
             onClick = onInfoClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 8.dp)
+                .padding(bottom = Dimens.margin)
                 .navigationBarsPadding(),
         ) {
             LocalIcon(id = R.drawable.ic_info)
@@ -128,7 +128,7 @@ private fun QRScannerState(
             QrScanner(
                 modifier = Modifier
                     .size(300.dp)
-                    .clip(RoundedCornerShape(16.dp)),
+                    .clip(Shapes.shape16),
                 imagePickerHandler = {},
                 onFailure = {},
                 flashlightOn = false,
@@ -180,12 +180,12 @@ private fun PermissionState(
             color = Color.White,
         )
         Spacer(20.dp)
-        OutlinedButton(
+        ActionButton(
             onClick = onRequestPermissionClick,
-            shape = Shapes.shape16,
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = AppColors.permissionGrant,
             ),
+            borderColor = AppColors.permissionGrant,
         ) {
             Text(
                 text = stringResource(R.string.pc_grant_access),
