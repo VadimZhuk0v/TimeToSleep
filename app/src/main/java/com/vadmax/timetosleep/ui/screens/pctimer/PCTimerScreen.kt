@@ -41,6 +41,7 @@ import com.vadmax.timetosleep.coreui.widgets.Spacer
 import com.vadmax.timetosleep.data.TimeUIModel
 import com.vadmax.timetosleep.ui.dialogs.pcinfo.PCInfoDialog
 import com.vadmax.timetosleep.ui.dialogs.pcsettings.PCSettingsDialog
+import com.vadmax.timetosleep.ui.screens.pctimer.support.ListenPCTimerScreenEvent
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.ConnectionStatus
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.NoDeviceScreenStata
@@ -84,7 +85,9 @@ fun PCTimerScreen(viewModel: PCTimerViewModel = koinViewModel()) {
     )
     PCInfoDialog(visible = infoDialogVisible)
     PCSettingsDialog(visible = settingsDialogVisible)
-
+    with(PCTimerScreenScope) {
+        ListenPCTimerScreenEvent(viewModel.event)
+    }
     LifecycleStartEffect(Unit) {
         viewModel.attachScope()
         onStopOrDispose { viewModel.detachScope() }

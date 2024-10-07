@@ -109,6 +109,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     implementation(libs.kotlinx.serialization)
     implementation(libs.google.material)
+    implementation(libs.kotlinx.serialization)
 
     // DI
     ksp(libs.koin.ksp.compiler)

@@ -2,6 +2,7 @@ package com.vadmax.timetosleep.ui.dialogs.phonesettings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vadmax.core.analytics.AppAnalytics
 import com.vadmax.core.data.RingerMode
 import com.vadmax.timetosleep.domain.usercases.local.GetOpenSourceLink
 import com.vadmax.timetosleep.domain.usercases.local.GetRingerMode
@@ -17,6 +18,7 @@ import com.vadmax.timetosleep.domain.usercases.local.SetVibrationEnable
 import com.vadmax.timetosleep.ui.dialogs.phonesettings.support.PhoneSettingsEvent
 import com.vadmax.timetosleep.utils.flow.EventFlow
 import com.vadmax.timetosleep.utils.flow.MutableEventFlow
+import com.vadmax.timetosleep.utils.toAnalytic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -24,7 +26,7 @@ import timber.log.Timber
 
 @SuppressWarnings("LongParameterList")
 @KoinViewModel
-class SettingsViewModel(
+class PhoneSettingsViewModel(
     isLockScreenEnable: IsLockScreenEnable,
     isDisableBluetoothEnable: IsDisableBluetoothEnable,
     getRingerMode: GetRingerMode,
@@ -36,6 +38,7 @@ class SettingsViewModel(
     private val setVibrationEnable: SetVibrationEnable,
     private val setSoundEffectEnable: SetSoundEffectEnable,
     private val getOpenSourceLink: GetOpenSourceLink,
+    private val analytics: AppAnalytics,
 ) : ViewModel() {
 
     val lockScreenEnable = isLockScreenEnable()
@@ -49,6 +52,7 @@ class SettingsViewModel(
 
     fun setLockScreenEnable(value: Boolean) {
         Timber.i("👆 Lock screen enable click:$value")
+        analytics.enableLockScreen(value)
         viewModelScope.launch(Dispatchers.IO) {
             setLockScreenEnable.invoke(value)
         }
@@ -56,6 +60,7 @@ class SettingsViewModel(
 
     fun setSoundEffectEnable(value: Boolean) {
         Timber.i("👆 Sound effect enable click: $value")
+        analytics.enableSoundEffect(value)
         viewModelScope.launch(Dispatchers.IO) {
             setSoundEffectEnable.invoke(value)
         }
@@ -70,13 +75,15 @@ class SettingsViewModel(
 
     fun setVibrationEnable(value: Boolean) {
         Timber.i("👆 Vibration enable click: $value")
+        analytics.enableVibration(value)
         viewModelScope.launch(Dispatchers.IO) {
             setVibrationEnable.invoke(value)
         }
     }
 
-    fun setRingerMode(ringerMode: RingerMode?) {
+    fun setRingerMode(ringerMode: RingerMode) {
         Timber.i("👆 Ringer mode click: $ringerMode")
+        analytics.setRingerMode(ringerMode.toAnalytic())
         viewModelScope.launch(Dispatchers.IO) {
             setRingerMode.invoke(ringerMode)
         }
@@ -84,6 +91,7 @@ class SettingsViewModel(
 
     fun onOpenSourceClick() {
         Timber.i("👆 Open source click")
+        analytics.openOpenSourceLink()
         _event.tryEmit(PhoneSettingsEvent.OpenLink(getOpenSourceLink()))
     }
 }

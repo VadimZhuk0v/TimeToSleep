@@ -32,11 +32,13 @@ class App : Application() {
 
     private fun initCrashlytics() {
         if (BuildConfig.ENABLE_CRASHLYTICS) {
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+            FirebaseCrashlytics.getInstance().also {
+                it.isCrashlyticsCollectionEnabled = true
+            }
             Timber.plant(
                 FirebaseCrashlyticsTree(
                     FirebaseCrashlytics.getInstance().apply {
-                        setCrashlyticsCollectionEnabled(true)
+                        isCrashlyticsCollectionEnabled = true
                     },
                 ),
             )

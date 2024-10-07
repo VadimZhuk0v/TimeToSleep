@@ -2,6 +2,7 @@ package com.vadmax.timetosleep.ui.screens.phonetimer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.vadmax.core.analytics.AppAnalytics
 import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
 import com.vadmax.core.utils.extentions.second
@@ -38,6 +39,7 @@ class PhoneTimerViewModel(
     private val scheduleApplyActionsWorker: ScheduleApplyActionsWorker,
     private val incEnableTimerCounter: IncEnableTimerCounter,
     private val cancelApplyActionsWorker: CancelApplyActionsWorker,
+    private val analytics: AppAnalytics,
 ) : ViewModel() {
 
     private val _event = MutableEventFlow<PhoneTimerScreenEvent>()
@@ -58,6 +60,7 @@ class PhoneTimerViewModel(
             if (getSoundEffectEnable().value) {
                 _event.emit(PhoneTimerScreenEvent.RippleSound)
             }
+            analytics.userEnablePhoneTimer(isEnable)
             setTimerActive(isEnable)
             if (isEnable) {
                 incEnableTimerCounter()

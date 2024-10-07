@@ -49,7 +49,7 @@ interface SettingsProvider {
     val isDisableBluetoothEnable: Flow<Boolean>
     val selectedAppsFlow: Flow<List<AppInfo>>
     val enableTimerCounter: Flow<Int>
-    val ringerMode: Flow<RingerMode?>
+    val ringerMode: Flow<RingerMode>
     val soundEffect: StateFlow<Boolean>
 
     fun getServerDataModel(): Flow<ServerConfigLocalModel?>
@@ -66,7 +66,7 @@ interface SettingsProvider {
 
     suspend fun setLockScreenEnable(value: Boolean)
 
-    suspend fun setRingerMode(mode: RingerMode?)
+    suspend fun setRingerMode(mode: RingerMode)
 
     suspend fun incEnableTimerCounter()
 
@@ -118,7 +118,7 @@ internal class SettingsProviderImpl(
 
     override val ringerMode = context.dataStore.data.map {
         val modeString = it[VL_RINGER_MODE]
-        safeValueOf<RingerMode>(modeString)
+        safeValueOf<RingerMode>(modeString) ?: RingerMode.NORMAL
     }
 
     override val isFirstTime = context.dataStore.data.map {
@@ -172,9 +172,9 @@ internal class SettingsProviderImpl(
         }
     }
 
-    override suspend fun setRingerMode(mode: RingerMode?) {
+    override suspend fun setRingerMode(mode: RingerMode) {
         context.dataStore.edit {
-            it[VL_RINGER_MODE] = mode?.name ?: ""
+            it[VL_RINGER_MODE] = mode.name
         }
     }
 

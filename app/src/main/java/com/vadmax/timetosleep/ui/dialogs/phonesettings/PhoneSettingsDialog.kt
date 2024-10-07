@@ -43,14 +43,14 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun PhoneSettingsDialog(
     visible: MutableState<Boolean>,
-    viewModel: SettingsViewModel = koinViewModel(),
+    viewModel: PhoneSettingsViewModel = koinViewModel(),
 ) {
     val isLockScreenEnable by viewModel.lockScreenEnable.collectAsStateWithLifecycle(false)
     val isDisableBluetoothEnable by viewModel.disableBluetoothEnable.collectAsStateWithLifecycle(
         false,
     )
     val isVibrationEnable by viewModel.vibrationEnable.collectAsStateWithLifecycle(true)
-    val ringerMode by viewModel.ringerMode.collectAsStateWithLifecycle(null)
+    val ringerMode by viewModel.ringerMode.collectAsStateWithLifecycle(RingerMode.NORMAL)
     val soundEffectEnable by viewModel.soundEffectEnable.collectAsStateWithLifecycle()
 
     AppModalBottomSheet(
@@ -82,12 +82,12 @@ private fun SettingsContent(
     isLockScreenEnable: Boolean,
     isDisableBluetoothEnable: Boolean,
     soundEffectEnable: Boolean,
-    ringerMode: RingerMode?,
+    ringerMode: RingerMode,
     onOpenSourceClick: VoidCallback,
     setVibrationEnable: (value: Boolean) -> Unit,
     setLockScreenEnable: (value: Boolean) -> Unit,
     setDisableBluetoothEnable: (value: Boolean) -> Unit,
-    setRingerMode: (mode: RingerMode?) -> Unit,
+    setRingerMode: (mode: RingerMode) -> Unit,
     onSoundEffectChange: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
@@ -210,7 +210,7 @@ private fun Item(
 @Composable
 private fun Ringer(
     ringerMode: RingerMode?,
-    selectMode: (mode: RingerMode?) -> Unit,
+    selectMode: (mode: RingerMode) -> Unit,
 ) {
     Column(modifier = Modifier.padding(Dimens.screenPadding)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -243,7 +243,7 @@ fun RingerItem(
     ringerMode: RingerMode?,
     @StringRes text: Int,
     widgetMode: RingerMode,
-    selectMode: (mode: RingerMode?) -> Unit,
+    selectMode: (mode: RingerMode) -> Unit,
 ) {
     val context = LocalContext.current
     Row(
@@ -278,12 +278,12 @@ private fun getMode(
     currentMode: RingerMode?,
     widgetMode: RingerMode,
     value: Boolean,
-): RingerMode? {
+): RingerMode {
     currentMode ?: run {
         return widgetMode
     }
     return if (currentMode == widgetMode && value.not()) {
-        null
+        RingerMode.NORMAL
     } else {
         widgetMode
     }

@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -54,6 +55,8 @@ class PCRepositoryImpl(
     override val enabled = getPCTimerEnabled()
 
     private val selectedTime = MutableStateFlow<TimeUIModel?>(null)
+
+    override val event = MutableSharedFlow<PCTimerRepositoryEvent>()
 
     override val timerState = combine(
         connected,
@@ -121,6 +124,9 @@ class PCRepositoryImpl(
     override fun setServerConfig(data: String) {
         coroutineScope.launch {
             setServerConfig.invoke(data)
+                .onFailure {
+                    event.emit(PCTimerRepositoryEvent.UnsupportedQR)
+                }
         }
     }
 

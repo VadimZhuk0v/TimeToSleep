@@ -6,12 +6,11 @@ import kotlinx.coroutines.flow.Flow
 import org.koin.core.annotation.Factory
 
 fun interface GetRingerMode {
-    operator fun invoke(): Flow<RingerMode?>
+    operator fun invoke(): Flow<RingerMode>
 }
 
-@Factory(binds = [com.vadmax.timetosleep.domain.usercases.local.GetRingerMode::class])
-internal class GetRingerModeImpl(private val settingsProvider: SettingsProvider) :
-    com.vadmax.timetosleep.domain.usercases.local.GetRingerMode {
+@Factory(binds = [GetRingerMode::class])
+internal class GetRingerModeImpl(private val settingsProvider: SettingsProvider) : GetRingerMode {
 
     override fun invoke() = settingsProvider.ringerMode
 }
