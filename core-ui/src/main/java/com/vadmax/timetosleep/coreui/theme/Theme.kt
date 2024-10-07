@@ -9,7 +9,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColorScheme(
-    primary = Purple200,
+    primary = Color.White,
     secondary = Teal200,
     background = Color.Black,
 )

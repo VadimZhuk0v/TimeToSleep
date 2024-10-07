@@ -5,8 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -23,7 +23,13 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.vadmax.timetosleep.R
+import com.vadmax.timetosleep.coreui.VoidCallback
+import com.vadmax.timetosleep.coreui.theme.AppColors
+import com.vadmax.timetosleep.coreui.theme.Dimens
 import com.vadmax.timetosleep.coreui.widgets.Spacer
+import com.vadmax.timetosleep.ui.dialogs.pcinfo.support.ListenPCInfoEvent
+import com.vadmax.timetosleep.ui.dialogs.pcinfo.support.PCInfoScope
+import com.vadmax.timetosleep.ui.widgets.actionbutton.ActionButton
 import com.vadmax.timetosleep.ui.widgets.appbottomsheet.AppModalBottomSheet
 import org.koin.androidx.compose.koinViewModel
 
@@ -33,12 +39,18 @@ fun PCInfoDialog(
     viewModel: PCInfoViewModel = koinViewModel(),
 ) {
     AppModalBottomSheet(visible = visible) {
-        PCInfoContent()
+        PCInfoContent(
+            onDownloadClick = viewModel::onDownloadClick,
+        )
+    }
+
+    with(PCInfoScope) {
+        ListenPCInfoEvent(viewModel.event)
     }
 }
 
 @Composable
-private fun PCInfoContent() {
+private fun PCInfoContent(onDownloadClick: VoidCallback) {
     val context = LocalContext.current
     val imageLoader = remember {
         ImageLoader.Builder(context)
@@ -61,8 +73,20 @@ private fun PCInfoContent() {
             color = Color.White,
             textAlign = TextAlign.Center,
         )
-        Spacer(16.dp)
-//        OutlinedButton { }
+        Spacer(Dimens.margin3x)
+        ActionButton(
+            onClick = onDownloadClick,
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = AppColors.download,
+            ),
+            borderColor = AppColors.download,
+        ) {
+            Text(
+                text = stringResource(R.string.pc_info_download),
+                style = MaterialTheme.typography.headlineSmall,
+            )
+        }
+        Spacer(Dimens.margin3x)
         Image(
             modifier = Modifier.size(200.dp),
             painter = rememberAsyncImagePainter(
@@ -71,6 +95,6 @@ private fun PCInfoContent() {
             ),
             contentDescription = null,
         )
-        Spacer(16.dp)
+        Spacer(Dimens.margin2x)
     }
 }

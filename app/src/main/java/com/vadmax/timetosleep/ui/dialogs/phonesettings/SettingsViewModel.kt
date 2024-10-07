@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.ui.dialogs.settings
+package com.vadmax.timetosleep.ui.dialogs.phonesettings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.coreui.theme.AppTheme
+import com.vadmax.timetosleep.coreui.theme.Dimens
 import com.vadmax.timetosleep.coreui.widgets.Spacer
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
 
@@ -49,7 +50,7 @@ fun ConnectionStatus(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Circle(connected = connected)
-        Spacer(8.dp)
+        Spacer(Dimens.margin)
         Text(
             text = text,
             style = MaterialTheme.typography.titleLarge,

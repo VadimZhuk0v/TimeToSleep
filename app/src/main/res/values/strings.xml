@@ -17,6 +17,7 @@
     <string name="settings.ringer.silent">Silent</string>
     <string name="settings.ringer.vibrate">Vibrate</string>
     <string name="settings.sound_effect">Sound effect enable</string>
+    <string name="settings.unpair">Unpair</string>
 
     <string name="pc.connected">Connected</string>
     <string name="pc.disconnected">Disconnected</string>
@@ -26,5 +27,5 @@
     <string name="pc.grant_access">Grant Access</string>
 
     <string name="pc_info.title">Download a Windows app\nto pair your device</string>
-    <string name="pc_info.download">Download</string>
+    <string name="pc_info.download">🌐 Download</string>
 </resources>

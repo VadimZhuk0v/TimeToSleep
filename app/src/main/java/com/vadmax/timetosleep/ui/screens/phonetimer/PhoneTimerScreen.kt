@@ -35,7 +35,7 @@ import com.vadmax.timetosleep.coreui.theme.AppTheme
 import com.vadmax.timetosleep.coreui.theme.Dimens
 import com.vadmax.timetosleep.coreui.widgets.Spacer
 import com.vadmax.timetosleep.data.TimeUIModel
-import com.vadmax.timetosleep.ui.dialogs.settings.PhoneSettingsDialog
+import com.vadmax.timetosleep.ui.dialogs.phonesettings.PhoneSettingsDialog
 import com.vadmax.timetosleep.ui.screens.phonetimer.support.ListenScreenEvent
 import com.vadmax.timetosleep.ui.screens.phonetimer.support.PhoneTimerScope
 import com.vadmax.timetosleep.ui.screens.phonetimer.ui.Moon
@@ -110,7 +110,7 @@ fun PhoneTimerContent(
             IconButton(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = Dimens.margin)
                     .navigationBarsPadding(),
                 painter = painterResource(id = R.drawable.ic_settings),
                 contentDescription = "Settings",
