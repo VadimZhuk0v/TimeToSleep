@@ -17,6 +17,7 @@
     <string name="settings.ringer.silent">Silent</string>
     <string name="settings.ringer.vibrate">Vibrate</string>
     <string name="settings.sound_effect">Sound effect enable</string>
+    <string name="settings.open_source">Open Source Project</string>
     <string name="settings.unpair">Unpair</string>
 
     <string name="pc.connected">Connected</string>

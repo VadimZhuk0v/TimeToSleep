@@ -6,31 +6,33 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vadmax.core.data.RingerMode
 import com.vadmax.timetosleep.BuildConfig
 import com.vadmax.timetosleep.R
+import com.vadmax.timetosleep.coreui.VoidCallback
 import com.vadmax.timetosleep.coreui.extensions.clickableNoRipple
 import com.vadmax.timetosleep.coreui.theme.Dimens
+import com.vadmax.timetosleep.coreui.widgets.Spacer
+import com.vadmax.timetosleep.ui.dialogs.phonesettings.support.ListenPhoneSettingsEvent
+import com.vadmax.timetosleep.ui.dialogs.phonesettings.support.PhoneSettingsScope
 import com.vadmax.timetosleep.ui.widgets.appbottomsheet.AppModalBottomSheet
 import com.vadmax.timetosleep.ui.widgets.divider.AppHorizontalDivider
+import com.vadmax.timetosleep.ui.widgets.localicon.LocalIcon
 import com.vadmax.timetosleep.ui.widgets.switch.AppSwitch
 import com.vadmax.timetosleep.utils.extentions.isAdminActive
 import com.vadmax.timetosleep.utils.extentions.isNotificationAccessGranted
@@ -43,11 +45,13 @@ fun PhoneSettingsDialog(
     visible: MutableState<Boolean>,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
-    val isLockScreenEnable by viewModel.lockScreenEnable.collectAsState(initial = false)
-    val isDisableBluetoothEnable by viewModel.disableBluetoothEnable.collectAsState(initial = false)
-    val isVibrationEnable by viewModel.vibrationEnable.collectAsState(initial = true)
-    val ringerMode by viewModel.ringerMode.collectAsState(initial = null)
-    val soundEffectEnable by viewModel.soundEffectEnable.collectAsState()
+    val isLockScreenEnable by viewModel.lockScreenEnable.collectAsStateWithLifecycle(false)
+    val isDisableBluetoothEnable by viewModel.disableBluetoothEnable.collectAsStateWithLifecycle(
+        false,
+    )
+    val isVibrationEnable by viewModel.vibrationEnable.collectAsStateWithLifecycle(true)
+    val ringerMode by viewModel.ringerMode.collectAsStateWithLifecycle(null)
+    val soundEffectEnable by viewModel.soundEffectEnable.collectAsStateWithLifecycle()
 
     AppModalBottomSheet(
         visible = visible,
@@ -63,7 +67,11 @@ fun PhoneSettingsDialog(
             setDisableBluetoothEnable = viewModel::setDisableBluetoothEnable,
             setRingerMode = viewModel::setRingerMode,
             onSoundEffectChange = viewModel::setSoundEffectEnable,
+            onOpenSourceClick = viewModel::onOpenSourceClick,
         )
+    }
+    with(PhoneSettingsScope) {
+        ListenPhoneSettingsEvent(viewModel.event)
     }
 }
 
@@ -75,6 +83,7 @@ private fun SettingsContent(
     isDisableBluetoothEnable: Boolean,
     soundEffectEnable: Boolean,
     ringerMode: RingerMode?,
+    onOpenSourceClick: VoidCallback,
     setVibrationEnable: (value: Boolean) -> Unit,
     setLockScreenEnable: (value: Boolean) -> Unit,
     setDisableBluetoothEnable: (value: Boolean) -> Unit,
@@ -121,13 +130,42 @@ private fun SettingsContent(
                     ringerMode = ringerMode,
                     selectMode = setRingerMode,
                 )
-                Spacer(modifier = Modifier.height(Dimens.margin))
+                Spacer(Dimens.margin)
+                OpenSource(
+                    onClick = onOpenSourceClick,
+                )
                 Text(
                     text = "${stringResource(R.string.home_version)} ${BuildConfig.VERSION_NAME}",
                     modifier = Modifier.padding(Dimens.screenPadding),
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun OpenSource(onClick: VoidCallback) {
+    Row(
+        modifier = Modifier
+            .padding(Dimens.screenPadding)
+            .clickableNoRipple { onClick() },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Row(
+            modifier = Modifier.weight(1F),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            LocalIcon(
+                id = R.drawable.ic_github,
+                modifier = Modifier.size(24.dp),
+                contentDescription = "Open Source",
+            )
+            Spacer(Dimens.margin2x)
+            Text(
+                text = stringResource(R.string.settings_open_source),
+            )
+        }
+        Spacer(Dimens.margin)
     }
 }
 
@@ -151,16 +189,15 @@ private fun Item(
                 modifier = Modifier.weight(1F),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(
-                    painter = painterResource(id = icon),
-                    contentDescription = "",
+                LocalIcon(
+                    id = icon,
                 )
-                Spacer(modifier = Modifier.width(Dimens.margin2x))
+                Spacer(Dimens.margin2x)
                 Text(
                     text = stringResource(id = text),
                 )
             }
-            Spacer(modifier = Modifier.width(Dimens.margin))
+            Spacer(Dimens.margin)
             AppSwitch(
                 checked = isEnable,
                 onCheckedChange = onCheckedChange,
@@ -177,21 +214,20 @@ private fun Ringer(
 ) {
     Column(modifier = Modifier.padding(Dimens.screenPadding)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                painter = painterResource(R.drawable.ic_volume),
-                contentDescription = "",
+            LocalIcon(
+                id = R.drawable.ic_volume,
             )
-            Spacer(modifier = Modifier.width(Dimens.margin2x))
+            Spacer(Dimens.margin2x)
             Text(text = stringResource(id = R.string.settings_ringer_mode))
         }
-        Spacer(modifier = Modifier.height(Dimens.margin))
+        Spacer(Dimens.margin)
         RingerItem(
             ringerMode = ringerMode,
             text = R.string.settings_ringer_silent,
             widgetMode = RingerMode.SILENT,
             selectMode = selectMode,
         )
-        Spacer(modifier = Modifier.height(Dimens.margin2x))
+        Spacer(Dimens.margin2x)
         RingerItem(
             ringerMode = ringerMode,
             text = R.string.settings_ringer_vibrate,
