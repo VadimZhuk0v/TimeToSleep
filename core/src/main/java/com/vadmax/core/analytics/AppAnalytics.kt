@@ -23,4 +23,14 @@ interface AppAnalytics {
     fun unpairPC()
 
     fun turnOffPC()
+
+    fun turnOffConfirm()
+
+    fun infoPC()
+
+    fun settingsPC()
+
+    fun settingsPhone()
+
+    fun downloadPCApp()
 }

@@ -15,4 +15,6 @@ interface PCService : RPC {
     suspend fun sendEnable(value: Boolean)
 
     suspend fun listenEnable(): Flow<Boolean>
+
+    suspend fun turnOff()
 }

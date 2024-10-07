@@ -29,6 +29,8 @@ interface PCApiRepository {
     suspend fun sendEnable(value: Boolean)
 
     suspend fun listenEnable()
+
+    suspend fun turnOff()
 }
 
 @Single(binds = [PCApiRepository::class])
@@ -71,6 +73,12 @@ internal class PCApiRepositoryImpl(private val factory: RPCClientFactory) : PCAp
             safeCall {
                 enabled.emitAll(withService<PCService>().listenEnable())
             }
+        }
+    }
+
+    override suspend fun turnOff() {
+        safeCall {
+            withService<PCService>().turnOff()
         }
     }
 

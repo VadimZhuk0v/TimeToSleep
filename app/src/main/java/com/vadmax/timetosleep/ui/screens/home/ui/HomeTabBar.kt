@@ -2,7 +2,6 @@ package com.vadmax.timetosleep.ui.screens.home.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.EaseOutBack
-import androidx.compose.animation.core.EaseOutElastic
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
@@ -53,7 +52,11 @@ fun HomeTabBar(
             Text(
                 text = stringResource(R.string.home_phone),
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.clickableNoRipple { onPhoneClick() },
+                modifier = Modifier.clickableNoRipple {
+                    if (isPhoneTab.not()) {
+                        onPhoneClick()
+                    }
+                },
                 color = Color.White,
             )
             Indicator(
@@ -67,7 +70,11 @@ fun HomeTabBar(
             Text(
                 text = stringResource(R.string.home_pc),
                 style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.clickableNoRipple { onPCClick() },
+                modifier = Modifier.clickableNoRipple {
+                    if (isPhoneTab) {
+                        onPCClick()
+                    }
+                },
                 color = Color.White,
             )
             Indicator(

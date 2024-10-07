@@ -23,9 +23,13 @@ private val itemHeight = 60.dp
 fun NumberClock(
     isVibrationEnable: Boolean,
     numberClockState: NumberClockState,
+    modifier: Modifier = Modifier,
     onChangeByUser: (TimeUIModel) -> Unit = {},
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
         ProvideTextStyle(
             value = MaterialTheme.typography.clock,
         ) {

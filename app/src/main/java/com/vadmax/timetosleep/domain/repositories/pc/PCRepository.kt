@@ -27,4 +27,6 @@ interface PCRepository {
     fun setEnabled(value: Boolean)
 
     fun setServerConfig(data: String)
+
+    fun turnOff()
 }

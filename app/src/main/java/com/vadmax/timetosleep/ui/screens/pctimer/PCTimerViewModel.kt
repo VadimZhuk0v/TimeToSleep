@@ -9,6 +9,7 @@ import com.vadmax.timetosleep.domain.repositories.pc.PCTimerRepositoryEvent
 import com.vadmax.timetosleep.domain.repositories.pc.TimerState
 import com.vadmax.timetosleep.domain.usercases.local.DeleteServerConfig
 import com.vadmax.timetosleep.domain.usercases.local.IsVibrationEnable
+import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenDialog
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenEvent
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.PCTimerScreenState
 import com.vadmax.timetosleep.utils.flow.EventFlow
@@ -35,6 +36,9 @@ class PCTimerViewModel(
     private val _event = MutableEventFlow<PCTimerScreenEvent>()
     val event: EventFlow<PCTimerScreenEvent> = _event
 
+    private val _dialog = MutableEventFlow<PCTimerScreenDialog>()
+    val dialog: EventFlow<PCTimerScreenDialog> = _dialog
+
     val timerEnable = pcRepository.enabled.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(500),
@@ -47,7 +51,7 @@ class PCTimerViewModel(
             TimerState.Idle -> PCTimerScreenState.Idle
             is TimerState.Timer -> PCTimerScreenState.Timer(it.initialTime)
         }
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(500), PCTimerScreenState.Idle)
+    }
 
     init {
         collectPCTimerRepositoryEvents()
@@ -80,12 +84,36 @@ class PCTimerViewModel(
         pcRepository.setServerConfig(data)
     }
 
+    fun onInfoClick() {
+        Timber.i("👆 On info click")
+        analytics.infoPC()
+        _dialog.tryEmit(PCTimerScreenDialog.Info)
+    }
+
+    fun onSettingsClick() {
+        Timber.i("👆 On settings click")
+        analytics.settingsPC()
+        _dialog.tryEmit(PCTimerScreenDialog.Settings)
+    }
+
     fun onUnpairClick() {
         Timber.i("👆 On unpair click")
         analytics.unpairPC()
         viewModelScope.launch {
             deleteServerConfig.invoke()
         }
+    }
+
+    fun onTurnOffClick() {
+        Timber.i("👆 On turn off click")
+        analytics.turnOffPC()
+        _dialog.tryEmit(PCTimerScreenDialog.TurnOff)
+    }
+
+    fun onConfirmTurnOffClick() {
+        Timber.i("👆 On confirm turn off click")
+        analytics.turnOffConfirm()
+        pcRepository.turnOff()
     }
 
     private fun collectPCTimerRepositoryEvents() {

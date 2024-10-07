@@ -11,6 +11,7 @@ import com.vadmax.timetosleep.domain.usercases.remote.request.SendTimerEnable
 import com.vadmax.timetosleep.domain.usercases.remote.request.SubscribePCTimerEnabled
 import com.vadmax.timetosleep.domain.usercases.remote.request.SubscribePinStatus
 import com.vadmax.timetosleep.domain.usercases.remote.request.SubscribeToPCTime
+import com.vadmax.timetosleep.domain.usercases.remote.request.TurnOffPC
 import com.vadmax.timetosleep.utils.flow.MutableEventFlow
 import com.vadmax.timetosleep.utils.toDomainModel
 import com.vadmax.timetosleep.utils.toUIModel
@@ -46,6 +47,7 @@ class PCRepositoryImpl(
     private val sendTimerEnable: SendTimerEnable,
     private val hasServerConfig: HasServerConfig,
     private val setServerConfig: SetServerConfig,
+    private val turnOffPC: TurnOffPC,
 ) : PCRepository {
 
     override val connected = MutableStateFlow(false)
@@ -127,6 +129,12 @@ class PCRepositoryImpl(
                 .onFailure {
                     event.emit(PCTimerRepositoryEvent.UnsupportedQR)
                 }
+        }
+    }
+
+    override fun turnOff() {
+        uiCoroutineScope?.launch {
+            turnOffPC()
         }
     }
 

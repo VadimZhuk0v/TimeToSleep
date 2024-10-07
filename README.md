@@ -7,23 +7,23 @@
 
 ###  
 
-<p align="left">This is app allows you to pause playing media on your phone or Windows PC</p>  
+<p align="left">This is app allows you to pause playing media on your phone or turn off your Windows PC</p>  
 
 ###  
 
 <div align="left">  
-  <img height="400" src="https://github.com/VadimZhuk0v/TimeToSleep/blob/main/assets/phne.gif?raw=true"  />  
+  <img height="400" src="https://github.com/VadimZhuk0v/TimeToSleep/blob/main/assets/phone.gif?raw=true"  />  
 </div>  
 
 ###  
 <h2 align="left">Technologies</h4>
 
 1. Jetpack Compose
-2. Kotlin RPC ([ktor](https://github.com/ktorio/ktor)) for communication between Windows PC and Android device
+2. [Kotlin RPC](https://github.com/Kotlin/kotlinx-rpc) ([ktor](https://github.com/ktorio/ktor)) for communication between Windows PC and Android device
 3. DataStore
 4. [Koin](https://github.com/InsertKoinIO/koin)
 5. [QR scanner](https://github.com/Chaintech-Network/QRKitComposeMultiplatform)
-6. [Lottine](https://github.com/airbnb/lottie-android)
+6. [Lottie](https://github.com/airbnb/lottie-android)
 
 
 ###  

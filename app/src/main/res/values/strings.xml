@@ -28,6 +28,11 @@
     <string name="pc.grant_access">Grant Access</string>
     <string name="pc.unsupported_qr">Unsupported QR</string>
 
+    <string name="turn_off_pc_dialog.title">Warning</string>
+    <string name="turn_off_pc_dialog.body">Are you sure you want to turn off PC?</string>
+    <string name="turn_off_pc_dialog.confirm">Confirm</string>
+    <string name="turn_off_pc_dialog.cancel">Cancel</string>
+
     <string name="pc_info.title">Download a Windows app\nto pair your device</string>
     <string name="pc_info.download">🌐 Download</string>
 </resources>

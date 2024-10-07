@@ -1,5 +1,6 @@
 package com.vadmax.timetosleep.analytics
 
+import android.util.StatsLog.logEvent
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ParametersBuilder
 import com.google.firebase.analytics.logEvent
@@ -65,6 +66,26 @@ class AppAnalyticsFirebaseImpl(private val analytics: FirebaseAnalytics) : AppAn
 
     override fun scanUnsupportedQR() {
         logEvent(AnalyticsEvents.SCAN_UNSUPPORTED_QR)
+    }
+
+    override fun turnOffConfirm() {
+        logEvent(AnalyticsEvents.TURN_OFF_PC_CONFIRM)
+    }
+
+    override fun settingsPhone() {
+        logEvent(AnalyticsEvents.SETTINGS_PHONE)
+    }
+
+    override fun settingsPC() {
+        logEvent(AnalyticsEvents.SETTINGS_PC)
+    }
+
+    override fun infoPC() {
+        logEvent(AnalyticsEvents.INFO_PC)
+    }
+
+    override fun downloadPCApp() {
+        logEvent(AnalyticsEvents.DOWNLOAD_PC_APP)
     }
 
     private fun logEvent(

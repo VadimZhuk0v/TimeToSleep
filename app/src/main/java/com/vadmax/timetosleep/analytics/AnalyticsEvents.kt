@@ -10,6 +10,11 @@ object AnalyticsEvents {
     const val PAIR_PC = "pair_pc"
     const val UNPAIR_PC = "unpair_pc"
     const val TURN_OFF_PC = "turn_off_pc"
+    const val TURN_OFF_PC_CONFIRM = "turn_off_pc_confirm"
     const val SET_RINGER_MODE = "set_ringer_mode"
     const val SCAN_UNSUPPORTED_QR = "scan_unsupported_qr"
+    const val SETTINGS_PHONE = "settings_phone"
+    const val SETTINGS_PC = "settings_pc"
+    const val INFO_PC = "info_pc"
+    const val DOWNLOAD_PC_APP = "download_pc_app"
 }
