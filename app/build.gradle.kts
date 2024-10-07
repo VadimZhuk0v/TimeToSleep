@@ -1,5 +1,4 @@
 import com.vadmax.AppBuildInfo
-import com.vadmax.constants.Config
 import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.io.FileInputStream
@@ -34,14 +33,13 @@ android {
         applicationId = "com.vadmax.timetosleep.app"
         minSdk = appBuildInfo.minSdk
         targetSdk = appBuildInfo.targetSdk
-        versionCode = 4
-        versionName = "2.0.0-alpha01"
+        versionCode = 5
+        versionName = "2.0.0-alpha02"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
-        buildConfigField("Boolean", "ENABLE_CRASHLYTICS", "true")
-        buildConfigField("Boolean", Config.ENABLE_ANALYTICS, false.toString())
+        buildConfigField("Boolean", "ENABLE_CRASHLYTICS", true.toString())
     }
 
     signingConfigs {
