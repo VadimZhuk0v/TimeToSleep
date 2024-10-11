@@ -33,8 +33,8 @@ android {
         applicationId = "com.vadmax.timetosleep.app"
         minSdk = appBuildInfo.minSdk
         targetSdk = appBuildInfo.targetSdk
-        versionCode = 6
-        versionName = "2.0.0-alpha02"
+        versionCode = 7
+        versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -139,6 +139,10 @@ composeCompiler {
     if (getCurrentFlavor() == "dev") {
         reportsDestination = layout.buildDirectory.dir("compose_metrics")
     }
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK", "true")
 }
 
 tasks.withType<KotlinJvmCompile>().configureEach {

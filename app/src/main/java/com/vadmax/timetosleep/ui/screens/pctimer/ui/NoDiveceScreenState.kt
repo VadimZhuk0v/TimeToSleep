@@ -48,6 +48,7 @@ import com.vadmax.timetosleep.ui.widgets.localicon.LocalIcon
 import com.vadmax.timetosleep.ui.widgets.localimage.LocalImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import qrscanner.CameraLens
 import qrscanner.QrScanner
 import timber.log.Timber
 
@@ -142,6 +143,7 @@ private fun QRScannerState(
                         }
                     }
                 },
+                cameraLens = CameraLens.Back,
                 openImagePicker = false,
             )
             LocalImage(

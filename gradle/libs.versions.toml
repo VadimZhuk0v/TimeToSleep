@@ -7,7 +7,7 @@ constraintlayout-compose = "1.0.1"
 core-ktx = "1.13.1"
 core-splashscreen = "1.0.1"
 datastore-preferences = "1.1.1"
-espresso-core = "3.6.1"
+espresso-core = "3.5.0"
 gson = "2.11.0"
 junit = "4.13.2"
 junit-version = "1.2.1"
@@ -17,7 +17,7 @@ koin-annotation = "1.4.0-RC4"
 kotlin = "2.0.10"
 kotlin-serialization = "1.7.3"
 kotlinx-collections-immutable = "0.3.8"
-ktor = "2.3.12"
+ktor = "3.0.0"
 kotlin-rpc = "0.2.4"
 lifecycle-livedata-ktx = "2.8.6"
 lottie-compose = "6.5.2"
@@ -28,7 +28,7 @@ crashlytics = "3.0.2"
 android = "8.7.0"
 ksp = "2.0.10-1.0.24"
 protobuf-javalite = "4.28.2"
-qrKit = "2.0.0"
+qrKit = "3.0.0"
 slf4jApi = "2.0.16"
 timber = "5.0.1"
 work = "2.9.1"
@@ -112,7 +112,7 @@ timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf-javalite" }
 
 #test
-test-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit-version" }
+test-androidx-junit = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junit-version" }
 test-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 test-junit = { group = "junit", name = "junit", version.ref = "junit" }
 

@@ -27,3 +27,4 @@ local.properties
 /.kotlin/sessions/kotlin-compiler-16699826914241238680.salive
 /.kotlin/
 /.idea/runConfigurations.xml
+/fastlane/time_to_sleep_fastlane_google_service_secret.json
