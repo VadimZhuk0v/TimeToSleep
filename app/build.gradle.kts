@@ -33,7 +33,7 @@ android {
         applicationId = "com.vadmax.timetosleep.app"
         minSdk = appBuildInfo.minSdk
         targetSdk = appBuildInfo.targetSdk
-        versionCode = 5
+        versionCode = 6
         versionName = "2.0.0-alpha02"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
