@@ -32,7 +32,7 @@
 
 ###  
 
-[Play Sore](https://play.google.com/store/apps/details?id=com.vadmax.timetosleep.app/)</br>  
+[Play Sore](https://play.google.com/store/apps/details?id=com.vadmax.timetosleep.app)</br>  
 [PC version](https://github.com/VadimZhuk0v/Time-To-Sleep-KMP)
 
 ###  
