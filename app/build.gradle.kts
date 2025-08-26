@@ -1,5 +1,6 @@
 import com.vadmax.AppBuildInfo
 import com.vadmax.constants.Config.ENABLE_CRASHLYTICS
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.io.FileInputStream
 import java.util.Properties
@@ -33,8 +34,8 @@ android {
         applicationId = "com.vadmax.timetosleep.app"
         minSdk = appBuildInfo.minSdk
         targetSdk = appBuildInfo.targetSdk
-        versionCode = 7
-        versionName = "2.0.0"
+        versionCode = 8
+        versionName = "2.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -78,9 +79,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_19
         targetCompatibility = JavaVersion.VERSION_19
     }
-    kotlinOptions {
-        jvmTarget = "19"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -89,10 +87,6 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-
-    composeCompiler {
-        enableStrongSkippingMode = true
     }
 
     lint.disable += "UnusedMaterial3ScaffoldPaddingParameter"
@@ -170,5 +164,12 @@ fun getCurrentFlavor(): String {
         matcher.group(1).lowercase()
     } else {
         ""
+    }
+}
+
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_19)
+        freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
 }

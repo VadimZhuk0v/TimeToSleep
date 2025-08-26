@@ -3,8 +3,8 @@ import com.vadmax.AppBuildInfo
 val appBuildInfo: AppBuildInfo by extra(
     AppBuildInfo(
         27,
-        34,
-        34,
+        36,
+        36,
     ),
 )
 
