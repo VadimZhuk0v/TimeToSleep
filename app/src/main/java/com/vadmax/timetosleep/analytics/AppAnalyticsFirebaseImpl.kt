@@ -1,6 +1,5 @@
 package com.vadmax.timetosleep.analytics
 
-import android.util.StatsLog.logEvent
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ParametersBuilder
 import com.google.firebase.analytics.logEvent

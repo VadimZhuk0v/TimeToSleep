@@ -41,6 +41,7 @@ private val VL_SOUND_EFFECT = booleanPreferencesKey("VL_SOUND_EFFECT")
 
 interface SettingsProvider {
 
+    val selectedTimeFlow: Flow<Long?>
     val isTimerEnabled: StateFlow<Boolean>
     val isLockScreenEnable: Flow<Boolean>
     val isFirstTime: Flow<Boolean>
@@ -95,6 +96,11 @@ internal class SettingsProviderImpl(
     private val context: Context,
     private val coroutineScope: CoroutineScope,
 ) : SettingsProvider {
+
+
+    override val selectedTimeFlow: Flow<Long?>
+        get() = context.dataStore.data.map { it[VL_SELECTED_TIME] }
+
 
     override val isTimerEnabled = context.dataStore.data.map {
         it[VL_IS_TIMER_ENABLED] ?: false

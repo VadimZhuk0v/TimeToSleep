@@ -17,14 +17,12 @@ fun interface ApplyActions {
 @SuppressWarnings("LongParameterList")
 @Factory(binds = [ApplyActions::class])
 class ApplyActionsImpl(
-    private val setTimerEnable: com.vadmax.timetosleep.domain.usercases.local.SetTimerEnable,
+    private val setTimerEnable: SetTimerEnable,
     private val stopMusic: StopMusic,
     private val closeApps: CloseApps,
     private val lockScreen: LockScreen,
-    private val isLockScreenEnable:
-    com.vadmax.timetosleep.domain.usercases.local.IsLockScreenEnable,
-    private val isDisableBluetoothEnable:
-    com.vadmax.timetosleep.domain.usercases.local.IsDisableBluetoothEnable,
+    private val isLockScreenEnable: IsLockScreenEnable,
+    private val isDisableBluetoothEnable: IsDisableBluetoothEnable,
     private val disableBluetooth: DisableBluetooth,
     private val applyRingerMode: ApplyRingerMode,
     private val dispatcher: CoroutineContext = Dispatchers.IO,

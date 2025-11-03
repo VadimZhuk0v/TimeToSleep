@@ -12,13 +12,13 @@ import com.vadmax.timetosleep.domain.usercases.remote.request.SubscribePCTimerEn
 import com.vadmax.timetosleep.domain.usercases.remote.request.SubscribePinStatus
 import com.vadmax.timetosleep.domain.usercases.remote.request.SubscribeToPCTime
 import com.vadmax.timetosleep.domain.usercases.remote.request.TurnOffPC
-import com.vadmax.timetosleep.utils.flow.MutableEventFlow
 import com.vadmax.timetosleep.utils.toDomainModel
 import com.vadmax.timetosleep.utils.toUIModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.koin.core.annotation.Single
 import timber.log.Timber
@@ -52,7 +53,8 @@ class PCRepositoryImpl(
 
     override val connected = MutableStateFlow(false)
 
-    override val selectTime = MutableEventFlow<TimeUIModel>()
+    private val _selectedTime = Channel<TimeUIModel>(capacity = Channel.CONFLATED)
+    override val selectTime = _selectedTime.receiveAsFlow()
 
     override val enabled = getPCTimerEnabled()
 
@@ -154,7 +156,7 @@ class PCRepositoryImpl(
             getPCTime().collectLatest {
                 Timber.i("💻 🕰️: $it")
                 selectedTime.value = it.toUIModel()
-                selectTime.emit(it.toUIModel())
+                _selectedTime.send(it.toUIModel())
             }
         }
     }

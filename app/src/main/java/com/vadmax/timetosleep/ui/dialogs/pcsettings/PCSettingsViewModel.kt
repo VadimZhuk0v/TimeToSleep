@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.vadmax.timetosleep.domain.usercases.local.DeleteServerConfig
 import com.vadmax.timetosleep.domain.usercases.local.GetOpenSourceLink
 import com.vadmax.timetosleep.ui.dialogs.pcsettings.support.PCSettingsEvent
-import com.vadmax.timetosleep.utils.flow.EventFlow
-import com.vadmax.timetosleep.utils.flow.MutableEventFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import timber.log.Timber
@@ -17,8 +17,8 @@ class PCSettingsViewModel(
     private val getOpenSourceLink: GetOpenSourceLink,
 ) : ViewModel() {
 
-    private val _event = MutableEventFlow<PCSettingsEvent>()
-    val event: EventFlow<PCSettingsEvent> = _event
+    private val _event = Channel<PCSettingsEvent>()
+    val event = _event.receiveAsFlow()
 
     fun onUnpairClick() {
         Timber.i("👆 On unpair click")
@@ -29,6 +29,6 @@ class PCSettingsViewModel(
 
     fun onOpenSourceClick() {
         Timber.i("👆 Open source click")
-        _event.tryEmit(PCSettingsEvent.OpenLink(getOpenSourceLink()))
+        _event.trySend(PCSettingsEvent.OpenLink(getOpenSourceLink()))
     }
 }

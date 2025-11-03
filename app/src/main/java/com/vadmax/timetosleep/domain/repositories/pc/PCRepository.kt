@@ -1,7 +1,6 @@
 package com.vadmax.timetosleep.domain.repositories.pc
 
 import com.vadmax.timetosleep.data.TimeUIModel
-import com.vadmax.timetosleep.utils.flow.EventFlow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,7 +13,7 @@ interface PCRepository {
 
     val connected: StateFlow<Boolean>
 
-    val selectTime: EventFlow<TimeUIModel>
+    val selectTime: Flow<TimeUIModel>
 
     val enabled: Flow<Boolean>
 

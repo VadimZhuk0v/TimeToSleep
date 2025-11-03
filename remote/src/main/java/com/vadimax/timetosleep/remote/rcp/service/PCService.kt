@@ -2,19 +2,20 @@ package com.vadimax.timetosleep.remote.rcp.service
 
 import com.vadimax.timetosleep.remote.data.TimeRemoteModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.rpc.RPC
+import kotlinx.rpc.annotations.Rpc
 
-interface PCService : RPC {
+@Rpc
+interface PCService {
 
-    suspend fun pingStatus(): Flow<Unit>
+    fun pingStatus(): Flow<Unit>
 
-    suspend fun receiveTime(): Flow<TimeRemoteModel>
+    fun receiveTime(): Flow<TimeRemoteModel>
 
     suspend fun shareTime(time: Flow<TimeRemoteModel>)
 
     suspend fun sendEnable(value: Boolean)
 
-    suspend fun listenEnable(): Flow<Boolean>
+    fun listenEnable(): Flow<Boolean>
 
     suspend fun turnOff()
 }

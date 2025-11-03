@@ -16,10 +16,10 @@ import com.vadmax.timetosleep.domain.usercases.local.SetRingerMode
 import com.vadmax.timetosleep.domain.usercases.local.SetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.local.SetVibrationEnable
 import com.vadmax.timetosleep.ui.dialogs.phonesettings.support.PhoneSettingsEvent
-import com.vadmax.timetosleep.utils.flow.EventFlow
-import com.vadmax.timetosleep.utils.flow.MutableEventFlow
 import com.vadmax.timetosleep.utils.toAnalytic
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 import timber.log.Timber
@@ -47,8 +47,8 @@ class PhoneSettingsViewModel(
     val vibrationEnable = isVibrationEnable()
     val soundEffectEnable = getSoundEffectEnable()
 
-    private val _event = MutableEventFlow<PhoneSettingsEvent>()
-    val event: EventFlow<PhoneSettingsEvent> = _event
+    private val _event = Channel<PhoneSettingsEvent>()
+    val event = _event.receiveAsFlow()
 
     fun setLockScreenEnable(value: Boolean) {
         Timber.i("👆 Lock screen enable click:$value")
@@ -92,6 +92,6 @@ class PhoneSettingsViewModel(
     fun onOpenSourceClick() {
         Timber.i("👆 Open source click")
         analytics.openOpenSourceLink()
-        _event.tryEmit(PhoneSettingsEvent.OpenLink(getOpenSourceLink()))
+        _event.trySend(PhoneSettingsEvent.OpenLink(getOpenSourceLink()))
     }
 }
