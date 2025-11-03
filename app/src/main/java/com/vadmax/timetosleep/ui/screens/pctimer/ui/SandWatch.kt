@@ -14,7 +14,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.vadmax.timetosleep.R
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 fun SandWatch() {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lt_sand_watch))

@@ -32,7 +32,7 @@ import com.vadmax.timetosleep.coreui.theme.Dimens
 import com.vadmax.timetosleep.coreui.widgets.Spacer
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenScope
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 fun ConnectionStatus(
     modifier: Modifier = Modifier,

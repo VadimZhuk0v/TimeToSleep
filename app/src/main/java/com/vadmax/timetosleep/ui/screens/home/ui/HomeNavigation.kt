@@ -10,7 +10,7 @@ import com.vadmax.timetosleep.ui.screens.pctimer.support.pcTimerScreenComposable
 import com.vadmax.timetosleep.ui.screens.phonetimer.support.PhoneTimerScreenArgs
 import com.vadmax.timetosleep.ui.screens.phonetimer.support.phoneTimerScreenComposable
 
-context(HomeScreenScope)
+context(_: HomeScreenScope)
 @Composable
 fun HomeNavigation(navController: NavHostController) {
     NavHost(

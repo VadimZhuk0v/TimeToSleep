@@ -12,7 +12,7 @@ sealed interface PhoneSettingsEvent {
     data class OpenLink(val link: String) : PhoneSettingsEvent
 }
 
-context(PhoneSettingsScope)
+context(_: PhoneSettingsScope)
 @Composable
 fun ListenPhoneSettingsEvent(event: Flow<PhoneSettingsEvent>) {
     val context = LocalContext.current

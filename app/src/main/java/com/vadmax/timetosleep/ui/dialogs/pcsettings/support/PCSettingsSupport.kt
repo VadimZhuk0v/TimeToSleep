@@ -12,7 +12,7 @@ sealed interface PCSettingsEvent {
     data class OpenLink(val link: String) : PCSettingsEvent
 }
 
-context(PCSettingsScope)
+context(_: PCSettingsScope)
 @Composable
 fun ListenPCSettingsEvent(event: Flow<PCSettingsEvent>) {
     val context = LocalContext.current

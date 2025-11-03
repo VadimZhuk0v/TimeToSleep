@@ -12,7 +12,7 @@ sealed interface PCInfoEvent {
     data class OpenLink(val link: String) : PCInfoEvent
 }
 
-context(PCInfoScope)
+context(_: PCInfoScope)
 @Composable
 fun ListenPCInfoEvent(event: Flow<PCInfoEvent>) {
     val context = LocalContext.current

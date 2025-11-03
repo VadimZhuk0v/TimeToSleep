@@ -8,7 +8,7 @@ data object HomeScreenScope
 
 sealed interface HomeScreenEvent
 
-context(HomeScreenScope)
+context(_: HomeScreenScope)
 @Composable
 fun ListenScreenEvent(event: Flow<HomeScreenEvent>) {
     SingleEventEffect(event) {
