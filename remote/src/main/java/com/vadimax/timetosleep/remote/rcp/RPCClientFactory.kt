@@ -10,17 +10,17 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.withContext
-import kotlinx.rpc.serialization.json
-import kotlinx.rpc.transport.ktor.client.KtorRPCClient
-import kotlinx.rpc.transport.ktor.client.rpc
-import kotlinx.rpc.transport.ktor.client.rpcConfig
+import kotlinx.rpc.krpc.ktor.client.KtorRpcClient
+import kotlinx.rpc.krpc.ktor.client.rpc
+import kotlinx.rpc.krpc.ktor.client.rpcConfig
+import kotlinx.rpc.krpc.serialization.json.json
 import org.koin.core.annotation.Single
 import timber.log.Timber
 import java.net.SocketTimeoutException
 
 interface RPCClientFactory {
 
-    suspend fun getInstance(): KtorRPCClient?
+    suspend fun getInstance(): KtorRpcClient?
 
     fun clear()
 }
@@ -33,7 +33,7 @@ internal class RPCClientFactoryImpl(
     private val getServerConfig: GetServerConfig,
 ) : RPCClientFactory {
 
-    private var deferred: Deferred<KtorRPCClient?>? = null
+    private var deferred: Deferred<KtorRpcClient?>? = null
 
     private val creationThread = newSingleThreadContext("Create RPC client thread")
 
@@ -41,7 +41,7 @@ internal class RPCClientFactoryImpl(
         deferred = null
     }
 
-    override suspend fun getInstance(): KtorRPCClient? = withContext(creationThread) {
+    override suspend fun getInstance(): KtorRpcClient? = withContext(creationThread) {
         val config = getServerConfig().firstOrNull() ?: run {
             Timber.w("⚠️ No server config")
             return@withContext null

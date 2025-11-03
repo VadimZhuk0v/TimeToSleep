@@ -49,6 +49,7 @@ android {
 dependencies {
     api(libs.androidx.core)
     api(libs.kotlinx.collections.immutable)
+    api(libs.kotlinx.time)
 
     api(platform(libs.kotlin.bom))
 

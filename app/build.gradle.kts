@@ -135,10 +135,6 @@ composeCompiler {
     }
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
-}
-
 tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions {
         freeCompilerArgs.add("-Xcontext-receivers")

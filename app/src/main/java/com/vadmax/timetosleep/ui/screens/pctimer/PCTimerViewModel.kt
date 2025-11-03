@@ -12,10 +12,10 @@ import com.vadmax.timetosleep.domain.usercases.local.IsVibrationEnable
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenDialog
 import com.vadmax.timetosleep.ui.screens.pctimer.support.PCTimerScreenEvent
 import com.vadmax.timetosleep.ui.screens.pctimer.ui.PCTimerScreenState
-import com.vadmax.timetosleep.utils.flow.EventFlow
-import com.vadmax.timetosleep.utils.flow.MutableEventFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -33,11 +33,11 @@ class PCTimerViewModel(
     val selectTime = pcRepository.selectTime
     val connected = pcRepository.connected
 
-    private val _event = MutableEventFlow<PCTimerScreenEvent>()
-    val event: EventFlow<PCTimerScreenEvent> = _event
+    private val _event = Channel<PCTimerScreenEvent>()
+    val event = _event.receiveAsFlow()
 
-    private val _dialog = MutableEventFlow<PCTimerScreenDialog>()
-    val dialog: EventFlow<PCTimerScreenDialog> = _dialog
+    private val _dialog = Channel<PCTimerScreenDialog>(capacity = Channel.CONFLATED)
+    val dialog = _dialog.receiveAsFlow()
 
     val timerEnable = pcRepository.enabled.stateIn(
         viewModelScope,
@@ -87,13 +87,13 @@ class PCTimerViewModel(
     fun onInfoClick() {
         Timber.i("👆 On info click")
         analytics.infoPC()
-        _dialog.tryEmit(PCTimerScreenDialog.Info)
+        _dialog.trySend(PCTimerScreenDialog.Info)
     }
 
     fun onSettingsClick() {
         Timber.i("👆 On settings click")
         analytics.settingsPC()
-        _dialog.tryEmit(PCTimerScreenDialog.Settings)
+        _dialog.trySend(PCTimerScreenDialog.Settings)
     }
 
     fun onUnpairClick() {
@@ -107,7 +107,7 @@ class PCTimerViewModel(
     fun onTurnOffClick() {
         Timber.i("👆 On turn off click")
         analytics.turnOffPC()
-        _dialog.tryEmit(PCTimerScreenDialog.TurnOff)
+        _dialog.trySend(PCTimerScreenDialog.TurnOff)
     }
 
     fun onConfirmTurnOffClick() {
@@ -122,7 +122,7 @@ class PCTimerViewModel(
                 val event = when (it) {
                     PCTimerRepositoryEvent.UnsupportedQR -> PCTimerScreenEvent.UnsupportedQR
                 }
-                _event.emit(event)
+                _event.send(event)
             }
         }
     }

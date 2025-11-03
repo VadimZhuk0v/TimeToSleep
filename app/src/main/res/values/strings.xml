@@ -35,4 +35,8 @@
 
     <string name="pc_info.title">Download a Windows app\nto pair your device</string>
     <string name="pc_info.download">🌐 Download</string>
+
+    <string name="notification_apply_actions_title">Timer started</string>
+    <string name="notification_apply_actions_body">Audio will be stopped at: %s</string>
+    <string name="notification_apply_actions_cancel">Cancel</string>
 </resources>

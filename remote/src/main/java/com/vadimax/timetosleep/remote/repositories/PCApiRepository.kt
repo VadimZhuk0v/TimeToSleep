@@ -7,8 +7,7 @@ import com.vadmax.core.exceptions.NoPCConnectionException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emitAll
-import kotlinx.rpc.streamScoped
-import kotlinx.rpc.transport.ktor.client.KtorRPCClient
+import kotlinx.rpc.krpc.ktor.client.KtorRpcClient
 import kotlinx.rpc.withService
 import org.koin.core.annotation.Single
 
@@ -41,26 +40,20 @@ internal class PCApiRepositoryImpl(private val factory: RPCClientFactory) : PCAp
     override val enabled = MutableSharedFlow<Boolean>(replay = 1)
 
     override suspend fun subscribePingStatus() {
-        streamScoped {
-            safeCall {
-                status.emitAll(withService<PCService>().pingStatus())
-            }
+        safeCall {
+            status.emitAll(withService<PCService>().pingStatus())
         }
     }
 
     override suspend fun collectServerTime() {
-        streamScoped {
-            safeCall {
-                serverTime.emitAll(withService<PCService>().receiveTime())
-            }
+        safeCall {
+            serverTime.emitAll(withService<PCService>().receiveTime())
         }
     }
 
     override suspend fun sendTimeToServer(time: Flow<TimeRemoteModel>) {
-        streamScoped {
-            safeCall {
-                withService<PCService>().shareTime(time)
-            }
+        safeCall {
+            withService<PCService>().shareTime(time)
         }
     }
 
@@ -69,10 +62,8 @@ internal class PCApiRepositoryImpl(private val factory: RPCClientFactory) : PCAp
     }
 
     override suspend fun listenEnable() {
-        streamScoped {
-            safeCall {
-                enabled.emitAll(withService<PCService>().listenEnable())
-            }
+        safeCall {
+            enabled.emitAll(withService<PCService>().listenEnable())
         }
     }
 
@@ -82,7 +73,7 @@ internal class PCApiRepositoryImpl(private val factory: RPCClientFactory) : PCAp
         }
     }
 
-    private suspend fun <T> safeCall(request: suspend KtorRPCClient.() -> T): T {
+    private suspend fun <T> safeCall(request: suspend KtorRpcClient.() -> T): T {
         val client = factory.getInstance() ?: throw NoPCConnectionException()
         return try {
             request(client)
