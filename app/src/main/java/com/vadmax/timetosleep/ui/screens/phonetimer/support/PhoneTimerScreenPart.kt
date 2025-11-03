@@ -18,7 +18,7 @@ sealed interface PhoneTimerScreenEvent {
     data object StopApplyActionsService : PhoneTimerScreenEvent
 }
 
-context(PhoneTimerScope)
+context(_: PhoneTimerScope)
 @Composable
 fun ListenScreenEvent(event: Flow<PhoneTimerScreenEvent>) {
     val context = LocalContext.current

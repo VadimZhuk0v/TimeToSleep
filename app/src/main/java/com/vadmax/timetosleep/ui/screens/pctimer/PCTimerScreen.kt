@@ -63,7 +63,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 fun PCTimerScreen(viewModel: PCTimerViewModel = koinViewModel()) {
     val screenState by viewModel.screenState.collectAsStateWithLifecycle(PCTimerScreenState.Idle)
@@ -111,7 +111,7 @@ fun PCTimerScreen(viewModel: PCTimerViewModel = koinViewModel()) {
     }
 }
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 private fun PCTimerContent(
     screenState: PCTimerScreenState,
@@ -164,7 +164,7 @@ private fun PCTimerContent(
     }
 }
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 private fun IdleScreenStata(
     onUnpairClick: VoidCallback,
@@ -192,7 +192,7 @@ private fun IdleScreenStata(
     }
 }
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 private fun TimerScreenState(
     screenState: PCTimerScreenState.Timer,

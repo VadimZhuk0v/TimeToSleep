@@ -49,7 +49,7 @@ import com.vadmax.timetosleep.utils.extentions.requestIgnoreBatteryOptimizations
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-context(PhoneTimerScope)
+context(_: PhoneTimerScope)
 @Composable
 fun PhoneTimerScreen(viewModel: PhoneTimerViewModel = koinViewModel()) {
     val context = LocalContext.current
@@ -76,7 +76,7 @@ fun PhoneTimerScreen(viewModel: PhoneTimerViewModel = koinViewModel()) {
     ListenScreenEvent(viewModel.event)
 }
 
-context(PhoneTimerScope)
+context(_: PhoneTimerScope)
 @Composable
 fun PhoneTimerContent(
     screenState: PhoneTimerScreenState,
@@ -120,14 +120,14 @@ fun PhoneTimerContent(
     }
 }
 
-context(PhoneTimerScope)
+context(_: PhoneTimerScope)
 @Composable
 private fun IdleScreenState(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
     }
 }
 
-context(PhoneTimerScope)
+context(_: PhoneTimerScope)
 @Composable
 private fun TimerScreenState(
     screenState: PhoneTimerScreenState.Timer,

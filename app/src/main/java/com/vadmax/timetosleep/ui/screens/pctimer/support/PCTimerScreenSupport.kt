@@ -20,7 +20,7 @@ sealed interface PCTimerScreenDialog {
     data object TurnOff : PCTimerScreenDialog
 }
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 fun ListenPCTimerScreenEvent(event: Flow<PCTimerScreenEvent>) {
     val context = LocalContext.current
@@ -37,7 +37,7 @@ fun ListenPCTimerScreenEvent(event: Flow<PCTimerScreenEvent>) {
     }
 }
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @Composable
 fun ListenPCTimerScreenDialog(
     event: Flow<PCTimerScreenDialog>,

@@ -34,8 +34,8 @@ android {
         applicationId = "com.vadmax.timetosleep.app"
         minSdk = appBuildInfo.minSdk
         targetSdk = appBuildInfo.targetSdk
-        versionCode = 8
-        versionName = "2.0.1"
+        versionCode = 9
+        versionName = "2.0.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -137,7 +137,7 @@ composeCompiler {
 
 tasks.withType<KotlinJvmCompile>().configureEach {
     compilerOptions {
-        freeCompilerArgs.add("-Xcontext-receivers")
+        freeCompilerArgs.add("-Xcontext-parameters")
         freeCompilerArgs.add("-opt-in=androidx.compose.material3.ExperimentalMaterial3Api")
     }
 }

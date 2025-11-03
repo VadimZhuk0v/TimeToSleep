@@ -35,7 +35,7 @@ import com.vadmax.timetosleep.coreui.theme.AppTheme
 import com.vadmax.timetosleep.coreui.widgets.Spacer
 import com.vadmax.timetosleep.ui.screens.home.support.HomeScreenScope
 
-context(HomeScreenScope)
+context(_: HomeScreenScope)
 @Composable
 fun HomeTabBar(
     onPhoneClick: VoidCallback,

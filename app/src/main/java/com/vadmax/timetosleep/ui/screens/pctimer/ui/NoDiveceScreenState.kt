@@ -54,7 +54,7 @@ import timber.log.Timber
 
 private const val QR_ID = "QR_ID"
 
-context(PCTimerScreenScope)
+context(_: PCTimerScreenScope)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun NoDeviceScreenStata(

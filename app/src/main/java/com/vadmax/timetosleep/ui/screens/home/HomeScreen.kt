@@ -36,7 +36,7 @@ import org.koin.androidx.compose.koinViewModel
 import timber.log.Timber
 
 @OptIn(ExperimentalPermissionsApi::class)
-context(HomeScreenScope)
+context(_: HomeScreenScope)
 @Composable
 fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val notificationPermission = rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
@@ -49,7 +49,7 @@ fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     }
 }
 
-context(HomeScreenScope)
+context(_: HomeScreenScope)
 @Composable
 fun HomeScreenContent() {
     val navController = rememberNavController()
