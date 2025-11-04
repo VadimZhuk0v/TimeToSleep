@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.utils
+package com.vadmax.timetosleep.domain.receiver
 
 import android.app.admin.DeviceAdminReceiver
 import android.content.Context
@@ -15,8 +15,7 @@ class AdminReceiver :
     DeviceAdminReceiver(),
     KoinComponent {
 
-    private val setLockScreenEnable:
-        com.vadmax.timetosleep.domain.usercases.local.SetLockScreenEnable by inject()
+    private val setLockScreenEnable: SetLockScreenEnable by inject()
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onDisabled(

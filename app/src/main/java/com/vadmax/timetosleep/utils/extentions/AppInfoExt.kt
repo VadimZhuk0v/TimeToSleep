@@ -7,6 +7,3 @@ import com.vadmax.core.data.AppInfo
 
 fun AppInfo.systemInfo(context: Context) =
     context.packageManager.getApplicationInfo(packageName, 0)
-
-fun ApplicationInfo.getApplicationLabel(pm: PackageManager) =
-    pm.getApplicationLabel(this).toString()

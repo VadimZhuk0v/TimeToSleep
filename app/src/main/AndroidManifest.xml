@@ -61,7 +61,7 @@
         </activity>
 
         <receiver
-            android:name=".utils.AdminReceiver"
+            android:name=".domain.receiver.AdminReceiver"
             android:description="@string/manifest.admin_description"
             android:exported="false"
             android:label="@string/manifest.admin_description"
@@ -80,5 +80,10 @@
         <meta-data
             android:name="firebase_analytics_collection_enabled"
             android:value="false" />
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="shortService" />
     </application>
 </manifest>

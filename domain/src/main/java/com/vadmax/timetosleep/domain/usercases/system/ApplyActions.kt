@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.domain.usecases
+package com.vadmax.timetosleep.domain.usercases.system
 
 import com.vadmax.timetosleep.domain.usercases.local.IsDisableBluetoothEnable
 import com.vadmax.timetosleep.domain.usercases.local.IsLockScreenEnable
