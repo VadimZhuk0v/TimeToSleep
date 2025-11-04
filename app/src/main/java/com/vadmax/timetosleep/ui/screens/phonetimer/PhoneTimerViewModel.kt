@@ -7,8 +7,9 @@ import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
 import com.vadmax.core.utils.extentions.second
 import com.vadmax.timetosleep.data.TimeUIModel
+import com.vadmax.timetosleep.domain.usecases.CancelApplyActionsWorker
+import com.vadmax.timetosleep.domain.usecases.ScheduleApplyActionsWorker
 import com.vadmax.timetosleep.domain.usercases.local.GetSelectedTime
-import com.vadmax.timetosleep.domain.usercases.local.GetSelectedTimeFlow
 import com.vadmax.timetosleep.domain.usercases.local.GetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.local.IncEnableTimerCounter
 import com.vadmax.timetosleep.domain.usercases.local.IsTimerEnable
@@ -19,12 +20,8 @@ import com.vadmax.timetosleep.ui.screens.phonetimer.support.PhoneTimerScreenEven
 import com.vadmax.timetosleep.ui.screens.phonetimer.ui.PhoneTimerScreenState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
@@ -35,17 +32,18 @@ import java.util.Date
 class PhoneTimerViewModel(
     isTimerEnable: IsTimerEnable,
     isVibrationEnable: IsVibrationEnable,
-    private val getSelectedTimeFlow: GetSelectedTimeFlow,
     private val getSelectedTime: GetSelectedTime,
     private val getSoundEffectEnable: GetSoundEffectEnable,
     private val setTimerActive: SetTimerEnable,
     private val setSelectedTime: SetSelectedTime,
+    private val scheduleApplyActionsWorker: ScheduleApplyActionsWorker,
     private val incEnableTimerCounter: IncEnableTimerCounter,
+    private val cancelApplyActionsWorker: CancelApplyActionsWorker,
     private val analytics: AppAnalytics,
 ) : ViewModel() {
 
     private val _event = Channel<PhoneTimerScreenEvent>()
-    val event: Flow<PhoneTimerScreenEvent> = _event.receiveAsFlow()
+    val event = _event.receiveAsFlow()
 
     private val _screenState = MutableStateFlow<PhoneTimerScreenState>(PhoneTimerScreenState.Idle)
     val screenState = _screenState.asStateFlow()
@@ -55,7 +53,6 @@ class PhoneTimerViewModel(
 
     init {
         setUpInitialTime()
-        observeSelectedTime()
     }
 
     fun setTimerEnable(isEnable: Boolean) {
@@ -67,9 +64,9 @@ class PhoneTimerViewModel(
             setTimerActive(isEnable)
             if (isEnable) {
                 incEnableTimerCounter()
-                _event.send(PhoneTimerScreenEvent.StartApplyActionsService)
+                scheduleApplyActionsWorker()
             } else {
-                _event.send(PhoneTimerScreenEvent.StopApplyActionsService)
+                cancelApplyActionsWorker()
             }
         }
     }
@@ -85,6 +82,9 @@ class PhoneTimerViewModel(
         }
         viewModelScope.launch(Dispatchers.IO) {
             setSelectedTime(calendar.timeInMillis)
+            if (timerEnable.value) {
+                scheduleApplyActionsWorker()
+            }
         }
     }
 
@@ -95,19 +95,6 @@ class PhoneTimerViewModel(
                 this.time = date
             }
             _screenState.value = PhoneTimerScreenState.Timer(TimeUIModel(time.hour, time.minute))
-        }
-    }
-
-    private fun observeSelectedTime() {
-        viewModelScope.launch {
-            getSelectedTimeFlow()
-                .conflate()
-                .collectLatest {
-                    delay(100)
-                    if(timerEnable.value) {
-                        _event.send(PhoneTimerScreenEvent.StartApplyActionsService)
-                    }
-                }
         }
     }
 }
