@@ -3,10 +3,7 @@ package com.vadmax.timetosleep.ui.screens.applications
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vadmax.core.data.AppInfo
-import com.vadmax.timetosleep.domain.usecases.GetAppsList
-import com.vadmax.timetosleep.domain.usercases.local.GetSelectedApps
-import com.vadmax.timetosleep.domain.usercases.local.SelectApp
-import com.vadmax.timetosleep.domain.usercases.local.UnselectApp
+import com.vadmax.timetosleep.domain.usercases.system.GetAppsList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

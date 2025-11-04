@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.domain.usecases
+package com.vadmax.timetosleep.domain.usercases.system
 
 import android.content.Context
 import android.media.AudioFocusRequest
@@ -11,7 +11,7 @@ fun interface StopMusic {
 }
 
 @Factory(binds = [StopMusic::class])
-class StopMusicImpl(private val context: Context) : StopMusic {
+internal class StopMusicImpl(private val context: Context) : StopMusic {
 
     override fun invoke() {
         context.getSystemService(AudioManager::class.java).also {

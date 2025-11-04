@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.domain.usecases
+package com.vadmax.timetosleep.domain.usecases.worker
 
 import android.content.Context
 import androidx.work.WorkManager

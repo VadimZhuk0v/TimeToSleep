@@ -1,11 +1,11 @@
-package com.vadmax.timetosleep.domain.usecases
+package com.vadmax.timetosleep.domain.usecases.worker
 
 import android.content.Context
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.vadmax.timetosleep.domain.usercases.local.GetSelectedTime
-import com.vadmax.timetosleep.domain.workers.ApplyActionsWorker
+import com.vadmax.timetosleep.workers.ApplyActionsWorker
 import org.koin.core.annotation.Factory
 import timber.log.Timber
 import java.util.Date
@@ -19,7 +19,7 @@ fun interface ScheduleApplyActionsWorker {
 @Factory(binds = [ScheduleApplyActionsWorker::class])
 internal class ScheduleApplyActionsWorkerImpl(
     private val context: Context,
-    private val getSelectedTime: com.vadmax.timetosleep.domain.usercases.local.GetSelectedTime,
+    private val getSelectedTime: GetSelectedTime,
 ) : ScheduleApplyActionsWorker {
     override suspend fun invoke() {
         val currentTimeInMillis = System.currentTimeMillis()

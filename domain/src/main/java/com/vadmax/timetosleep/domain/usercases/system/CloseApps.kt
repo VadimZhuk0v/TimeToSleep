@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.domain.usecases
+package com.vadmax.timetosleep.domain.usercases.system
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
@@ -18,7 +18,7 @@ fun interface CloseApps {
 @Factory(binds = [CloseApps::class])
 class CloseAppsImpl(
     private val context: Context,
-    private val getSelectedApps: com.vadmax.timetosleep.domain.usercases.local.GetSelectedApps,
+    private val getSelectedApps: GetSelectedApps,
     private val dispatcher: CoroutineContext = Dispatchers.IO,
 ) : CloseApps {
 

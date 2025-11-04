@@ -1,17 +1,17 @@
-package com.vadmax.timetosleep.domain.workers
+package com.vadmax.timetosleep.workers
 
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
+import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import com.vadmax.timetosleep.R
-import com.vadmax.timetosleep.domain.usecases.ApplyActions
+import com.vadmax.timetosleep.domain.usercases.system.ApplyActions
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -32,6 +32,8 @@ class ApplyActionsWorker(context: Context, params: WorkerParameters) :
         return Result.success()
     }
 
+    override suspend fun getForegroundInfo() = createForegroundInfo()
+
     private fun createForegroundInfo(): ForegroundInfo {
         val channel = NotificationChannel(
             CHANNEL_ID,
@@ -43,8 +45,11 @@ class ApplyActionsWorker(context: Context, params: WorkerParameters) :
         manager?.createNotificationChannel(channel)
 
         val notification = createNotification()
-
-        return ForegroundInfo(NOTIFICATION_ID, notification)
+        return ForegroundInfo(
+            NOTIFICATION_ID,
+            notification,
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_SHORT_SERVICE,
+        )
     }
 
     private fun createNotification(): Notification {

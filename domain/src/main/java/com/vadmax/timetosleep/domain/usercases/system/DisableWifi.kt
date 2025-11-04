@@ -1,4 +1,4 @@
-package com.vadmax.timetosleep.domain.usecases
+package com.vadmax.timetosleep.domain.usercases.system
 
 import android.content.Context
 import android.net.wifi.WifiManager

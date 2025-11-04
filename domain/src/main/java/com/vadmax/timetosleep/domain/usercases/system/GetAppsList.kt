@@ -1,10 +1,10 @@
-package com.vadmax.timetosleep.domain.usecases
+package com.vadmax.timetosleep.domain.usercases.system
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import com.vadmax.core.data.AppInfo
-import com.vadmax.timetosleep.utils.extentions.getApplicationLabel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
@@ -36,3 +36,6 @@ class GetAppsListImpl(
             }
     }
 }
+
+private fun ApplicationInfo.getApplicationLabel(pm: PackageManager) =
+    pm.getApplicationLabel(this).toString()

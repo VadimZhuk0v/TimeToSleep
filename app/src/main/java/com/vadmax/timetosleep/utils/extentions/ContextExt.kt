@@ -14,7 +14,7 @@ import android.os.Vibrator
 import android.provider.Settings
 import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import androidx.browser.customtabs.CustomTabsIntent
-import com.vadmax.timetosleep.utils.AdminReceiver
+import com.vadmax.timetosleep.domain.receiver.AdminReceiver
 import timber.log.Timber
 
 @SuppressWarnings("MagicNumber")

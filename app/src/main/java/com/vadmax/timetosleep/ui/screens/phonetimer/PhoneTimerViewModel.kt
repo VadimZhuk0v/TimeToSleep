@@ -7,8 +7,8 @@ import com.vadmax.core.utils.extentions.hour
 import com.vadmax.core.utils.extentions.minute
 import com.vadmax.core.utils.extentions.second
 import com.vadmax.timetosleep.data.TimeUIModel
-import com.vadmax.timetosleep.domain.usecases.CancelApplyActionsWorker
-import com.vadmax.timetosleep.domain.usecases.ScheduleApplyActionsWorker
+import com.vadmax.timetosleep.domain.usecases.worker.CancelApplyActionsWorker
+import com.vadmax.timetosleep.domain.usecases.worker.ScheduleApplyActionsWorker
 import com.vadmax.timetosleep.domain.usercases.local.GetSelectedTime
 import com.vadmax.timetosleep.domain.usercases.local.GetSoundEffectEnable
 import com.vadmax.timetosleep.domain.usercases.local.IncEnableTimerCounter
